@@ -38,14 +38,31 @@ async function loadDom(url) {
     ck("es home: html lang es", d.documentElement.lang === "es", d.documentElement.lang);
     dom.window.close();
   }
-  // 2) default selected voice on the plain homepage is the first EN voice
+  // 2) voice parity: alphabetical order, trimmed names, curated defaults
   {
     const dom = await loadDom(BASE + "/");
     const d = dom.window.document;
     const rows = [...d.querySelectorAll("#voicelist .vrow")];
+    ck("home: EN 47 rows, first is Abeo - NG (alphabetical)", rows.length === 47 && /Abeo - NG/.test(rows[0].textContent),
+       rows[0] ? rows[0].textContent.slice(0, 30) : "none");
     const badged = rows.find(r => r.querySelector(".badge"));
-    ck("home: badge on first row (Natasha)", !!badged && badged === rows[0] && /Natasha/.test(badged.textContent),
+    ck("home: badge on Natasha - AU (curated default)", !!badged && /Natasha - AU/.test(badged.textContent),
        badged ? badged.textContent.slice(0, 40) : "none");
+    ck("home: no 'Multilingual' text in any row", !rows.some(r => /Multilingual/.test(r.textContent)));
+    ck("home: Andrew - US appears twice (trimmed duplicates)",
+       rows.filter(r => /Andrew - US/.test(r.textContent)).length === 2);
+    const sel = d.querySelector("#langsel");
+    sel.value = "zh"; sel.dispatchEvent(new dom.window.Event("change"));
+    const zrows = [...d.querySelectorAll("#voicelist .vrow")];
+    const zb = zrows.find(r => r.querySelector(".badge"));
+    ck("zh: badge on HiuGaai - HK", !!zb && /HiuGaai - HK/.test(zb.textContent),
+       zb ? zb.textContent.slice(0, 30) : "none");
+    sel.value = "es"; sel.dispatchEvent(new dom.window.Event("change"));
+    const erows = [...d.querySelectorAll("#voicelist .vrow")];
+    const eb = erows.find(r => r.querySelector(".badge"));
+    ck("es: first row Alex - PE, badge on Elena - AR",
+       /Alex - PE/.test(erows[0].textContent) && !!eb && /Elena - AR/.test(eb.textContent),
+       erows[0] ? erows[0].textContent.slice(0, 30) : "none");
     dom.window.close();
   }
   // 3) German tutorial: full translation applied from SUBI18N

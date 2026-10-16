@@ -73,7 +73,8 @@ async def get_voices() -> list[dict]:
         lang_code, _, country = locale.partition("-")
         friendly = v.get("FriendlyName", v["ShortName"])
         # Display name like the catalog convention: "Aria - US"
-        short = v["ShortName"].replace(locale + "-", "").replace("Neural", "")
+        short = (v["ShortName"].replace(locale + "-", "")
+                 .replace("Neural", "").replace("Multilingual", ""))
         display = f"{short} - {country}"
         out.append({
             "id": v["ShortName"],
@@ -84,7 +85,9 @@ async def get_voices() -> list[dict]:
             "gender": v.get("Gender", ""),
             "friendly": friendly,
         })
-    out.sort(key=lambda x: (x["language"], x["country"], x["name"]))
+    # Alphabetical by display name within each language, matching the
+    # reference catalog's ordering (not grouped by region).
+    out.sort(key=lambda x: (x["language"], x["name"]))
     _voices_cache.update(data=out, ts=time.time())
     return out
 

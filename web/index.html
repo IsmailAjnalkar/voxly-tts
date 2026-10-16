@@ -430,10 +430,12 @@ async function loadVoices(){
     pickDefaultVoice(); renderVoices();
   }catch(e){ toast("Could not load the voice catalog. Check your connection and reload."); }
 }
+const CURATED_DEFAULTS = { en: "en-AU-NatashaNeural", es: "es-AR-ElenaNeural", zh: "zh-HK-HiuGaaiNeural" };
 function pickDefaultVoice(){
   const lang = $("#langsel").value;
   const pool = VOICES.filter(v=>v.language===lang);
-  selectedVoice = (pool[0] || VOICES[0] || {}).id || null;
+  const curated = pool.find(v=>v.id===CURATED_DEFAULTS[lang]);
+  selectedVoice = (curated || pool[0] || VOICES[0] || {}).id || null;
 }
 function renderVoices(){
   const lang = $("#langsel").value, q = $("#vsearch").value.trim().toLowerCase();
