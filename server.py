@@ -298,4 +298,32 @@ async def health():
     return {"ok": True, "app": "voxly"}
 
 
+# Per-language URLs, mirroring the reference site's scheme: /en/, /es/,
+# /zh-CN/ ... Every page is reachable under each language prefix; the page
+# itself boots in that language (client-side). Only exact known codes and
+# page names are registered, so nothing else is swallowed.
+_UI_CODES = ["en", "zh", "zh-TW", "ar", "cs", "da", "de", "es", "fa", "fr",
+             "hi", "hu", "id", "it", "ja", "ko", "nl", "no", "pl", "pt",
+             "ru", "sv", "th", "tr", "vi"]
+_PATH_OF_UI = {"zh": "zh-CN"}  # URL segment for a UI code, when different
+_PAGES = ["tutorial.html", "donate.html", "support.html", "auth.html",
+          "privacy.html", "terms.html"]
+_WEBDIR = BASE / "web"
+
+
+def _serve_page(name: str):
+    return FileResponse(_WEBDIR / name)
+
+
+for _ui in _UI_CODES:
+    _seg = _PATH_OF_UI.get(_ui, _ui)
+    app.get(f"/{_seg}", include_in_schema=False)(
+        lambda: _serve_page("index.html"))
+    app.get(f"/{_seg}/", include_in_schema=False)(
+        lambda: _serve_page("index.html"))
+    for _page in _PAGES:
+        app.get(f"/{_seg}/{_page}", include_in_schema=False)(
+            lambda page=_page: _serve_page(page))
+
+
 app.mount("/", StaticFiles(directory=str(BASE / "web"), html=True), name="web")

@@ -433,7 +433,7 @@ async function loadVoices(){
 function pickDefaultVoice(){
   const lang = $("#langsel").value;
   const pool = VOICES.filter(v=>v.language===lang);
-  selectedVoice = (pool.find(v=>/Aria/i.test(v.name)) || pool[0] || VOICES[0] || {}).id || null;
+  selectedVoice = (pool[0] || VOICES[0] || {}).id || null;
 }
 function renderVoices(){
   const lang = $("#langsel").value, q = $("#vsearch").value.trim().toLowerCase();
@@ -585,8 +585,17 @@ $("#genbtn").onclick = async ()=>{
 /* ---------- UI language switcher ---------- */
 const uisel = $("#uilang");
 uisel.innerHTML = UI_LANGS.map(([c,n])=>`<option value="${c}">${n}</option>`).join("");
-uisel.value = localStorage.getItem("voxly-ui") || "en";
-uisel.addEventListener("change", ()=>{ localStorage.setItem("voxly-ui", uisel.value); applyI18n(uisel.value); });
+const PATH2UI = {"zh-CN":"zh"}, UI2PATH = {"zh":"zh-CN"};
+const _seg = location.pathname.split("/")[1] || "";
+const _urlLang = PATH2UI[_seg] || (UI_LANGS.some(([c])=>c===_seg) ? _seg : null);
+if (_urlLang) localStorage.setItem("voxly-ui", _urlLang);
+uisel.value = _urlLang || localStorage.getItem("voxly-ui") || "en";
+uisel.addEventListener("change", ()=>{ const c = uisel.value; localStorage.setItem("voxly-ui", c); location.href = "/" + (UI2PATH[c] || c) + "/"; });
+if (uisel.value !== "en") {
+  const _p = "/" + (UI2PATH[uisel.value] || uisel.value);
+  document.querySelectorAll('a[href^="/"]').forEach(a=>{ const h = a.getAttribute("href"); if (h === "/" || /^\/(tutorial|donate|support|auth|privacy|terms)\.html$/.test(h)) a.setAttribute("href", _p + (h === "/" ? "/" : h)); });
+}
+if (_urlLang) { const _c = document.querySelector('link[rel="canonical"]'); if (_c) _c.href = "https://voxly.chatbotreply.com/" + (UI2PATH[_urlLang] || _urlLang) + "/"; }
 
 /* ---------- boot ---------- */
 if(window.speechSynthesis) speechSynthesis.onvoiceschanged = ()=>{};
