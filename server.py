@@ -217,11 +217,24 @@ async def api_tts(req: Request, x_session_id: str = Header(default="")):
                 _silence_mp3(part, seg["ms"])
                 offset += seg["ms"] / 1000
             else:
-                audio, words = await synth_segment(seg["text"], voice, rate, pitch)
+                audio, words = await asyncio.wait_for(
+                    synth_segment(seg["text"], voice, rate, pitch), timeout=45)
                 if not audio:
                     raise HTTPException(502, "Synthesis returned no audio")
                 part.write_bytes(audio)
                 dur = _probe_duration(part)
+                if not words:
+                    # Speech service sent no word boundaries: estimate timings
+                    # proportionally from the real segment duration so the
+                    # SRT/VTT subtitles are never empty.
+                    toks = seg["text"].split()
+                    weights = [max(1, len(t)) for t in toks]
+                    total = sum(weights) or 1
+                    t = 0.0
+                    for tok, wgt in zip(toks, weights):
+                        span = dur * wgt / total
+                        words.append((t, t + span, tok))
+                        t += span
                 for (s, e, w) in words:
                     all_words.append((offset + s, offset + e, w))
                 offset += dur
