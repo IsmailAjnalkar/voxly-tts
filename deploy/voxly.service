@@ -1,0 +1,15 @@
+[Unit]
+Description=Voxly TTS web app
+After=network.target
+
+[Service]
+Type=simple
+User=voxly
+WorkingDirectory=/opt/voxly
+ExecStart=/opt/voxly/.venv/bin/uvicorn server:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=3
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
