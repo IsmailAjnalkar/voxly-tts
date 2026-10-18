@@ -480,8 +480,9 @@ async function previewVoice(id, btn){
     const r = await fetch("/api/tts", { method:"POST", headers:H, body: JSON.stringify({ text: sample, voice: id, speed: 0, pitch: 0, format: "mp3" })});
     if(!r.ok) throw new Error("preview failed");
     const d = await r.json();
-    sampleCache.set(id, d.audio);
-    play(d.audio);
+    const url = d.audio + "&s=" + SESSION;
+    sampleCache.set(id, url);
+    play(url);
   }catch(e){ toast("Voice preview failed — please try Generate Audio."); }
   finally{ if(btn){ btn.disabled = false; btn.textContent = old; } }
 }
