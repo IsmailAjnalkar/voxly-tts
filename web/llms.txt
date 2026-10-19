@@ -1,6 +1,6 @@
-# Voxly — Free Text to Speech Online
+# Text 2 Speech — Free Text to Speech Online
 
-> Voxly (at text-2-speech.com) is a free online text-to-speech tool that turns written text into natural, lifelike speech. It offers 322 AI voices in 75 languages, runs entirely in the browser with no sign-up, and lets users listen instantly or download the audio.
+> Text 2 Speech (at text-2-speech.com) is a free online text-to-speech tool that turns written text into natural, lifelike speech. It offers 322 AI voices in 75 languages, runs entirely in the browser with no sign-up, and lets users listen instantly or download the audio.
 
 Key facts:
 - Price: free. No account or sign-up is required.
@@ -16,7 +16,7 @@ Key facts:
 ## Pages
 
 - [Home — text to speech tool](https://text-2-speech.com/): the generator itself, with voice picker, preview, speed/pitch controls and downloads.
-- [Tutorial](https://text-2-speech.com/tutorial.html): how to make voiceovers with Voxly, step by step.
+- [Tutorial](https://text-2-speech.com/tutorial.html): how to make voiceovers with Text 2 Speech, step by step.
 - [Support & FAQ](https://text-2-speech.com/support.html): help, quick fixes and contact.
 - [Privacy Policy](https://text-2-speech.com/privacy.html): how data is handled.
 - [Terms of Service](https://text-2-speech.com/terms.html): the terms of use.

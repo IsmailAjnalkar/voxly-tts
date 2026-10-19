@@ -1,4 +1,4 @@
-/* Voxly sub-page language runtime. Boots the page in the language named by
+/* Text 2 Speech sub-page language runtime. Boots the page in the language named by
    the URL prefix (/es/, /de/ ...), falling back to the visitor's saved
    language; translates every [data-i18n] string from window.SUBI18N;
    keeps navigation inside the active language; drives the header
