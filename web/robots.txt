@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://voxly.chatbotreply.com/sitemap.xml
+Sitemap: https://text-2-speech.com/sitemap.xml

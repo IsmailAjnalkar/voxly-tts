@@ -43,6 +43,16 @@ DATA.mkdir(exist_ok=True)
 SESSION_TTL = 2 * 3600  # generated files are session-only
 
 app = FastAPI(title="Voxly TTS")
+
+
+@app.middleware("http")
+async def _no_cache_html(request, call_next):
+    # HTML pages must revalidate on every load so a deploy reaches visitors
+    # immediately (a stale cached page kept an old, broken script alive).
+    resp = await call_next(request)
+    if "text/html" in resp.headers.get("content-type", ""):
+        resp.headers["Cache-Control"] = "no-cache"
+    return resp
 _voices_cache: dict = {"data": None, "ts": 0}
 
 
