@@ -24,8 +24,16 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"WebApplication","name":"Voxly","url":"https://text-2-speech.com/","applicationCategory":"MultimediaApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Turn any text into natural, lifelike speech with 300+ AI voices in 75 languages. Listen instantly, download MP3 or WAV plus subtitles. Free, no sign-up.","featureList":"322 AI voices in 75 languages, MP3 and WAV download, SRT and VTT subtitles, speed and pitch control, pause markers, file import"},
-{"@type":"WebSite","name":"Voxly","url":"https://text-2-speech.com/"}
+{"@type":"WebSite","name":"Voxly","url":"https://text-2-speech.com/"},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is Voxly free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes. Listening, generating and downloading are free and need no account. Personal and learning use is fully covered; if you use generated audio commercially, make sure your use complies with applicable laws and the rights of any text you convert."}},
+{"@type":"Question","name":"Is there a character limit per generation?","acceptedAnswer":{"@type":"Answer","text":"No fixed limit. A single generation accepts long text, but for book-length material we recommend generating chapter by chapter and stitching the files — each render is faster, and re-doing one chapter is cheaper than re-doing a book."}},
+{"@type":"Question","name":"What can I type into the text box?","acceptedAnswer":{"@type":"Answer","text":"Plain text in any of the supported languages, including mixed Chinese and English, numbers and common punctuation. Special symbols are cleaned up automatically, punctuation is interpreted for natural pausing, and [break:…] markers insert exact silences."}},
+{"@type":"Question","name":"How do I add a pause?","acceptedAnswer":{"@type":"Answer","text":"Insert a break marker anywhere in the text: [break:200ms] for a short beat, [break:2s] for two seconds. Pressing Ctrl+B inserts [break:500ms] at the cursor. Markers are silent in the output — you hear only the pause."}},
+{"@type":"Question","name":"Which formats can I download?","acceptedAnswer":{"@type":"Answer","text":"Audio in MP3 or WAV (chosen before generating), plus subtitles in SRT and VTT built from the engine's word-level timings — ideal for captioning videos with the same narration."}},
+{"@type":"Question","name":"Do my generated files stay online?","acceptedAnswer":{"@type":"Answer","text":"No. Results exist only for your current browser session and are removed afterwards. Anything you want to keep, download before you close the tab."}}
 ]}
+}
 </script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='3' y='12' width='4' height='8' rx='2' fill='%23ff6b4a'/><rect x='10' y='7' width='4' height='18' rx='2' fill='%23ffb347'/><rect x='17' y='10' width='4' height='12' rx='2' fill='%23ff6b4a'/><rect x='24' y='14' width='4' height='4' rx='2' fill='%23ffb347'/></svg>">
 <style>
@@ -283,7 +291,15 @@
     <button id="faqexpand" data-i18n="expand_all">Expand All</button>
     <button id="faqcollapse" data-i18n="collapse_all">Collapse All</button>
   </div>
-  <div id="faqlist"></div>
+  <div id="faqlist">
+    <!-- Static copy of the FAQ in the FAQ array below, so crawlers and AI answer engines can read it without running JavaScript. Keep the two in sync. -->
+    <div class="faqitem"><button class="q" type="button">Is Voxly free to use?<span>▾</span></button><div class="a">Yes. Listening, generating and downloading are free and need no account. Personal and learning use is fully covered; if you use generated audio commercially, make sure your use complies with applicable laws and the rights of any text you convert.</div></div>
+    <div class="faqitem"><button class="q" type="button">Is there a character limit per generation?<span>▾</span></button><div class="a">No fixed limit. A single generation accepts long text, but for book-length material we recommend generating chapter by chapter and stitching the files — each render is faster, and re-doing one chapter is cheaper than re-doing a book.</div></div>
+    <div class="faqitem"><button class="q" type="button">What can I type into the text box?<span>▾</span></button><div class="a">Plain text in any of the supported languages, including mixed Chinese and English, numbers and common punctuation. Special symbols are cleaned up automatically, punctuation is interpreted for natural pausing, and [break:…] markers insert exact silences.</div></div>
+    <div class="faqitem"><button class="q" type="button">How do I add a pause?<span>▾</span></button><div class="a">Insert a break marker anywhere in the text: [break:200ms] for a short beat, [break:2s] for two seconds. Pressing Ctrl+B inserts [break:500ms] at the cursor. Markers are silent in the output — you hear only the pause.</div></div>
+    <div class="faqitem"><button class="q" type="button">Which formats can I download?<span>▾</span></button><div class="a">Audio in MP3 or WAV (chosen before generating), plus subtitles in SRT and VTT built from the engine's word-level timings — ideal for captioning videos with the same narration.</div></div>
+    <div class="faqitem"><button class="q" type="button">Do my generated files stay online?<span>▾</span></button><div class="a">No. Results exist only for your current browser session and are removed afterwards. Anything you want to keep, download before you close the tab.</div></div>
+  </div>
 </section>
 
 <footer>
