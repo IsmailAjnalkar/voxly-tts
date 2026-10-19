@@ -455,7 +455,9 @@ function pickDefaultVoice(){
 }
 function renderVoices(){
   const lang = $("#langsel").value, q = $("#vsearch").value.trim().toLowerCase();
-  const pool = VOICES.filter(v=>v.language===lang && (genderFilter==="All" || v.gender===genderFilter) && (!q || v.name.toLowerCase().includes(q)));
+  const words = q.split(/\s+/).filter(Boolean);
+  const hay = v => `${v.name} ${v.friendly || ""} ${v.locale || ""} ${v.country || ""} ${langLabel(v.language)}`.toLowerCase();
+  const pool = VOICES.filter(v=>v.language===lang && (genderFilter==="All" || v.gender===genderFilter) && (!words.length || words.every(w=>hay(v).includes(w))));
   $("#voicelist").innerHTML = pool.map(v=>`
     <div class="vrow ${v.id===selectedVoice?"sel":""}" data-id="${v.id}" role="button" tabindex="0">
       <span class="nm">${v.name}</span>
