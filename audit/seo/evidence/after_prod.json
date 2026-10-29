@@ -1,0 +1,310 @@
+[
+ {
+  "form": "mobile",
+  "path": "/",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 1370,
+  "cls": 0.039,
+  "tbt_ms": 44,
+  "fcp_ms": 1370,
+  "bytes_kb": 51,
+  "failing": [
+   "first-contentful-paint(0.97)",
+   "max-potential-fid(0.45)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/es/",
+  "performance": 98,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 1410,
+  "cls": 0.039,
+  "tbt_ms": 0,
+  "fcp_ms": 1388,
+  "bytes_kb": 51,
+  "failing": [
+   "first-contentful-paint(0.97)",
+   "speed-index(0.85)",
+   "mainthread-work-breakdown(0.5)",
+   "bootup-time(0.5)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/tutorial.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 986,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 986,
+  "bytes_kb": 13,
+  "failing": [
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/support.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 1016,
+  "cls": 0.035,
+  "tbt_ms": 0,
+  "fcp_ms": 1016,
+  "bytes_kb": 13,
+  "failing": [
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/privacy.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 1056,
+  "cls": 0.011,
+  "tbt_ms": 0,
+  "fcp_ms": 1056,
+  "bytes_kb": 12,
+  "failing": [
+   "forced-reflow-insight(0)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/voices.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 971,
+  "cls": 0,
+  "tbt_ms": 5,
+  "fcp_ms": 942,
+  "bytes_kb": 15,
+  "failing": [
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/how-it-works.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 1015,
+  "cls": 0,
+  "tbt_ms": 2,
+  "fcp_ms": 1015,
+  "bytes_kb": 13,
+  "failing": [
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/guides/subtitles.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 993,
+  "cls": 0,
+  "tbt_ms": 1,
+  "fcp_ms": 967,
+  "bytes_kb": 13,
+  "failing": [
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/guides/mp3-vs-wav.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 1016,
+  "cls": 0,
+  "tbt_ms": 2,
+  "fcp_ms": 1016,
+  "bytes_kb": 12,
+  "failing": [
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 473,
+  "cls": 0.024,
+  "tbt_ms": 0,
+  "fcp_ms": 467,
+  "bytes_kb": 53,
+  "failing": [
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/es/",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 374,
+  "cls": 0.024,
+  "tbt_ms": 0,
+  "fcp_ms": 363,
+  "bytes_kb": 51,
+  "failing": [
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/tutorial.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 295,
+  "cls": 0.002,
+  "tbt_ms": 0,
+  "fcp_ms": 295,
+  "bytes_kb": 13,
+  "failing": [
+   "forced-reflow-insight(0)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/support.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 92,
+  "lcp_ms": 377,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 377,
+  "bytes_kb": 13,
+  "failing": [
+   "robots-txt(0)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/privacy.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 403,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 403,
+  "bytes_kb": 12,
+  "failing": [
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/voices.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 345,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 345,
+  "bytes_kb": 15,
+  "failing": [
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/how-it-works.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 303,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 296,
+  "bytes_kb": 13,
+  "failing": [
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/guides/subtitles.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 292,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 285,
+  "bytes_kb": 13,
+  "failing": [
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/guides/mp3-vs-wav.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 281,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 281,
+  "bytes_kb": 12,
+  "failing": [
+   "network-dependency-tree-insight(0)"
+  ]
+ }
+]

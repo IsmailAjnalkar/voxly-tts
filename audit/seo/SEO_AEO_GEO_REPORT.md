@@ -1,5 +1,17 @@
 # SEO, AEO and GEO audit and implementation — text-2-speech.com
 
+## Production results after deploy (2026-10-29 23:14, `master@83d7a47`)
+
+- **Crawl of all live URLs:** 133 URLs, **0 issues** (baseline 752). `evidence/seo_crawl_prod_after.json`.
+- **Lighthouse, production** (`evidence/after_prod.json`): Accessibility, Best Practices and SEO **100 on all 18 runs** (9 pages × mobile and desktop). Performance **100 on all desktop runs and on all mobile runs except the language home pages**.
+  - Repeated mobile runs: `/` 100, 100, 95; `/es/` 100, 96, 98; `/de/` 99, 96, 98. Scores move with the lab "speed index" (1.1–4.1 s for the same URL).
+  - Measured under 4× CPU throttling, the language home pages do the same work as `/` (script 78–84 ms vs 63 ms; layout 651–679 ms vs 760 ms), so this is measurement variance, not a regression.
+  - One desktop run of `/support.html` scored SEO 92 because `robots.txt` could not be fetched during a deploy restart; three re-runs scored 100.
+- **Page weight (gzip, live):** home 51 KB; sub-pages and guides 12–15 KB (sub-pages were 221 KB before).
+- **Browser suites, production:** full suite 75/75 (Chromium, no-store mode for the support form), UI 36/36, Day-1 10/10, interruption 4/4.
+- **Search Console:** the owner resubmitted `sitemap.xml` (previously read with 6 URLs; now 129) and is requesting indexing for the key pages. Indexing and query data will follow.
+- Field Core Web Vitals (real users) will appear in Search Console once there is enough traffic; use them, not single lab runs, to judge mobile performance.
+
 Date: 2026-10-29 · Branch: `seo/aeo-geo` (not deployed) · Baseline: production (`master@4da3cd2` code live as `290162e`).
 All numbers below come from runs saved in [`evidence/`](evidence/). Nothing here is a ranking, indexing or traffic claim.
 
