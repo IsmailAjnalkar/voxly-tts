@@ -176,6 +176,17 @@ class Api(unittest.TestCase):
         self.assertEqual({t: p for t, p in titles.items() if len(p) > 1}, {})
         self.assertEqual({d: p for d, p in descs.items() if len(p) > 1}, {})
 
+    def test_head_has_no_body_content_and_footer_is_shared(self):
+        # a stray <rect> in <head> once ended the head early and printed '">' above the header
+        import re as _re
+        for path in ["/", "/es/", "/tutorial.html", "/ar/support.html", "/auth.html", "/voices.html", "/guides/subtitles.html", "/nope"]:
+            html = self.c.get(path).text
+            head = html[:html.index("</head>")]
+            self.assertNotRegex(head, r"<(rect|svg|div|p)[\s>]", path)
+            foot = _re.search(r"<footer>.*?</footer>", html, _re.S).group(0)
+            self.assertEqual(len(_re.findall(r"<a ", foot)), 11, path)
+        self.assertIn("Todos los derechos reservados.", self.c.get("/es/tutorial.html").text)
+
     def test_language_pages_rendered_server_side(self):
         es = self.c.get("/es/").text
         self.assertIn("<title>Texto a voz gratuito en línea | Text 2 Speech</title>", es)
