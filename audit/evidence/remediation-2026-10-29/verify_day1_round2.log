@@ -1,0 +1,10 @@
+PASS counter counts code points and shows the limit 10 / 5000 characters (2 lines)
+PASS Generate disabled above 5000 chars 
+PASS Generate enabled at exactly 5000 chars 
+PASS Generate stays disabled when typing mid-job 
+PASS exactly one /api/tts request 1
+PASS generated audio plays under the new CSP 5.952
+PASS Generate re-enabled after the job 
+PASS 400 shows server reason without the network blame Generation failed: Total pause length exceeds 60 s
+PASS download still works 
+PASS no CSP violations or page errors []

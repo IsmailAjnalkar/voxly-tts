@@ -1,0 +1,7 @@
+PASS TC-U12 mobile burger toggles nav and aria-expanded 
+PASS TC-U13 theme toggle persists 
+PASS TC-U14 FAQ expand/collapse 
+PASS TC-U15 how-it-works tabs 
+PASS TC-C49 Preview Audio speaks cleaned text 
+PASS TC-C50 row Preview renders server sample 
+ALL PASSED

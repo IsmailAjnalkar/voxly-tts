@@ -1,5 +1,23 @@
 # Executive Audit Report — text-2-speech.com
 
+## Update 2026-10-29 (round 2) — "fix all" (branch `fix/remaining`, not deployed)
+
+| | Audit | Round 1 | **Round 2** |
+|---|---:|---:|---:|
+| Readiness (untested = 0) | 63.8 | 96.2 | **97.1** |
+| Tested-only | 67.9 | 97.5 | **98.4** |
+| FAIL / PARTIAL / NOT TESTED | 55 / 5 / 10 | 1 / 7 / 3 | **0 / 5 / 3** |
+
+- **TTS-BUG-030 (P0) is closed in production.** Hotfix `3f4d4fe` was copied to the server at 13:02 with a backup (`/root/server.py.before-hotfix-2026-10-29-1302`); `?page=../server.py` and two other payloads now return the tutorial HTML (checked from outside).
+- **Home content in all 25 languages** (BUG-023): How-it-works, use cases and FAQ live in `web/i18n-home/<lang>.json`, are rendered server-side (crawlers see them) with the FAQ JSON-LD in the page language, and the client fetches the right file when `/` is opened with a saved language. All 25 files validated for structure, emoji, protected tokens ([break:…], Ctrl+B, formats) and no leftover English. Translations were machine-produced; a native speaker should spot-check, starting with Thai and Vietnamese.
+- **Monitoring** (BUG-028): `.github/workflows/uptime.yml` checks the live site every 15 minutes (health, pages, voice catalog, one real generation + download) and GitHub emails the owner on failure; `deploy/voxly-watchdog.{sh,service,timer}` restarts the app after two failed health checks and can post to any webhook via `ALERT_URL`. Both become active only after merge to `master` / install at deploy, so they are still PARTIAL.
+- **Accounts and donations**: kept as labelled placeholders by owner decision (2026-10-29, "ignore it"); their two test cases are marked NOT APPLICABLE with that reason, not as passes.
+- **Tests**: API 35/35; UI-language 25/25; full browser suite 59/59 on Chromium, Firefox and WebKit; UI 36/36; Day-1 10/10; interruption 4/4; touched-feature re-checks 6/6. Logs: `evidence/remediation-2026-10-29/*round2.log`.
+
+**Still open (cannot be closed by code):** real-phone testing, a human listening panel, a screen-reader walkthrough, a multi-hour soak; gzip/HTTP2/www redirect/monitoring take effect at deploy.
+
+**Decision:** production now has no open P0. This branch, deployed with `deploy/nginx-voxy-tls.conf` and the watchdog and re-verified on the live site: **GO** (no open P0–P2; the remaining items are deploy-activated or human/device checks).
+
 ## Update 2026-10-29 — full remediation (branch `fix/full-remediation`, not deployed)
 
 | | Before (audit, 2026-10-28) | After (this branch + fixes already live) |

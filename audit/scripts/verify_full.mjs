@@ -79,10 +79,18 @@ for (const theme of ["dark", "light"]) {
   const p = await (await b.newContext()).newPage(); watch(p);
   await p.goto(BASE + "/ar/", { waitUntil: "networkidle" }); await ready(p);
   ck("/ar/ home is right-to-left", (await p.evaluate(() => document.documentElement.dir)) === "rtl");
-  ck("/ar/ English-only FAQ marked lang=en dir=ltr", (await p.getAttribute("#faqlist", "lang")) === "en" && (await p.getAttribute("#faqlist", "dir")) === "ltr");
+  const arab = /[؀-ۿ]/;
+  ck("/ar/ how-it-works, use cases and FAQ are in Arabic",
+     arab.test(await p.textContent("#tabpane")) && arab.test(await p.textContent("#usecases")) && arab.test(await p.textContent("#faqlist .q")));
+  await p.click('#steptabs button[data-t="3"]');
+  ck("/ar/ step tabs switch within Arabic content", arab.test(await p.textContent("#tabpane h3")));
   await p.screenshot({ path: OUT + "/home_ar.png" });
-  await p.goto(BASE + "/en/", { waitUntil: "networkidle" });  // "/" would reuse the saved Arabic choice
-  ck("English home: FAQ has no lang override", (await p.getAttribute("#faqlist", "lang")) === null);
+  // "/" serves English HTML but the saved choice is Arabic: the client fetches the Arabic content
+  await p.goto(BASE + "/", { waitUntil: "networkidle" }); await ready(p);
+  await p.waitForFunction(() => /[؀-ۿ]/.test(document.querySelector("#faqlist .q").textContent), null, { timeout: 5000 }).catch(() => {});
+  ck("'/' with a saved Arabic choice shows Arabic content", arab.test(await p.textContent("#faqlist .q")));
+  await p.goto(BASE + "/ja/", { waitUntil: "networkidle" });
+  ck("/ja/ FAQ in Japanese", /[぀-ヿ一-鿿]/.test(await p.textContent("#faqlist .q")));
   await p.context().close();
 }
 
