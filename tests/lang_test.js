@@ -1,6 +1,6 @@
 /* Language-parity tests: URL-prefix boot, default voice, sub-page runtime. */
 const { JSDOM } = require("jsdom");
-const BASE = "http://localhost:8077";
+const BASE = process.env.BASE || "http://localhost:8077";  // the app must be running there
 let pass = 0, fail = 0;
 const failures = [];
 function ck(name, cond, extra) {
@@ -45,21 +45,21 @@ async function loadDom(url) {
     const rows = [...d.querySelectorAll("#voicelist .vrow")];
     ck("home: EN 47 rows, first is Abeo - NG (alphabetical)", rows.length === 47 && /Abeo - NG/.test(rows[0].textContent),
        rows[0] ? rows[0].textContent.slice(0, 30) : "none");
-    const badged = rows.find(r => r.querySelector(".badge"));
+    const badged = rows.find(r => r.matches(".sel"));
     ck("home: badge on Natasha - AU (curated default)", !!badged && /Natasha - AU/.test(badged.textContent),
        badged ? badged.textContent.slice(0, 40) : "none");
-    ck("home: no 'Multilingual' text in any row", !rows.some(r => /Multilingual/.test(r.textContent)));
-    ck("home: Andrew - US appears twice (trimmed duplicates)",
-       rows.filter(r => /Andrew - US/.test(r.textContent)).length === 2);
+    const names = rows.map(r => r.querySelector(".nm").textContent);
+    ck("home: voice names unique (Multilingual voices tagged)", new Set(names).size === names.length
+       && names.includes("Andrew - US") && names.includes("Andrew (Multilingual) - US"));
     const sel = d.querySelector("#langsel");
     sel.value = "zh"; sel.dispatchEvent(new dom.window.Event("change"));
     const zrows = [...d.querySelectorAll("#voicelist .vrow")];
-    const zb = zrows.find(r => r.querySelector(".badge"));
+    const zb = zrows.find(r => r.matches(".sel"));
     ck("zh: badge on HiuGaai - HK", !!zb && /HiuGaai - HK/.test(zb.textContent),
        zb ? zb.textContent.slice(0, 30) : "none");
     sel.value = "es"; sel.dispatchEvent(new dom.window.Event("change"));
     const erows = [...d.querySelectorAll("#voicelist .vrow")];
-    const eb = erows.find(r => r.querySelector(".badge"));
+    const eb = erows.find(r => r.matches(".sel"));
     ck("es: first row Alex - PE, badge on Elena - AR",
        /Alex - PE/.test(erows[0].textContent) && !!eb && /Elena - AR/.test(eb.textContent),
        erows[0] ? erows[0].textContent.slice(0, 30) : "none");
@@ -90,8 +90,8 @@ async function loadDom(url) {
     const fr = (w.SUBI18N || {}).fr || {};
     ck("fr sup: bug option French", d.querySelector('[data-i18n="sup_o3"]').textContent === fr.sup_o3 && fr.sup_o3 !== "Bug report", fr.sup_o3);
     ck("fr sup: placeholder French", d.querySelector("[data-i18n-ph]").getAttribute("placeholder") === fr.sup_msg_ph);
-    ck("fr sup: pre-launch notice French", d.querySelector('[data-i18n="sup_notice"]').textContent === fr.sup_notice && !!fr.sup_notice);
-    ck("fr sup: send disabled until launch", d.querySelector('button[type="submit"]').matches(":disabled"));
+    ck("fr sup: result line is announced (role=status)", !!d.getElementById("supstatus") && d.getElementById("supstatus").getAttribute("role") === "status");
+    ck("fr sup: send enabled, email required", !d.querySelector('button[type="submit"]').matches(":disabled") && d.getElementById("sup_email").required);
     dom.window.close();
   }
   // 5) Arabic privacy: RTL + translated heading

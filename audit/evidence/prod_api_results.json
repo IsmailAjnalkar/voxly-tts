@@ -1,0 +1,1274 @@
+[
+ {
+  "case": "empty text",
+  "status": 400,
+  "ctype": "application/json",
+  "latency_s": 0.275,
+  "body": {
+   "detail": "Text is empty"
+  },
+  "expected": 400,
+  "verdict": "PASS",
+  "chars": 0
+ },
+ {
+  "case": "whitespace-only text",
+  "status": 400,
+  "ctype": "application/json",
+  "latency_s": 0.24,
+  "body": {
+   "detail": "Text is empty"
+  },
+  "expected": 400,
+  "verdict": "PASS",
+  "chars": 6
+ },
+ {
+  "case": "unknown voice",
+  "status": 400,
+  "ctype": "application/json",
+  "latency_s": 0.298,
+  "body": {
+   "detail": "Unknown voice"
+  },
+  "expected": 400,
+  "verdict": "PASS",
+  "chars": 5
+ },
+ {
+  "case": "missing voice",
+  "status": 400,
+  "ctype": "application/json",
+  "latency_s": 0.254,
+  "body": {
+   "detail": "Unknown voice"
+  },
+  "expected": 400,
+  "verdict": "PASS",
+  "chars": 5
+ },
+ {
+  "case": "bad format ogg",
+  "status": 400,
+  "ctype": "application/json",
+  "latency_s": 0.455,
+  "body": {
+   "detail": "Format must be mp3 or wav"
+  },
+  "expected": 400,
+  "verdict": "PASS",
+  "chars": 5
+ },
+ {
+  "case": "only break markers",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.418,
+  "body": {
+   "id": "0c39cd472b7d",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 3.0,
+   "snippet": " ",
+   "created": 1793230596,
+   "audio": "/api/file/0c39cd472b7d.mp3?item=0c39cd472b7d",
+   "audioName": "0c39cd472b7d.mp3",
+   "srt": "/api/file/0c39cd472b7d.srt",
+   "vtt": "/api/file/0c39cd472b7d.vtt"
+  },
+  "expected": 400,
+  "verdict": "FAIL",
+  "chars": 20
+ },
+ {
+  "case": "missing session id",
+  "status": 400,
+  "ctype": "application/json",
+  "latency_s": 0.405,
+  "body": {
+   "detail": "Missing session id"
+  },
+  "expected": 400,
+  "verdict": "PASS"
+ },
+ {
+  "case": "malformed JSON (expect 4xx)",
+  "status": 500,
+  "ctype": "text/plain; charset=utf-8",
+  "latency_s": 0.314,
+  "body": "Internal Server Error",
+  "expected": 422,
+  "verdict": "FAIL"
+ },
+ {
+  "case": "JSON array body (expect 4xx)",
+  "status": 500,
+  "ctype": "text/plain; charset=utf-8",
+  "latency_s": 0.305,
+  "body": "Internal Server Error",
+  "expected": 422,
+  "verdict": "FAIL"
+ },
+ {
+  "case": "speed non-numeric (expect 4xx)",
+  "status": 500,
+  "ctype": "text/plain; charset=utf-8",
+  "latency_s": 0.311,
+  "body": "Internal Server Error",
+  "expected": 422,
+  "verdict": "FAIL",
+  "chars": 5
+ },
+ {
+  "case": "speed out of range 1000 (expect 4xx/clamp)",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.634,
+  "body": {
+   "id": "4ee5b8ecdfe7",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 0.84,
+   "snippet": "hello",
+   "created": 1793230598,
+   "audio": "/api/file/4ee5b8ecdfe7.mp3?item=4ee5b8ecdfe7",
+   "audioName": "4ee5b8ecdfe7.mp3",
+   "srt": "/api/file/4ee5b8ecdfe7.srt",
+   "vtt": "/api/file/4ee5b8ecdfe7.vtt"
+  },
+  "expected": 400,
+  "verdict": "FAIL",
+  "chars": 5
+ },
+ {
+  "case": "speed float 10.5",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.702,
+  "body": {
+   "id": "1cb2254c40b1",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 1.87,
+   "snippet": "hello",
+   "created": 1793230599,
+   "audio": "/api/file/1cb2254c40b1.mp3?item=1cb2254c40b1",
+   "audioName": "1cb2254c40b1.mp3",
+   "srt": "/api/file/1cb2254c40b1.srt",
+   "vtt": "/api/file/1cb2254c40b1.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 5
+ },
+ {
+  "case": "one char",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.91,
+  "body": {
+   "id": "31ddd53d3988",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 1.87,
+   "snippet": "a",
+   "created": 1793230600,
+   "audio": "/api/file/31ddd53d3988.mp3?item=31ddd53d3988",
+   "audioName": "31ddd53d3988.mp3",
+   "srt": "/api/file/31ddd53d3988.srt",
+   "vtt": "/api/file/31ddd53d3988.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 1,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 11756,
+  "download_s": 0.197,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "1.872000",
+    "bit_rate": "50239"
+   }
+  },
+  "file": "one_char.mp3",
+  "text": "a",
+  "voice": "en-US-AriaNeural"
+ },
+ {
+  "case": "one word",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.721,
+  "body": {
+   "id": "f8955f3393f1",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 1.61,
+   "snippet": "Hello",
+   "created": 1793230601,
+   "audio": "/api/file/f8955f3393f1.mp3?item=f8955f3393f1",
+   "audioName": "f8955f3393f1.mp3",
+   "srt": "/api/file/f8955f3393f1.srt",
+   "vtt": "/api/file/f8955f3393f1.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 5,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 10172,
+  "download_s": 0.203,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "1.608000",
+    "bit_rate": "50606"
+   }
+  },
+  "file": "one_word.mp3",
+  "text": "Hello",
+  "voice": "en-US-AriaNeural"
+ },
+ {
+  "case": "paragraph mp3",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.916,
+  "body": {
+   "id": "473188fee3bb",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 11.06,
+   "snippet": "The quick brown fox jumps over the lazy dog. Speech synthesis converts written text into spoken audio, and this paragrap",
+   "created": 1793230602,
+   "audio": "/api/file/473188fee3bb.mp3?item=473188fee3bb",
+   "audioName": "473188fee3bb.mp3",
+   "srt": "/api/file/473188fee3bb.srt",
+   "vtt": "/api/file/473188fee3bb.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 153,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 66908,
+  "download_s": 0.287,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "11.064000",
+    "bit_rate": "48378"
+   }
+  },
+  "file": "para_en.mp3",
+  "text": "The quick brown fox jumps over the lazy dog. Speech synthesis converts written text into spoken audio, and this paragraph checks a normal length request.",
+  "voice": "en-US-AriaNeural"
+ },
+ {
+  "case": "paragraph wav",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.726,
+  "body": {
+   "id": "e28a75e39c33",
+   "voice": "en-US-AriaNeural",
+   "format": "wav",
+   "duration": 11.06,
+   "snippet": "The quick brown fox jumps over the lazy dog. Speech synthesis converts written text into spoken audio, and this paragrap",
+   "created": 1793230604,
+   "audio": "/api/file/e28a75e39c33.wav?item=e28a75e39c33",
+   "audioName": "e28a75e39c33.wav",
+   "srt": "/api/file/e28a75e39c33.srt",
+   "vtt": "/api/file/e28a75e39c33.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 153,
+  "download_status": 200,
+  "download_ctype": "audio/x-wav",
+  "bytes": 531150,
+  "download_s": 0.554,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "pcm_s16le",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "wav",
+    "duration": "11.064000",
+    "bit_rate": "384056"
+   }
+  },
+  "file": "para_en_wav.wav",
+  "text": "The quick brown fox jumps over the lazy dog. Speech synthesis converts written text into spoken audio, and this paragraph checks a normal length request.",
+  "voice": "en-US-AriaNeural"
+ },
+ {
+  "case": "html/js-looking text",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.685,
+  "body": {
+   "id": "70a94c089ef5",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 4.9,
+   "snippet": "<script>alert(1)</script> <b>bold</b> & done",
+   "created": 1793230605,
+   "audio": "/api/file/70a94c089ef5.mp3?item=70a94c089ef5",
+   "audioName": "70a94c089ef5.mp3",
+   "srt": "/api/file/70a94c089ef5.srt",
+   "vtt": "/api/file/70a94c089ef5.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 44,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 29900,
+  "download_s": 0.422,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "4.896000",
+    "bit_rate": "48856"
+   }
+  },
+  "file": "htmljs.mp3",
+  "text": "<script>alert(1)</script> <b>bold</b> & done",
+  "voice": "en-US-AriaNeural"
+ },
+ {
+  "case": "emoji + unicode",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.602,
+  "body": {
+   "id": "0ad8cfcbafcc",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 4.44,
+   "snippet": "Café déjà vu 😀 naïve — “quotes” ½",
+   "created": 1793230607,
+   "audio": "/api/file/0ad8cfcbafcc.mp3?item=0ad8cfcbafcc",
+   "audioName": "0ad8cfcbafcc.mp3",
+   "srt": "/api/file/0ad8cfcbafcc.srt",
+   "vtt": "/api/file/0ad8cfcbafcc.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 33,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 27164,
+  "download_s": 0.198,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "4.440000",
+    "bit_rate": "48944"
+   }
+  },
+  "file": "unicode.mp3",
+  "text": "Café déjà vu 😀 naïve — “quotes” ½",
+  "voice": "en-US-AriaNeural"
+ },
+ {
+  "case": "numbers/currency/dates",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.911,
+  "body": {
+   "id": "30d369d182e9",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 15.22,
+   "snippet": "On 03/14/2026 I paid $1,234.56 and €99 at 7:45 PM, about 12% more. Dr. Smith, NASA and the FBI agreed.",
+   "created": 1793230608,
+   "audio": "/api/file/30d369d182e9.mp3?item=30d369d182e9",
+   "audioName": "30d369d182e9.mp3",
+   "srt": "/api/file/30d369d182e9.srt",
+   "vtt": "/api/file/30d369d182e9.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 102,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 91820,
+  "download_s": 0.429,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "15.216000",
+    "bit_rate": "48275"
+   }
+  },
+  "file": "numbers.mp3",
+  "text": "On 03/14/2026 I paid $1,234.56 and €99 at 7:45 PM, about 12% more. Dr. Smith, NASA and the FBI agreed.",
+  "voice": "en-US-AriaNeural"
+ },
+ {
+  "case": "break markers",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 1.691,
+  "body": {
+   "id": "4754e5d9f20e",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 8.69,
+   "snippet": "First sentence. Second sentence. Third.",
+   "created": 1793230611,
+   "audio": "/api/file/4754e5d9f20e.mp3?item=4754e5d9f20e",
+   "audioName": "4754e5d9f20e.mp3",
+   "srt": "/api/file/4754e5d9f20e.srt",
+   "vtt": "/api/file/4754e5d9f20e.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 64,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 52796,
+  "download_s": 0.254,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "8.692000",
+    "bit_rate": "48592"
+   }
+  },
+  "file": "breaks.mp3",
+  "text": "First sentence. [break:2s] Second sentence. [break:500ms] Third.",
+  "voice": "en-US-AriaNeural"
+ },
+ {
+  "case": "speed+50 pitch-20",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.878,
+  "body": {
+   "id": "950f09e69cbd",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 7.39,
+   "snippet": "The quick brown fox jumps over the lazy dog. Speech synthesis converts written text into spoken audio, and this paragrap",
+   "created": 1793230612,
+   "audio": "/api/file/950f09e69cbd.mp3?item=950f09e69cbd",
+   "audioName": "950f09e69cbd.mp3",
+   "srt": "/api/file/950f09e69cbd.srt",
+   "vtt": "/api/file/950f09e69cbd.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 153,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 44876,
+  "download_s": 0.456,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "7.392000",
+    "bit_rate": "48567"
+   }
+  },
+  "file": "prosody.mp3",
+  "text": "The quick brown fox jumps over the lazy dog. Speech synthesis converts written text into spoken audio, and this paragraph checks a normal length request.",
+  "voice": "en-US-AriaNeural"
+ },
+ {
+  "case": "1001 chars",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 1.486,
+  "body": {
+   "id": "5ffed385fcd9",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 91.34,
+   "snippet": "Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing leng",
+   "created": 1793230614,
+   "audio": "/api/file/5ffed385fcd9.mp3?item=5ffed385fcd9",
+   "audioName": "5ffed385fcd9.mp3",
+   "srt": "/api/file/5ffed385fcd9.srt",
+   "vtt": "/api/file/5ffed385fcd9.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 1001,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 548588,
+  "download_s": 0.628,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "91.344000",
+    "bit_rate": "48045"
+   }
+  },
+  "file": "len1001.mp3",
+  "text": "Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing length boundaries. Te",
+  "voice": "en-US-AriaNeural"
+ },
+ {
+  "case": "lang en en-US-AriaNeural",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.68,
+  "body": {
+   "id": "ddae0b87fa96",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 4.08,
+   "snippet": "Good morning. The weather is pleasant today.",
+   "created": 1793230616,
+   "audio": "/api/file/ddae0b87fa96.mp3?item=ddae0b87fa96",
+   "audioName": "ddae0b87fa96.mp3",
+   "srt": "/api/file/ddae0b87fa96.srt",
+   "vtt": "/api/file/ddae0b87fa96.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 44,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 25004,
+  "download_s": 0.267,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "4.080000",
+    "bit_rate": "49027"
+   }
+  },
+  "file": "lang_en.mp3",
+  "text": "Good morning. The weather is pleasant today.",
+  "voice": "en-US-AriaNeural"
+ },
+ {
+  "case": "lang hi hi-IN-SwaraNeural",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.584,
+  "body": {
+   "id": "04c1b02c1091",
+   "voice": "hi-IN-SwaraNeural",
+   "format": "mp3",
+   "duration": 5.02,
+   "snippet": "सुप्रभात। आज मौसम बहुत सुहावना है।",
+   "created": 1793230617,
+   "audio": "/api/file/04c1b02c1091.mp3?item=04c1b02c1091",
+   "audioName": "04c1b02c1091.mp3",
+   "srt": "/api/file/04c1b02c1091.srt",
+   "vtt": "/api/file/04c1b02c1091.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 34,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 30620,
+  "download_s": 0.4,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "5.016000",
+    "bit_rate": "48835"
+   }
+  },
+  "file": "lang_hi.mp3",
+  "text": "सुप्रभात। आज मौसम बहुत सुहावना है।",
+  "voice": "hi-IN-SwaraNeural"
+ },
+ {
+  "case": "lang te te-IN-ShrutiNeural",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 1.828,
+  "body": {
+   "id": "f53b75e9e655",
+   "voice": "te-IN-ShrutiNeural",
+   "format": "mp3",
+   "duration": 4.32,
+   "snippet": "శుభోదయం. ఈ రోజు వాతావరణం చాలా బాగుంది.",
+   "created": 1793230620,
+   "audio": "/api/file/f53b75e9e655.mp3?item=f53b75e9e655",
+   "audioName": "f53b75e9e655.mp3",
+   "srt": "/api/file/f53b75e9e655.srt",
+   "vtt": "/api/file/f53b75e9e655.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 38,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 26444,
+  "download_s": 0.272,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "4.320000",
+    "bit_rate": "48970"
+   }
+  },
+  "file": "lang_te.mp3",
+  "text": "శుభోదయం. ఈ రోజు వాతావరణం చాలా బాగుంది.",
+  "voice": "te-IN-ShrutiNeural"
+ },
+ {
+  "case": "lang ar ar-SA-ZariyahNeural",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 1.566,
+  "body": {
+   "id": "ec8ffd7ec687",
+   "voice": "ar-SA-ZariyahNeural",
+   "format": "mp3",
+   "duration": 4.56,
+   "snippet": "صباح الخير. الطقس جميل اليوم.",
+   "created": 1793230622,
+   "audio": "/api/file/ec8ffd7ec687.mp3?item=ec8ffd7ec687",
+   "audioName": "ec8ffd7ec687.mp3",
+   "srt": "/api/file/ec8ffd7ec687.srt",
+   "vtt": "/api/file/ec8ffd7ec687.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 29,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 27884,
+  "download_s": 0.349,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "4.560000",
+    "bit_rate": "48919"
+   }
+  },
+  "file": "lang_ar.mp3",
+  "text": "صباح الخير. الطقس جميل اليوم.",
+  "voice": "ar-SA-ZariyahNeural"
+ },
+ {
+  "case": "lang es es-ES-ElviraNeural",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.823,
+  "body": {
+   "id": "7ef70c8088ef",
+   "voice": "es-ES-ElviraNeural",
+   "format": "mp3",
+   "duration": 4.34,
+   "snippet": "Buenos días. Hoy hace muy buen tiempo.",
+   "created": 1793230623,
+   "audio": "/api/file/7ef70c8088ef.mp3?item=7ef70c8088ef",
+   "audioName": "7ef70c8088ef.mp3",
+   "srt": "/api/file/7ef70c8088ef.srt",
+   "vtt": "/api/file/7ef70c8088ef.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 38,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 26588,
+  "download_s": 0.175,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "4.344000",
+    "bit_rate": "48965"
+   }
+  },
+  "file": "lang_es.mp3",
+  "text": "Buenos días. Hoy hace muy buen tiempo.",
+  "voice": "es-ES-ElviraNeural"
+ },
+ {
+  "case": "lang fr fr-FR-DeniseNeural",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.821,
+  "body": {
+   "id": "3c4d02f1b532",
+   "voice": "fr-FR-DeniseNeural",
+   "format": "mp3",
+   "duration": 3.98,
+   "snippet": "Bonjour. Il fait très beau aujourd'hui.",
+   "created": 1793230624,
+   "audio": "/api/file/3c4d02f1b532.mp3?item=3c4d02f1b532",
+   "audioName": "3c4d02f1b532.mp3",
+   "srt": "/api/file/3c4d02f1b532.srt",
+   "vtt": "/api/file/3c4d02f1b532.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 39,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 24428,
+  "download_s": 0.312,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "3.984000",
+    "bit_rate": "49052"
+   }
+  },
+  "file": "lang_fr.mp3",
+  "text": "Bonjour. Il fait très beau aujourd'hui.",
+  "voice": "fr-FR-DeniseNeural"
+ },
+ {
+  "case": "lang de de-DE-KatjaNeural",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 1.187,
+  "body": {
+   "id": "c6511ee08623",
+   "voice": "de-DE-KatjaNeural",
+   "format": "mp3",
+   "duration": 4.39,
+   "snippet": "Guten Morgen. Das Wetter ist heute schön.",
+   "created": 1793230626,
+   "audio": "/api/file/c6511ee08623.mp3?item=c6511ee08623",
+   "audioName": "c6511ee08623.mp3",
+   "srt": "/api/file/c6511ee08623.srt",
+   "vtt": "/api/file/c6511ee08623.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 41,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 26876,
+  "download_s": 0.316,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "4.392000",
+    "bit_rate": "48954"
+   }
+  },
+  "file": "lang_de.mp3",
+  "text": "Guten Morgen. Das Wetter ist heute schön.",
+  "voice": "de-DE-KatjaNeural"
+ },
+ {
+  "case": "lang zh zh-CN-XiaoxiaoNeural",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.74,
+  "body": {
+   "id": "7d518f842267",
+   "voice": "zh-CN-XiaoxiaoNeural",
+   "format": "mp3",
+   "duration": 3.29,
+   "snippet": "早上好。今天天气很好。",
+   "created": 1793230628,
+   "audio": "/api/file/7d518f842267.mp3?item=7d518f842267",
+   "audioName": "7d518f842267.mp3",
+   "srt": "/api/file/7d518f842267.srt",
+   "vtt": "/api/file/7d518f842267.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 11,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 20252,
+  "download_s": 0.337,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "3.288000",
+    "bit_rate": "49274"
+   }
+  },
+  "file": "lang_zh.mp3",
+  "text": "早上好。今天天气很好。",
+  "voice": "zh-CN-XiaoxiaoNeural"
+ },
+ {
+  "case": "lang ja ja-JP-NanamiNeural",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 1.434,
+  "body": {
+   "id": "10b7f419a233",
+   "voice": "ja-JP-NanamiNeural",
+   "format": "mp3",
+   "duration": 4.49,
+   "snippet": "おはようございます。今日はいい天気です。",
+   "created": 1793230630,
+   "audio": "/api/file/10b7f419a233.mp3?item=10b7f419a233",
+   "audioName": "10b7f419a233.mp3",
+   "srt": "/api/file/10b7f419a233.srt",
+   "vtt": "/api/file/10b7f419a233.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 20,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 27452,
+  "download_s": 0.3,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "4.488000",
+    "bit_rate": "48934"
+   }
+  },
+  "file": "lang_ja.mp3",
+  "text": "おはようございます。今日はいい天気です。",
+  "voice": "ja-JP-NanamiNeural"
+ },
+ {
+  "case": "lang ko ko-KR-SunHiNeural",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 1.039,
+  "body": {
+   "id": "766f462c7c7e",
+   "voice": "ko-KR-SunHiNeural",
+   "format": "mp3",
+   "duration": 4.58,
+   "snippet": "좋은 아침입니다. 오늘 날씨가 좋네요.",
+   "created": 1793230631,
+   "audio": "/api/file/766f462c7c7e.mp3?item=766f462c7c7e",
+   "audioName": "766f462c7c7e.mp3",
+   "srt": "/api/file/766f462c7c7e.srt",
+   "vtt": "/api/file/766f462c7c7e.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 21,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 28028,
+  "download_s": 0.572,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "4.584000",
+    "bit_rate": "48914"
+   }
+  },
+  "file": "lang_ko.mp3",
+  "text": "좋은 아침입니다. 오늘 날씨가 좋네요.",
+  "voice": "ko-KR-SunHiNeural"
+ },
+ {
+  "case": "lang he he-IL-HilaNeural",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 2.057,
+  "body": {
+   "id": "2769a980751f",
+   "voice": "he-IL-HilaNeural",
+   "format": "mp3",
+   "duration": 4.42,
+   "snippet": "בוקר טוב. מזג האוויר נעים היום.",
+   "created": 1793230634,
+   "audio": "/api/file/2769a980751f.mp3?item=2769a980751f",
+   "audioName": "2769a980751f.mp3",
+   "srt": "/api/file/2769a980751f.srt",
+   "vtt": "/api/file/2769a980751f.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 31,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 27020,
+  "download_s": 0.366,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "4.416000",
+    "bit_rate": "48949"
+   }
+  },
+  "file": "lang_he.mp3",
+  "text": "בוקר טוב. מזג האוויר נעים היום.",
+  "voice": "he-IL-HilaNeural"
+ },
+ {
+  "case": "lang ru ru-RU-SvetlanaNeural",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 5.655,
+  "body": {
+   "id": "79b3f8c9a954",
+   "voice": "ru-RU-SvetlanaNeural",
+   "format": "mp3",
+   "duration": 4.85,
+   "snippet": "Доброе утро. Сегодня хорошая погода.",
+   "created": 1793230641,
+   "audio": "/api/file/79b3f8c9a954.mp3?item=79b3f8c9a954",
+   "audioName": "79b3f8c9a954.mp3",
+   "srt": "/api/file/79b3f8c9a954.srt",
+   "vtt": "/api/file/79b3f8c9a954.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 36,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 29612,
+  "download_s": 0.431,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "4.848000",
+    "bit_rate": "48864"
+   }
+  },
+  "file": "lang_ru.mp3",
+  "text": "Доброе утро. Сегодня хорошая погода.",
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ {
+  "case": "mismatch: hindi text on en voice",
+  "status": 502,
+  "ctype": "application/json",
+  "latency_s": 0.577,
+  "body": {
+   "detail": "Synthesis failed: NoAudioReceived: No audio was received. Please verify that your parameters are correct."
+  },
+  "expected": 200,
+  "verdict": "FAIL",
+  "chars": 34
+ },
+ {
+  "case": "item for isolation tests",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.695,
+  "body": {
+   "id": "0b7851852f40",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 2.14,
+   "snippet": "Isolation check.",
+   "created": 1793230643,
+   "audio": "/api/file/0b7851852f40.mp3?item=0b7851852f40",
+   "audioName": "0b7851852f40.mp3",
+   "srt": "/api/file/0b7851852f40.srt",
+   "vtt": "/api/file/0b7851852f40.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS",
+  "chars": 16,
+  "download_status": 200,
+  "download_ctype": "audio/mpeg",
+  "bytes": 13340,
+  "download_s": 0.264,
+  "probe": {
+   "programs": [],
+   "stream_groups": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "24000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "2.136000",
+    "bit_rate": "49962"
+   }
+  },
+  "file": "iso.mp3",
+  "text": "Isolation check.",
+  "voice": "en-US-AriaNeural"
+ },
+ {
+  "case": "other session cannot read file",
+  "status": 404,
+  "ctype": "application/json",
+  "latency_s": 0.197,
+  "body": {
+   "detail": "Not found"
+  },
+  "expected": 404,
+  "verdict": "PASS"
+ },
+ {
+  "case": "path traversal encoded",
+  "status": 404,
+  "ctype": "application/json",
+  "latency_s": 0.172,
+  "body": {
+   "detail": "Not Found"
+  },
+  "expected": 404,
+  "verdict": "PASS"
+ },
+ {
+  "case": "own metadata json readable",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.247,
+  "body": {
+   "id": "0b7851852f40",
+   "voice": "en-US-AriaNeural",
+   "format": "mp3",
+   "duration": 2.14,
+   "snippet": "Isolation check.",
+   "created": 1793230643,
+   "audio": "/api/file/0b7851852f40.mp3?item=0b7851852f40",
+   "audioName": "0b7851852f40.mp3",
+   "srt": "/api/file/0b7851852f40.srt",
+   "vtt": "/api/file/0b7851852f40.vtt"
+  },
+  "expected": 200,
+  "verdict": "PASS"
+ },
+ {
+  "case": "delete item",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.206,
+  "body": {
+   "ok": true
+  },
+  "expected": 200,
+  "verdict": "PASS"
+ },
+ {
+  "case": "file gone after delete",
+  "status": 404,
+  "ctype": "application/json",
+  "latency_s": 0.175,
+  "body": {
+   "detail": "Not found"
+  },
+  "expected": 404,
+  "verdict": "PASS"
+ },
+ {
+  "case": "delete nonexistent (idempotent)",
+  "status": 200,
+  "ctype": "application/json",
+  "latency_s": 0.344,
+  "body": {
+   "ok": true
+  },
+  "expected": 200,
+  "verdict": "PASS"
+ },
+ {
+  "case": "file without session",
+  "status": 400,
+  "ctype": "application/json",
+  "latency_s": 0.229,
+  "body": {
+   "detail": "Missing session id"
+  },
+  "expected": 400,
+  "verdict": "PASS"
+ }
+]

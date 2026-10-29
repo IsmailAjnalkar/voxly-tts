@@ -1,9 +1,11 @@
 """Deterministic API regression tests (no network): the speech provider is mocked.
 Run: .venv/Scripts/python -m unittest tests/test_api.py -v   (needs ffmpeg + httpx)
 
-Tests marked @expectedFailure pin a known, still-open defect.
+Tests marked @expectedFailure pin a known, still-open defect (none at the moment).
 When the defect is fixed the test reports "unexpected success": remove the marker."""
 import asyncio
+import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -94,6 +96,81 @@ class Api(unittest.TestCase):
     def test_break_marker_inserts_silence(self):
         m = self.tts(text="One. [break:2s] Two.").json()
         self.assertAlmostEqual(m["duration"], 4.0, delta=0.3)
+
+    def test_page_routes_ignore_query_params(self):  # TTS-BUG-030: ?page= read any file
+        for q in ("page=../server.py", "page=../../etc/passwd", "name=../server.py", "n=../server.py", "c=x"):
+            r = self.c.get(f"/es/tutorial.html?{q}")
+            self.assertEqual(r.status_code, 200, q)
+            self.assertIn("text/html", r.headers["content-type"], q)
+            self.assertNotIn("edge_tts", r.text, q)
+            self.assertIn('<html lang="es"', r.text, q)
+
+    def test_localized_pages_server_side(self):  # TTS-BUG-023
+        r = self.c.get("/es/")
+        self.assertIn('<html lang="es"', r.text)
+        self.assertIn('<link rel="canonical" href="https://text-2-speech.com/es/">', r.text)
+        self.assertEqual(r.text.count('rel="alternate" hreflang='), 26)  # 25 languages + x-default
+        self.assertIn('hreflang="pt-BR" href="https://text-2-speech.com/pt/"', r.text)
+        self.assertIn('<html lang="ar" dir="rtl"', self.c.get("/ar/").text)
+        self.assertIn('<link rel="canonical" href="https://text-2-speech.com/">', self.c.get("/").text)
+        self.assertIn('href="https://text-2-speech.com/zh-CN/tutorial.html"', self.c.get("/zh-CN/tutorial.html").text)
+        self.assertNotIn("hreflang", self.c.get("/auth.html").text)  # noindex page
+
+    def test_sitemap_lists_every_language(self):  # TTS-BUG-023
+        r = self.c.get("/sitemap.xml")
+        self.assertEqual(r.headers["content-type"].split(";")[0], "application/xml")
+        self.assertEqual(r.text.count("<loc>"), 6 * 26)
+        self.assertNotIn("auth.html", r.text)
+
+    def test_html_404_for_pages_json_for_api(self):  # TTS-BUG-026
+        r = self.c.get("/nope.html")
+        self.assertEqual(r.status_code, 404)
+        self.assertIn("text/html", r.headers["content-type"])
+        self.assertIn("Page not found", r.text)
+        r = self.c.get("/api/nope")
+        self.assertEqual(r.status_code, 404)
+        self.assertEqual(r.json(), {"detail": "Not Found"})
+
+    def test_voices_cacheable(self):  # TTS-BUG-027
+        self.assertEqual(self.c.get("/api/voices").headers["cache-control"], "public, max-age=3600")
+
+    def test_subtitles_keep_punctuation_and_cjk_spacing(self):  # TTS-BUG-005
+        words = [(0.1, 0.5, "Hello"), (0.8, 1.0, "world"), (1.2, 1.5, "Bye")]
+        with mock.patch.object(server, "synth_segment", mock.AsyncMock(return_value=(self.tone, words))):
+            m = self.tts(text="Hello, world! Bye.").json()
+        srt = self.c.get(m["srt"], headers=H).text
+        self.assertIn("Hello, world!", srt)
+        self.assertIn("Bye.", srt)
+        self.assertIn("00:00:00,100 --> 00:00:01,000", srt)
+        zh = server.align_words("早上好。今天很好！", [(0, 1, "早上"), (1, 2, "好"), (3, 4, "今天"), (4, 5, "很"), (5, 6, "好")])
+        self.assertEqual([c.strip() for c in server.build_subtitles(zh, srt=False).split("\n\n")[1:3]],
+                         ["00:00:00.000 --> 00:00:02.000\n早上好。", "00:00:03.000 --> 00:00:06.000\n今天很好！"])
+
+    def test_expired_sessions_are_cleaned(self):  # TTS-BUG-019
+        old, fresh = server.DATA / "oldsession", server.DATA / "freshsession"
+        old.mkdir(); fresh.mkdir()
+        t = time.time() - server.SESSION_TTL - 60
+        os.utime(old, (t, t))
+        server._cleanup_old_sessions()
+        self.assertFalse(old.exists())
+        self.assertTrue(fresh.exists())
+
+    def test_support_inbox(self):  # TTS-BUG-016
+        tmp = Path(self.tmp.name) / "support"
+        good = {"email": "a@example.com", "topic": "bug", "message": "The preview button does nothing."}
+        with mock.patch.object(server, "SUPPORT_DIR", tmp):
+            self.assertEqual(self.c.post("/api/support", json=good).json(), {"ok": True})
+            line = json.loads((tmp / "inbox.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+            self.assertEqual((line["email"], line["topic"], line["message"]), (good["email"], "bug", good["message"]))
+            for bad in ({**good, "email": ""}, {**good, "email": "not-an-email"}, {**good, "message": "short"},
+                        {**good, "message": "x" * 5001}, {**good, "topic": "spam"}):
+                self.assertEqual(self.c.post("/api/support", json=bad).status_code, 422, bad)
+            n = len((tmp / "inbox.jsonl").read_text(encoding="utf-8").splitlines())
+            self.assertEqual(self.c.post("/api/support", json={**good, "website": "http://spam"}).status_code, 200)
+            self.assertEqual(len((tmp / "inbox.jsonl").read_text(encoding="utf-8").splitlines()), n)  # bot: not stored
+            with mock.patch.object(server, "SUPPORT_MAX_BYTES", 10):
+                self.assertEqual(self.c.post("/api/support", json=good).status_code, 503)
+        self.assertNotIn("support", [p.name for p in Path(server.BASE / "web").iterdir()])  # never served
 
     def test_path_traversal(self):
         self.assertEqual(self.c.get("/api/file/..%2f..%2fserver.py", headers=H).status_code, 404)
@@ -265,7 +342,7 @@ class Api(unittest.TestCase):
 
     # ---------- known open defects ----------
 
-    @unittest.expectedFailure  # TTS-BUG-005: subtitles never use engine word timings
+    # TTS-BUG-005 (fixed): engine word timings requested
     def test_requests_word_boundaries(self):
         async def no_chunks():
             return
@@ -283,12 +360,12 @@ class Api(unittest.TestCase):
     def test_non_numeric_speed_is_4xx(self):  # TTS-BUG-014 (fixed)
         self.assertEqual(self.tts(text="hi", speed="fast").status_code, 422)
 
-    @unittest.expectedFailure  # TTS-BUG-019: GET /api/file creates a directory per arbitrary session id
+    # TTS-BUG-019 (fixed): reads never create session directories
     def test_file_get_does_not_create_session_dir(self):
         self.c.get("/api/file/x.mp3?s=brandnewsession42")
         self.assertFalse((server.DATA / "brandnewsession42").exists())
 
-    @unittest.expectedFailure  # TTS-BUG-012: duplicate voice display names
+    # TTS-BUG-012 (fixed): Multilingual voices keep their tag
     def test_voice_display_names_unique(self):
         names = [v["name"] for v in self.c.get("/api/voices").json()["voices"]]
         self.assertEqual(len(names), len(set(names)), names)

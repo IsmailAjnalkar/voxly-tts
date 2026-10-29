@@ -1,12 +1,11 @@
 {
-  "name": "tests",
-  "version": "1.0.0",
-  "description": "",
-  "main": "lang_test.js",
+  "name": "voxly-tests",
+  "private": true,
+  "description": "UI-language tests; needs the app running at $BASE (default http://localhost:8077)",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node lang_test.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  }
 }

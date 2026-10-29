@@ -68,5 +68,25 @@
     });
   }
 
-  window.subAlert = function (key) { var v = str(key); alert(v != null ? v : key); };
+  // Support form: the browser validates (required, email, length) before this runs.
+  var form = document.getElementById("supform");
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var btn = form.querySelector('button[type="submit"]'), out = document.getElementById("supstatus");
+      btn.disabled = true;
+      out.textContent = "";
+      fetch("/api/support", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: form.email.value, topic: form.topic.value,
+                               message: form.message.value, website: form.website.value })
+      }).then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        out.textContent = str("sup_ok");
+        form.reset();
+      }).catch(function () {
+        out.textContent = str("sup_err");
+      }).then(function () { btn.disabled = false; });
+    });
+  }
 })();

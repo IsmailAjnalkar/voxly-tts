@@ -38,7 +38,8 @@ PROXY = os.environ.get("https_proxy") or os.environ.get("HTTPS_PROXY") or None
 import edge_tts
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -62,9 +63,12 @@ log = logging.getLogger("voxly")
 
 @asynccontextmanager
 async def _lifespan(app):
-    sweep = asyncio.create_task(_voice_sweep_loop())  # hides voices the service won't speak
+    tasks = [asyncio.create_task(_cleanup_loop())]
+    if os.environ.get("VOXLY_VOICE_SWEEP", "1") != "0":  # off in CI: no provider calls
+        tasks.append(asyncio.create_task(_voice_sweep_loop()))  # hides voices the service won't speak
     yield
-    sweep.cancel()
+    for t in tasks:
+        t.cancel()
 
 
 app = FastAPI(title="Voxly TTS", docs_url=None, redoc_url=None, openapi_url=None,
@@ -103,12 +107,15 @@ async def _invalid_request(request, exc):
 _voices_cache: dict = {"data": None, "ts": 0}
 
 
-def _session_dir(session_id: str) -> Path:
+def _session_dir(session_id: str, create: bool = False) -> Path:
+    # Only generation creates a session dir; reads and deletes never do
+    # (any ?s=<random> used to leave an empty directory behind).
     sid = re.sub(r"[^a-zA-Z0-9_-]", "", session_id or "")[:64]
     if not sid:
         raise HTTPException(400, "Missing session id")
     d = DATA / sid
-    d.mkdir(exist_ok=True)
+    if create:
+        d.mkdir(exist_ok=True)
     return d
 
 
@@ -117,6 +124,16 @@ def _cleanup_old_sessions() -> None:
     for d in DATA.iterdir():
         if d.is_dir() and now - d.stat().st_mtime > SESSION_TTL:
             shutil.rmtree(d, ignore_errors=True)
+
+
+async def _cleanup_loop() -> None:
+    # On a timer, so files expire even when nobody is generating.
+    while True:
+        try:
+            await asyncio.to_thread(_cleanup_old_sessions)
+        except Exception:
+            log.exception("session cleanup failed")
+        await asyncio.sleep(600)
 
 
 # --- Voices ---------------------------------------------------------------
@@ -129,9 +146,11 @@ async def get_voices() -> list[dict]:
         locale = v["Locale"]                       # e.g. en-US
         lang_code, _, country = locale.partition("-")
         friendly = v.get("FriendlyName", v["ShortName"])
-        # Display name like the catalog convention: "Aria - US"
-        short = (v["ShortName"].replace(locale + "-", "")
-                 .replace("Neural", "").replace("Multilingual", ""))
+        # Display name like the catalog convention: "Aria - US". Multilingual
+        # voices keep a tag: "Andrew - US" existed twice without it.
+        short = v["ShortName"].replace(locale + "-", "").replace("Neural", "")
+        if short.endswith("Multilingual"):
+            short = short[:-len("Multilingual")] + " (Multilingual)"
         display = f"{short} - {country}"
         out.append({
             "id": v["ShortName"],
@@ -217,7 +236,8 @@ async def api_voices():
     for v in voices:
         langs.setdefault(v["language"], 0)
         langs[v["language"]] += 1
-    return {"voices": voices, "languages": sorted(langs.keys()), "count": len(voices)}
+    return JSONResponse({"voices": voices, "languages": sorted(langs.keys()), "count": len(voices)},
+                        headers={"Cache-Control": "public, max-age=3600"})
 
 
 # --- Synthesis --------------------------------------------------------------
@@ -277,19 +297,46 @@ def fmt_ts(seconds: float, srt: bool) -> str:
     return f"{h:02d}:{m:02d}:{s:02d}{sep}{ms:03d}"
 
 
+_TAIL_PUNCT = re.compile(r"[^\w\s]*")
+_SENTENCE_END = (".", "!", "?", "…", "。", "！", "？", "؟", "।")
+_ABBREV = {"mr.", "mrs.", "ms.", "dr.", "prof.", "st.", "vs.", "e.g.", "i.e."}  # "." not a sentence end
+
+
+def align_words(text: str, words: list[tuple[float, float, str]]) -> list[tuple[float, float, str]]:
+    """Map engine word timings back onto the source text. The engine drops
+    punctuation ("Hello, world!" -> Hello / world) and CJK words carry no
+    spaces, so each token becomes the source slice up to and including its
+    trailing punctuation, with a leading space only where the source had one."""
+    out, pos = [], 0
+    for s, e, w in words:
+        w = w.strip()
+        i = text.find(w, pos) if w else -1
+        if i < 0:  # engine rewrote the token: keep its own text
+            out.append((s, e, " " + w))
+            continue
+        j = i + len(w)
+        j += len(_TAIL_PUNCT.match(text, j).group())
+        piece = text[pos:j]
+        out.append((s, e, (" " if piece[:1].isspace() else "") + piece.strip()))
+        pos = j
+    return out
+
+
 def build_subtitles(words: list[tuple[float, float, str]], srt: bool) -> str:
-    """words: (start_s, end_s, text). Group into cues of <= 10 words."""
+    """words: (start_s, end_s, token) from align_words. Cues of <= 10 tokens,
+    also split at sentence ends."""
     cues, cur = [], []
     for w in words:
         cur.append(w)
-        if len(cur) >= 10 or w[2].endswith((".", "!", "?", "。")):
+        tok = w[2].strip()
+        if len(cur) >= 10 or (tok.endswith(_SENTENCE_END) and tok.lower() not in _ABBREV):
             cues.append(cur); cur = []
     if cur:
         cues.append(cur)
     lines = []
     for i, cue in enumerate(cues, 1):
         start, end = cue[0][0], cue[-1][1]
-        text = " ".join(w[2] for w in cue)
+        text = "".join(w[2] for w in cue).strip()
         if srt:
             lines.append(f"{i}\n{fmt_ts(start, True)} --> {fmt_ts(end, True)}\n{text}\n")
         else:
@@ -321,7 +368,8 @@ async def _probe_duration(path: Path) -> float:
 
 
 async def synth_segment(text: str, voice: str, rate: str, pitch: str) -> tuple[bytes, list]:
-    comm = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch, proxy=PROXY)
+    comm = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch, proxy=PROXY,
+                                boundary="WordBoundary")  # default is SentenceBoundary
     audio, words = b"", []
     async for chunk in comm.stream():
         if chunk["type"] == "audio":
@@ -371,8 +419,7 @@ async def api_tts(body: TTSRequest, x_session_id: str = Header(default="")):
         raise HTTPException(422, VOICE_UNAVAILABLE)
     rate, pitch = f"{body.speed:+d}%", f"{body.pitch:+d}Hz"
 
-    _cleanup_old_sessions()
-    sdir = _session_dir(x_session_id)
+    sdir = _session_dir(x_session_id, create=True)
     item_id = uuid.uuid4().hex[:12]
     work = sdir / f"tmp-{item_id}"
     work.mkdir(exist_ok=True)
@@ -393,7 +440,9 @@ async def api_tts(body: TTSRequest, x_session_id: str = Header(default="")):
             raise HTTPException(502, "Synthesis returned no audio")
         part.write_bytes(audio)
         dur = await _probe_duration(part)
-        if not words:
+        if words:
+            words = align_words(seg["text"], words)
+        else:
             # Speech service sent no word boundaries: estimate timings
             # proportionally from the real segment duration so the
             # SRT/VTT subtitles are never empty.
@@ -403,7 +452,7 @@ async def api_tts(body: TTSRequest, x_session_id: str = Header(default="")):
             t = 0.0
             for tok, wgt in zip(toks, weights):
                 span = dur * wgt / total
-                words.append((t, t + span, tok))
+                words.append((t, t + span, " " + tok))
                 t += span
         return part, dur, words
 
@@ -437,12 +486,14 @@ async def api_tts(body: TTSRequest, x_session_id: str = Header(default="")):
         raise
     except edge_tts.exceptions.NoAudioReceived:
         # Either the voice itself is gone upstream, or the text's script
-        # doesn't fit it (e.g. Hindi text on an English voice). A probe tells.
+        # doesn't fit it (e.g. Hindi text on an English voice), or the voice is
+        # flaky (sk-SK-Lukas: fails the request, answers the probe). The probe
+        # rules out the first; the other two look the same, so name both.
         # Not hidden here: one failure can be a flaky voice; the sweep decides.
         if not await _voice_alive(engine):
             raise HTTPException(422, VOICE_UNAVAILABLE)
-        raise HTTPException(422, "This voice can't read this text. Choose a Voice Language "
-                                 "that matches the language of your text.")
+        raise HTTPException(422, "The speech service returned no audio for this text. Check that the "
+                                 "Voice Language matches the language of your text, or try again.")
     except Exception:
         # Details go to the log, not to anonymous clients.
         log.exception("synthesis failed (voice=%s, chars=%d)", voice, len(text))
@@ -468,7 +519,7 @@ async def api_file(name: str, s: str = "", x_session_id: str = Header(default=""
     # so the session id may arrive as the ?s= query parameter instead.
     sdir = _session_dir(x_session_id or s)
     p = (sdir / re.sub(r"[^a-zA-Z0-9_.-]", "", name)).resolve()
-    if sdir.resolve() not in p.parents or not p.exists():
+    if not sdir.is_dir() or sdir.resolve() not in p.parents or not p.is_file():
         raise HTTPException(404, "Not found")
     return FileResponse(p)
 
@@ -487,32 +538,106 @@ async def health():
     return {"ok": True, "app": "voxly"}
 
 
-# Per-language URLs, mirroring the reference site's scheme: /en/, /es/,
-# /zh-CN/ ... Every page is reachable under each language prefix; the page
-# itself boots in that language (client-side). Only exact known codes and
-# page names are registered, so nothing else is swallowed.
+# --- Support inbox ----------------------------------------------------------
+# Messages from /support.html are appended to support/inbox.jsonl (outside
+# web/ and data/, so never served and never swept). Read it on the server.
+SUPPORT_DIR = BASE / "support"
+SUPPORT_MAX_BYTES = 5_000_000  # refuse new mail rather than fill the disk
+
+
+class SupportRequest(BaseModel):
+    email: str = Field(max_length=254, pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+    topic: Literal["generation", "voice", "bug", "business", "other"] = "other"
+    message: str = Field(min_length=10, max_length=5000)
+    website: str = ""  # honeypot: hidden from people, filled in by bots
+
+
+@app.post("/api/support")
+async def api_support(body: SupportRequest):
+    if body.website:
+        return {"ok": True}  # bot: pretend success, store nothing
+    SUPPORT_DIR.mkdir(exist_ok=True)
+    inbox = SUPPORT_DIR / "inbox.jsonl"
+    if inbox.exists() and inbox.stat().st_size > SUPPORT_MAX_BYTES:
+        log.error("support inbox full (%d bytes)", inbox.stat().st_size)
+        raise HTTPException(503, "The support inbox is full, please try again later")
+    line = json.dumps({"ts": int(time.time()), "email": body.email.strip(), "topic": body.topic,
+                       "message": body.message.strip()}, ensure_ascii=False)
+    with inbox.open("a", encoding="utf-8") as f:
+        f.write(line + "\n")
+    log.warning("support message received (topic=%s)", body.topic)  # shows up in the journal
+    return {"ok": True}
+
+
+# --- Pages ------------------------------------------------------------------
+# Every page is served at / and under each UI-language prefix (/es/, /zh-CN/
+# ...). The server fills in lang/dir, the canonical URL and hreflang
+# alternates, so crawlers see each language without running JavaScript.
+SITE = "https://text-2-speech.com"
 _UI_CODES = ["en", "zh", "zh-TW", "ar", "cs", "da", "de", "es", "fa", "fr",
              "hi", "hu", "id", "it", "ja", "ko", "nl", "no", "pl", "pt",
              "ru", "sv", "th", "tr", "vi"]
-_PATH_OF_UI = {"zh": "zh-CN"}  # URL segment for a UI code, when different
+_PATH_OF_UI = {"zh": "zh-CN"}            # URL segment for a UI code, when different
+_HREFLANG = {"zh": "zh-CN", "pt": "pt-BR"}  # the pt UI is Brazilian Portuguese
+_RTL = {"ar", "fa"}
 _PAGES = ["tutorial.html", "donate.html", "support.html", "auth.html",
           "privacy.html", "terms.html"]
+_INDEXED = ["", "tutorial.html", "donate.html", "support.html", "privacy.html", "terms.html"]
 _WEBDIR = BASE / "web"
+_page_cache: dict = {}
 
 
-def _serve_page(name: str):
-    return FileResponse(_WEBDIR / name)
+def _url(code: str | None, page: str) -> str:
+    return f"{SITE}/{_PATH_OF_UI.get(code, code)}/{page}" if code else f"{SITE}/{page}"
 
 
-for _ui in _UI_CODES:
-    _seg = _PATH_OF_UI.get(_ui, _ui)
-    app.get(f"/{_seg}", include_in_schema=False)(
-        lambda: _serve_page("index.html"))
-    app.get(f"/{_seg}/", include_in_schema=False)(
-        lambda: _serve_page("index.html"))
-    for _page in _PAGES:
-        app.get(f"/{_seg}/{_page}", include_in_schema=False)(
-            lambda page=_page: _serve_page(page))
+def _page(name: str, code: str | None = None) -> HTMLResponse:
+    key = (name, code)
+    if key not in _page_cache:
+        html = (_WEBDIR / name).read_text(encoding="utf-8")
+        page = "" if name == "index.html" else name
+        if page in _INDEXED:
+            links = f'<link rel="canonical" href="{_url(code, page)}">' + "".join(
+                f'<link rel="alternate" hreflang="{_HREFLANG.get(c, c)}" href="{_url(c, page)}">'
+                for c in _UI_CODES) + f'<link rel="alternate" hreflang="x-default" href="{_url(None, page)}">'
+            html = re.sub(r'<link rel="canonical" href="[^"]*">', lambda m: links, html, count=1)
+        if code:
+            html = html.replace('<html lang="en"', f'<html lang="{code}"'
+                                + (' dir="rtl"' if code in _RTL else ""), 1)
+        _page_cache[key] = html
+    return HTMLResponse(_page_cache[key])
+
+
+def _page_route(name: str, code: str | None):
+    # A closure with NO parameters. A default-argument lambda (lambda page=...)
+    # becomes a query parameter in FastAPI: ?page=../server.py read any file.
+    async def handler():
+        return _page(name, code)
+    return handler
+
+
+for _code in [None] + _UI_CODES:
+    _prefix = f"/{_PATH_OF_UI.get(_code, _code)}" if _code else ""
+    for _route in ([_prefix, _prefix + "/"] if _code else ["/"]):
+        app.get(_route, include_in_schema=False)(_page_route("index.html", _code))
+    for _name in _PAGES:
+        app.get(f"{_prefix}/{_name}", include_in_schema=False)(_page_route(_name, _code))
+
+
+@app.get("/sitemap.xml", include_in_schema=False)
+async def sitemap():
+    urls = "".join(f"<url><loc>{_url(c, p)}</loc></url>" for p in _INDEXED for c in [None] + _UI_CODES)
+    return Response('<?xml version="1.0" encoding="UTF-8"?>\n'
+                    f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n',
+                    media_type="application/xml")
+
+
+@app.exception_handler(StarletteHTTPException)
+async def _not_found_page(request, exc):
+    # Browsers get an HTML 404 page; the API keeps JSON errors.
+    if exc.status_code == 404 and not request.url.path.startswith("/api/"):
+        return HTMLResponse((_WEBDIR / "not-found.html").read_text(encoding="utf-8"), status_code=404)
+    return JSONResponse({"detail": exc.detail}, status_code=exc.status_code, headers=exc.headers)
 
 
 app.mount("/", StaticFiles(directory=str(BASE / "web"), html=True), name="web")

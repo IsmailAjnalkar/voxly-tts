@@ -1,0 +1,192 @@
+TC_ID,Dimension,Area,Test Case,Type,Environment,Method,Expected,Actual,Status,Evidence,Defect
+TC-C01,CORE,Input,Empty text rejected,Negative,Production,API + browser,400 / Generate disabled,400 'Text is empty'; buttons disabled,PASS,evidence/prod_api_results.json; browser_run.log,
+TC-C02,CORE,Input,Whitespace-only text rejected,Negative,Production,API,400,400 'Text is empty',PASS,evidence/prod_api_results.json,
+TC-C03,CORE,Input,One character,Boundary,Production,API + ffprobe,Playable audio,200; 1.87 s MP3,PASS,evidence/prod_api_results.json,
+TC-C04,CORE,Input,One word,Positive,Production,API + ffprobe + STT,Playable audio; STT matches,200; 1.61 s; WER 0,PASS,evidence/prod_wer.json,
+TC-C05,CORE,Input,Full paragraph (167 chars),Positive,Production,API + ffprobe + STT,Playable audio; STT matches,200; 11.06 s; WER 0,PASS,evidence/prod_wer.json,
+TC-C06,CORE,Input,999 / 1000 / 1001 character boundary,Boundary,Production,Code review + API (1001),No 1000-char limit exists in client or server,1001 chars -> 200 (91 s audio); no limit at 1000 to bracket,PASS,server.py:198-216; evidence/prod_api_results.json,
+TC-C07,CORE,Input,3000 characters,Boundary,Local,API,200 within timeout,200 in 25.0 s,PASS,Local run log (see AUTOMATION_COVERAGE_REPORT.md),
+TC-C08,CORE,Input,6000 characters,Boundary,Local,API,200 within timeout,200 in 39.7 s (5.3 s below the 45 s timeout),PARTIAL,Local run log,TTS-BUG-003
+TC-C09,CORE,Input,10000 characters,Boundary,Local,API,200,200 in 23.0 s (latency varies run to run),PASS,Local run log,
+TC-C10,CORE,Input,20000 characters (FAQ: no fixed limit),Boundary,Local,API,200 or clear documented limit,502 'Synthesis failed: TimeoutError' after 45.07 s,FAIL,evidence/local_stress.json,TTS-BUG-003
+TC-C11,CORE,Input,60000 characters,Boundary,Local,API,200 or clear 413,502 TimeoutError after 45.0 s,FAIL,evidence/local_stress.json,TTS-BUG-003
+TC-C12,CORE,Input,Unicode + emoji + typographic quotes,Positive,Production,API + STT,Audio generated; text preserved,200; snippet preserved exactly; emoji spoken as 'grinning face',PASS,evidence/prod_api_results.json,
+TC-C13,CORE,Input,Numbers / currency / dates / abbreviations,Positive,Production,API + STT,Correct readings,STT: 'March 14 2026 ... $1234.56 ... 99 euros ... 7.45 p.m. ... Dr. Smith NASA FBI',PASS,audit/scripts/acr.py output in AI_AUDIO_QUALITY_REPORT.md,
+TC-C14,CORE,Input,HTML/JS-looking text,Security/Positive,Production,API + code review,Treated as plain text; never rendered as HTML,200; spoken literally; UI escapes '<' in snippet (index.html:570),PASS,evidence/prod_api_results.json,
+TC-C15,CORE,Input,[break:Xs] markers insert silence,Positive,Production,API + SRT,2 s and 0.5 s gaps,8.69 s audio; SRT gap 2.136->4.136 and 6.320->6.820,PASS,evidence/subtitles/breaks.srt,
+TC-C16,CORE,Input,Break-only input,Negative,Production,API,400 nothing to say,200 and a 3.0 s silent MP3,FAIL,evidence/prod_api_results.json,TTS-BUG-009
+TC-C17,CORE,Input,Multiple paragraphs / tabs / leading-trailing spaces in generation,Positive,Production,—,Generated correctly,Not exercised in a generation request,NOT TESTED,,
+TC-C18,CORE,Input,Right-to-left text (Arabic / Hebrew),Positive,Production,API + STT,Correct speech,Arabic CER 0.13; Hebrew WER 0,PASS,evidence/prod_wer.json,
+TC-C19,CORE,Output,MP3 output decodes,Positive,Production,ffprobe,MP3 decodable; duration matches metadata,mp3 24 kHz mono ~48 kbps; all durations match API metadata,PASS,evidence/prod_api_results.json (probe),
+TC-C20,CORE,Output,WAV output decodes,Positive,Production,ffprobe,PCM WAV,pcm_s16le 24 kHz mono 11.064 s,PASS,evidence/prod_api_results.json,
+TC-C21,CORE,Controls,Speed/pitch change the output,Positive,Production,API,Shorter audio at +50%,11.06 s -> 7.39 s at speed +50,PASS,evidence/prod_api_results.json,
+TC-C22,CORE,Voice,Unknown voice rejected,Negative,Production,API,400,400 'Unknown voice',PASS,evidence/prod_api_results.json,
+TC-C23,CORE,Voice,Missing voice rejected,Negative,Production,API,400,400 'Unknown voice',PASS,evidence/prod_api_results.json,
+TC-C24,CORE,Output,Unsupported format rejected,Negative,Production,API,400,400 'Format must be mp3 or wav',PASS,evidence/prod_api_results.json,
+TC-C25,CORE,Voice,Text language differs from voice language (Hindi text + en-US voice),Negative,Production,API + browser,Speech or a clear actionable error,502 NoAudioReceived; UI says service may be unreachable,FAIL,evidence/prod_api_results.json; browser_run.log,TTS-BUG-007
+TC-C26,CORE,Generation,Duplicate-job prevention while generating,Negative,Production,Browser,Generate stays disabled; 1 request,Typing re-enabled Generate; 2 /api/tts requests sent,FAIL,evidence/browser_run.log,TTS-BUG-006
+TC-C27,CORE,Generation,Sequential requests in one session,Positive,Production,API,All succeed,26 successful generations in one session,PASS,evidence/prod_api_results.json,
+TC-C28,CORE,Generation,6 concurrent requests,Concurrency,Local,API,All 200,6x200 in 2.07 s wall,PASS,evidence/local_stress.json,
+TC-C29,CORE,Generation,Provider timeout handling,Failure-recovery,Local,API + browser,Bounded wait and clear message,Bounded (45 s) but message blames network,PARTIAL,evidence/local_stress.json,TTS-BUG-003; TTS-BUG-007
+TC-C30,CORE,Generation,Provider outage / rate limit / invalid response,Failure-recovery,—,—,Graceful 502 + message,Cannot induce provider failures in production; not mocked yet,NOT TESTED,,
+TC-C31,CORE,Generation,Refresh / network loss during generation,Failure-recovery,—,—,No orphan state,Not exercised,NOT TESTED,,
+TC-C32,CORE,Generation,Cancel a running generation,Positive,—,Code review,—,No cancel feature exists or is advertised,NOT APPLICABLE,,
+TC-C33,CORE,Input,Character counter accuracy,Positive,Production,Browser,'Hi 😀\nline2' = 10 characters,Shows 11 (counts UTF-16 units),FAIL,evidence/browser_run.log,TTS-BUG-024
+TC-C34,CORE,Input,Ctrl+B inserts [break:500ms],Positive,Production,Browser,Marker at cursor,'Hello[break:500ms]',PASS,evidence/browser_run.log,
+TC-C35,CORE,Input,Import .txt file,Positive,Production,Browser,Text loaded; counter updated,Loaded exactly; counter 33,PASS,audit/scripts/browser_extra.mjs output,
+TC-C36,CORE,Voice,Voice catalog loads,Positive,Production,API,322 voices / 75 languages; unique ids,322 / 75; ids unique,PASS,API probe,
+TC-C37,CORE,Voice,Language dropdown,Positive,Production,Browser,75 options; English default,75; en,PASS,evidence/browser_run.log,
+TC-C38,CORE,Voice,Gender filter,Positive,Production,Browser,Female + Male = All,24 + 23 = 47,PASS,evidence/browser_run.log,
+TC-C39,CORE,Voice,Voice search,Positive,Production,Browser,'aria' and 'united states' match,Both match,PASS,evidence/browser_run.log,
+TC-C40,CORE,Voice,Default voice preselected,Positive,Production,Browser,One voice selected,Natasha - AU,PASS,evidence/browser_run.log,
+TC-C41,CORE,Voice,Language switch refreshes voice list,Positive,Production,Browser,Hindi -> only IN voices,Madhur - IN / Swara - IN,PASS,evidence/browser_run.log,
+TC-C42,CORE,Player,Play / pause / seek-restart / volume 0-1 / natural end,Positive,Production,Browser media API,All states consistent,All true,PASS,evidence/browser_run.log,
+TC-C43,CORE,Player,Autoplay after generation,Positive,Production,Browser,Plays when ticked,paused=false,PASS,evidence/browser_run.log,
+TC-C44,CORE,Download,Download audio (MP3),Positive,Production,Browser,Non-empty correct file,c314a614848f.mp3 25724 B,PASS,evidence/browser_run.log,
+TC-C45,CORE,Download,Download SRT and VTT,Positive,Production,Browser,Non-empty,125 B / 129 B,PASS,evidence/browser_run.log,
+TC-C46,CORE,Download,Download before generation,Negative,Production,Browser,—,No download control exists before an item is generated,NOT APPLICABLE,,
+TC-C47,CORE,Results,Delete a result,Positive,Production,Browser + API,Item removed; file 404,Removed; file 404 after delete,PASS,evidence/browser_run.log; prod_api_results.json,
+TC-C48,CORE,Results,Results survive a page refresh in the same session,Positive,Production,Browser,Items still listed (session copy),0 items after reload,FAIL,evidence/browser_run.log,TTS-BUG-022
+TC-C49,CORE,Preview,Preview Audio (device voice),Positive,Production,Browser (speechSynthesis stubbed),Speaks cleaned text in voice locale,'Hello … world' lang en-AU,PASS,audit/scripts/browser_extra.mjs,
+TC-C50,CORE,Preview,Row Preview renders server sample,Positive,Production,Browser,200 + playback,200,PASS,audit/scripts/browser_extra.mjs,
+TC-C51,CORE,Download,Expired/missing audio URL,Negative,Production,API,404,404,PASS,evidence/prod_api_results.json,
+TC-C52,CORE,Player,Playback/download on a real mobile device,Device,—,—,Works,No physical device available,NOT TESTED,,
+TC-C53,CORE,Browser,Firefox / Safari compatibility,Browser,—,—,Works,Only Chromium executed,NOT TESTED,,
+TC-C54,CORE,Controls,Speed/pitch number box matches value sent,Positive,Production,Browser,Typed 33 -> 33 sent; 150 rejected,Slider 35 sent; number box keeps 150,FAIL,evidence/browser_run.log,TTS-BUG-018
+TC-A01,AUDIO,Language,English (en-US-AriaNeural),Language,Production,STT,Intelligible,WER 0.00,PASS,evidence/prod_wer.json,
+TC-A02,AUDIO,Language,Hindi (hi-IN-SwaraNeural),Language,Production,STT,Intelligible,WER 0.08 / CER 0.06,PASS,evidence/prod_wer.json,
+TC-A03,AUDIO,Language,Telugu (te-IN-ShrutiNeural),Language,Production,STT (phonetic),Intelligible,Whisper wrote Devanagari; phonetically matches source (subhodayam ... chala bagundi); script mismatch is an STT limitation,PASS,evidence/prod_wer.json,
+TC-A04,AUDIO,Language,Arabic (ar-SA-ZariyahNeural),Language,Production,STT,Intelligible,WER 0.20 / CER 0.13 (one word misheard by STT),PASS,evidence/prod_wer.json,
+TC-A05,AUDIO,Language,Spanish (es-ES-ElviraNeural),Language,Production,STT,Intelligible,WER 0.00,PASS,evidence/prod_wer.json,
+TC-A06,AUDIO,Language,French (fr-FR-DeniseNeural),Language,Production,STT,Intelligible,WER 0.00,PASS,evidence/prod_wer.json,
+TC-A07,AUDIO,Language,German (de-DE-KatjaNeural),Language,Production,STT,Intelligible,WER 0.00,PASS,evidence/prod_wer.json,
+TC-A08,AUDIO,Language,Chinese (zh-CN-XiaoxiaoNeural),Language,Production,STT,Intelligible,CER 0.11 (STT output in Traditional script),PASS,evidence/prod_wer.json,
+TC-A09,AUDIO,Language,Japanese (ja-JP-NanamiNeural),Language,Production,STT,Intelligible,CER 0.06,PASS,evidence/prod_wer.json,
+TC-A10,AUDIO,Language,Korean (ko-KR-SunHiNeural),Language,Production,STT,Intelligible,CER 0.00,PASS,evidence/prod_wer.json,
+TC-A11,AUDIO,Language,Hebrew (he-IL-HilaNeural),Language,Production,STT,Intelligible,WER 0.00,PASS,evidence/prod_wer.json,
+TC-A12,AUDIO,Language,Russian (ru-RU-SvetlanaNeural),Language,Production,STT,Intelligible,WER 0.00,PASS,evidence/prod_wer.json,
+TC-A13,AUDIO,Quality,No clipping,Integrity,Production,ffmpeg volumedetect,Peak < 0 dBFS,Peaks -1.6 to -5.2 dBFS,PASS,AI_AUDIO_QUALITY_REPORT.md,
+TC-A14,AUDIO,Quality,Long-text continuity (1001 chars / 37 sentences),Integrity,Production,silencedetect + STT,No dropped sentences,38 pause gaps for 37 sentences (consistent); Whisper proxy collapsed repeats (inconclusive),PASS,AI_AUDIO_QUALITY_REPORT.md,
+TC-A15,AUDIO,Subtitles,SRT/VTT use engine word timings (as advertised),Integrity,Local + Production,Library inspection + SRT,Word-level cue timing,Engine emits SentenceBoundary only; server estimates timings proportionally,FAIL,evidence/subtitles/para_en.srt,TTS-BUG-005
+TC-A16,AUDIO,Quality,Metadata duration equals decoded duration,Integrity,Production,ffprobe,Equal,Equal for all 23 files,PASS,evidence/prod_api_results.json,
+TC-A17,AUDIO,Quality,Special symbols 'cleaned up automatically' (FAQ),Claim,Production,STT,Emoji/tags not read aloud,Emoji read as 'grinning face'; tags read as 'script alert 1 slash script',PARTIAL,AI_AUDIO_QUALITY_REPORT.md,TTS-BUG-015
+TC-A18,AUDIO,Coverage,All 322 voices generate,Language,—,—,All produce audio,14 voices exercised,NOT TESTED,,
+TC-A19,AUDIO,Quality,Subjective naturalness (human listening),Subjective,—,—,MOS-style rating,No human listening performed,NOT TESTED,,
+TC-U01,UI,Responsive,Home at 320 px,Responsive,Production,Browser,No horizontal overflow,scrollWidth 320,PASS,screenshots/home_320.png,
+TC-U02,UI,Responsive,Home at 375 px,Responsive,Production,Browser,No overflow,OK,PASS,screenshots/home_375.png,
+TC-U03,UI,Responsive,Home at 390 px,Responsive,Production,Browser,No overflow,OK,PASS,screenshots/home_390.png,
+TC-U04,UI,Responsive,Home at 430 px,Responsive,Production,Browser,No overflow,OK,PASS,screenshots/home_430.png,
+TC-U05,UI,Responsive,Home at 768 px,Responsive,Production,Browser,No overflow,OK,PASS,screenshots/home_768.png,
+TC-U06,UI,Responsive,Home at 1024 px,Responsive,Production,Browser,No overflow,OK,PASS,screenshots/home_1024.png,
+TC-U07,UI,Responsive,Home at 1280 px,Responsive,Production,Browser,No overflow,OK,PASS,screenshots/home_1280.png,
+TC-U08,UI,Responsive,Home at 1440 px,Responsive,Production,Browser,No overflow,OK,PASS,screenshots/home_1440.png,
+TC-U09,UI,Responsive,Home at 1920 px,Responsive,Production,Browser,No overflow,OK,PASS,screenshots/home_1920.png,
+TC-U10,UI,Responsive,Sub-pages at 320 px,Responsive,Production,Browser,No overflow,scrollWidth 397 > 320; nav and language switcher clipped,FAIL,screenshots/sub_tutorial_375.png,TTS-BUG-017
+TC-U11,UI,Responsive,Header language select at 320 px,Responsive,Production,Visual,Readable,Clipped to 'Er',FAIL,screenshots/home_320.png,TTS-BUG-017
+TC-U12,UI,Navigation,Mobile burger menu,Mobile,Production,Browser,Toggles nav,Toggles,PASS,screenshots/mobile_nav_open.png,
+TC-U13,UI,Theme,Theme toggle persists,Positive,Production,Browser,Persists after reload,Persists,PASS,audit/scripts/browser_extra.mjs,
+TC-U14,UI,Content,FAQ expand/collapse all,Positive,Production,Browser,6 open / 0 open,6 / 0,PASS,audit/scripts/browser_extra.mjs,
+TC-U15,UI,Content,How-it-works tabs,Positive,Production,Browser,Pane switches,Switches,PASS,audit/scripts/browser_extra.mjs,
+TC-U16,UI,Branding,Brand consistent on all pages,Visual,Production,Browser,'Text 2 Speech' everywhere,6 sub-pages show 'Voxly',FAIL,screenshots/page_tutorial.png,TTS-BUG-013
+TC-U17,UI,Voice,No-match search empty state,UX,Production,Browser,Message shown,Blank list,FAIL,evidence/browser_run.log,TTS-BUG-025
+TC-U18,UI,Voice,Voice labels distinguishable,UX,Production,Browser,Unique labels,4 duplicate English labels,FAIL,evidence/browser_run.log,TTS-BUG-012
+TC-U19,UI,Errors,Error message actionable,UX,Production,Browser,Explains cause,Generic 'service may be unreachable' on validation errors,FAIL,evidence/browser_run.log,TTS-BUG-007
+TC-U20,UI,Consent,Cookie banner accept/decline remembered,Positive,Production,Browser,Remembered,Remembered,PASS,audit/scripts/browser_extra.mjs,
+TC-U21,UI,i18n,/es/tutorial.html localized,i18n,Production,Browser,lang=es,lang=es,PASS,evidence/browser_run.log,
+TC-U22,UI,i18n,/es/ home content localized,i18n,Production,Browser,FAQ/steps in Spanish,English FAQ/steps/use cases,FAIL,evidence/browser_run.log,TTS-BUG-023
+TC-U23,UI,i18n,/ar/ home right-to-left,i18n,Production,Browser,dir=rtl,dir empty (sub-pages do set rtl),FAIL,audit/scripts/browser_subpages.mjs,TTS-BUG-023
+TC-U24,UI,State,Loading state while generating,Positive,Production,Browser,Busy indicator,'Generating…',PASS,evidence/browser_run.log,
+TC-U25,UI,Mock,Account sign-in/create/forgot,Functional,Production,Browser,Real request or hidden,alert() only; 0 requests,FAIL,evidence/browser_run.log,TTS-BUG-016
+TC-U26,UI,Mock,Support contact form,Functional,Production,Browser,Message delivered,alert() only; 0 requests,FAIL,evidence/browser_run.log,TTS-BUG-016
+TC-U27,UI,Mock,Donate buttons,Functional,Production,Browser,Checkout or hidden,alert() only; 0 requests,FAIL,evidence/browser_run.log,TTS-BUG-016
+TC-U28,UI,Content,Footer friend links,Content,Production,Source,Real content,Placeholder 'Google' link,FAIL,web/index.html:320-321,TTS-BUG-029
+TC-P01,API,Health,GET /api/health,Positive,Production,API,200 JSON,200 {'ok':true},PASS,curl,
+TC-P02,API,Voices,GET /api/voices schema,Positive,Production,API,voices/languages/count,Valid; 322 unique ids,PASS,curl,
+TC-P03,API,TTS,Missing X-Session-Id,Negative,Production,API,400,400,PASS,evidence/prod_api_results.json,
+TC-P04,API,TTS,Malformed JSON,Negative,Production,API,4xx,500 Internal Server Error,FAIL,evidence/prod_api_results.json,TTS-BUG-014
+TC-P05,API,TTS,JSON array body,Negative,Production,API,4xx,500,FAIL,evidence/prod_api_results.json,TTS-BUG-014
+TC-P06,API,TTS,Non-numeric speed,Negative,Production,API,4xx,500,FAIL,evidence/prod_api_results.json,TTS-BUG-014
+TC-P07,API,TTS,Speed out of range (1000),Boundary,Production,API,400 or clamp to ±100,200 (unclamped),FAIL,evidence/prod_api_results.json,TTS-BUG-018
+TC-P08,API,TTS,Float speed 10.5,Boundary,Production,API,Accepted,200,PASS,evidence/prod_api_results.json,
+TC-P09,API,Files,Other session cannot read file,Authorization,Production,API,404,404,PASS,evidence/prod_api_results.json,
+TC-P10,API,Files,Own metadata JSON readable,Positive,Production,API,200,200,PASS,evidence/prod_api_results.json,
+TC-P11,API,Files,File without session,Negative,Production,API,400,400,PASS,evidence/prod_api_results.json,
+TC-P12,API,Items,DELETE idempotent on unknown id,Idempotency,Production,API,200,200,PASS,evidence/prod_api_results.json,
+TC-P13,API,Files,Correct Content-Type (audio/mpeg; audio/x-wav),Positive,Production,API,Correct,Correct,PASS,evidence/prod_api_results.json,
+TC-P14,API,Routing,Unknown route,Negative,Production,curl,404,404,PASS,curl,
+TC-P15,API,Robustness,Voice-catalog failure during POST /api/tts handled,Failure-recovery,Local,Code review,502 with message,get_voices() not wrapped in api_tts -> 500,FAIL,server.py:207,TTS-BUG-014
+TC-S01,SEC,Secrets,No API keys/tokens in frontend,Security,Production,grep + diff,None,None found,PASS,web/ (live == repo),
+TC-S02,SEC,Secrets,Provider credentials server-side only,Security,Production,Code review,Server-side,edge-tts runs only on the server,PASS,server.py,
+TC-S03,SEC,XSS,User text never injected as HTML,Security,Production,Code review + API,Escaped,Snippet escapes '<'; voice data from server,PASS,web/index.html:570,
+TC-S04,SEC,Access,Cross-session file access blocked,Security,Production,API,404,404,PASS,evidence/prod_api_results.json,
+TC-S05,SEC,Access,Path traversal on /api/file,Security,Production,API,404,404,PASS,evidence/prod_api_results.json,
+TC-S06,SEC,Abuse,Server-side input size limit,Security,Local + code,API,413/400 above a documented limit,Accepted 60000 chars; nginx allows 10 MB bodies,FAIL,server.py:198-216; deploy/nginx-voxy.conf:4,TTS-BUG-001
+TC-S07,SEC,Abuse,Rate limiting,Security,Production + code,API,429 after threshold,43 requests in ~1 min all served; no limiter in code or nginx,FAIL,evidence/prod_api_results.json,TTS-BUG-001
+TC-S08,SEC,Abuse,Total generated silence capped,Security,Local,API,Reject excessive total,663-char input -> 1801.6 s audio,FAIL,evidence/local_stress.json,TTS-BUG-002
+TC-S09,SEC,Headers,Security headers (HSTS/CSP/XCTO/XFO/Referrer-Policy),Security,Production,curl -D,Present,None present; Server version disclosed,FAIL,curl headers,TTS-BUG-020
+TC-S10,SEC,Transport,HTTP -> HTTPS redirect,Security,Production,curl,301,301 to https,PASS,curl,
+TC-S11,SEC,Transport,TLS 1.0 / 1.1 disabled,Security,Production,curl --tls-max,Refused,Refused,PASS,curl,
+TC-S12,SEC,Exposure,API docs hidden in production,Security,Production,curl,404,/docs /redoc /openapi.json -> 200,FAIL,curl,TTS-BUG-020
+TC-S13,SEC,Dependencies,No known-vulnerable dependencies,Supply chain,Local,pip-audit,0 findings,certifi 2026.7.22 PYSEC-2026-4320,FAIL,pip-audit output,TTS-BUG-021
+TC-S14,SEC,Retention,Generated files deleted after TTL,Privacy,Code review,Code review,Deleted after 2 h,Deleted only when a later /api/tts call runs cleanup; based on directory mtime,PARTIAL,server.py:68-72,TTS-BUG-019
+TC-S15,SEC,Abuse,GET cannot create server state,Security,Local,API,No directory created,25 GETs -> 25 directories,FAIL,evidence/local_stress.json,TTS-BUG-019
+TC-S16,SEC,CSRF,Cross-site simple POST rejected,Security,Production,curl (Origin: evil),Rejected,text/plain cross-origin POST -> 200,FAIL,curl,TTS-BUG-020
+TC-S17,SEC,Privacy,Privacy disclosures match behaviour,Privacy,Production,Source + network,Accurate,Claims analytics cookies (none exist); no mention of Microsoft as processor,FAIL,web/privacy.html; browser_extra,TTS-BUG-015
+TC-S18,SEC,Session,Session id unguessable,Security,Production,Code review,>=122-bit random,crypto.randomUUID,PASS,web/index.html:431,
+TC-S19,SEC,CORS,No permissive CORS,Security,Production,curl preflight,No ACAO for foreign origin,405; no ACAO header,PASS,curl,
+TC-S20,SEC,Errors,No internal exception text in responses,Security,Production,API,Generic message,'Synthesis failed: NoAudioReceived: ...' returned verbatim,FAIL,evidence/prod_api_results.json,TTS-BUG-020
+TC-F01,PERF,Web vitals,TTFB < 800 ms,Performance,Production,Navigation Timing,<800 ms,134 ms desktop / 91 ms mobile,PASS,evidence/browser_results.json,
+TC-F02,PERF,Web vitals,LCP < 2.5 s,Performance,Production,PerformanceObserver,<2.5 s,572 ms / 576 ms,PASS,evidence/browser_results.json,
+TC-F03,PERF,Web vitals,CLS < 0.1,Performance,Production,PerformanceObserver,<0.1,0.0245 / 0,PASS,evidence/browser_results.json,
+TC-F04,PERF,Web vitals,Interaction-to-paint < 200 ms (INP proxy),Performance,Production,Scripted click,<200 ms,8-9 ms,PASS,evidence/browser_results.json,
+TC-F05,PERF,Payload,Initial page weight,Performance,Production,Resource Timing,<500 KB,36 KB HTML (gzip) + 58 KB voices JSON,PASS,evidence/browser_results.json,
+TC-F06,PERF,Payload,/api/voices compressed,Performance,Production,curl,gzip/br,Uncompressed 58 KB,FAIL,evidence/browser_results.json,TTS-BUG-027
+TC-F07,PERF,Generation,Short-text generation latency,Performance,Production,API timing,p90 < 3 s,median 0.91 s; p90 1.69 s; max 5.66 s (n=23),PASS,evidence/prod_api_results.json,
+TC-F08,PERF,Download,Audio download latency,Performance,Production,API timing,<1 s,median 0.32 s; max 0.63 s,PASS,evidence/prod_api_results.json,
+TC-F09,PERF,Concurrency,6 parallel generations,Performance,Local,API,No errors,6/6 in 2.07 s,PASS,evidence/local_stress.json,
+TC-F10,PERF,Concurrency,Event loop stays responsive during heavy request,Performance,Local,Health probe,<100 ms,health max 5.9 s; 3 of ~36 probes completed,FAIL,evidence/local_stress.json,TTS-BUG-004
+TC-F11,PERF,Generation,Long-text latency well below timeout,Performance,Local,API timing,Margin > 50%,6000 chars 39.7 s vs 45 s timeout,FAIL,Local run log,TTS-BUG-003
+TC-F12,PERF,Transport,HTTP/2,Performance,Production,curl ALPN,h2,http/1.1 only,FAIL,curl,TTS-BUG-027
+TC-F13,PERF,Soak,Memory/disk growth over time,Reliability,—,—,Stable,No soak test (no staging),NOT TESTED,,
+TC-F14,PERF,Load,Load test at agreed concurrency,Load,—,—,SLO met,No staging environment or approved limits,BLOCKED,,
+TC-D01,AUTH,Isolation,Session isolation of generated files,Data integrity,Production,API,Isolated,Isolated,PASS,evidence/prod_api_results.json,
+TC-D02,AUTH,Integrity,Delete removes all artifacts,Data integrity,Production,API,All gone,Audio 404 after delete,PASS,evidence/prod_api_results.json,
+TC-D03,AUTH,Retention,TTL cleanup runs independently,Data integrity,Code review,Code review,Scheduled cleanup,Cleanup only piggybacks on /api/tts,PARTIAL,server.py:68-72,TTS-BUG-019
+TC-D04,AUTH,Accounts,Signup / login / logout / reset / profile,Functional,Production,Browser,—,Front-end mock only; accounts are not a current product requirement,NOT IMPLEMENTED,web/auth.html,TTS-BUG-016
+TC-D05,AUTH,Billing,Credits / quotas / checkout / webhooks,Functional,—,Code review,—,No billing; free product,NOT APPLICABLE,,
+TC-X01,A11Y,Automated,axe WCAG 2.2 AA - home (dark),Accessibility,Production,axe-core,0 violations,label(4) nested-interactive(47) color-contrast(6) target-size(6),FAIL,evidence/browser_results.json,TTS-BUG-008; TTS-BUG-010; TTS-BUG-011
+TC-X02,A11Y,Automated,axe - tutorial,Accessibility,Production,axe-core,0,0,PASS,evidence/browser_results.json,
+TC-X03,A11Y,Automated,axe - privacy,Accessibility,Production,axe-core,0,0,PASS,evidence/browser_results.json,
+TC-X04,A11Y,Automated,axe - terms,Accessibility,Production,axe-core,0,0,PASS,evidence/browser_results.json,
+TC-X05,A11Y,Automated,axe - donate,Accessibility,Production,axe-core,0,color-contrast(4) label(1),FAIL,evidence/browser_results.json,TTS-BUG-010; TTS-BUG-011
+TC-X06,A11Y,Automated,axe - support,Accessibility,Production,axe-core,0,color-contrast(1) select-name(1),FAIL,evidence/browser_results.json,TTS-BUG-010; TTS-BUG-011
+TC-X07,A11Y,Automated,axe - auth,Accessibility,Production,axe-core,0,color-contrast(1),FAIL,evidence/browser_results.json,TTS-BUG-010
+TC-X08,A11Y,Keyboard,Select a voice with keyboard (Enter/Space),Accessibility,Production,Browser,Selects,No effect,FAIL,evidence/browser_run.log,TTS-BUG-008
+TC-X09,A11Y,Status,Toast/errors announced (aria-live),Accessibility,Production,DOM,aria-live or role=status/alert,None,FAIL,evidence/browser_run.log,TTS-BUG-011
+TC-X10,A11Y,Contrast,axe - home light theme,Accessibility,Production,axe-core,0,color-contrast(57),FAIL,evidence/browser_results.json,TTS-BUG-010
+TC-X11,A11Y,Reflow,400% zoom equivalent (320 CSS px) home,Accessibility,Production,Browser,No 2-D scroll,No overflow,PASS,screenshots/home_320.png,
+TC-X12,A11Y,Manual,Screen reader walkthrough (NVDA/VoiceOver),Accessibility,—,—,Usable,Not performed,NOT TESTED,,
+TC-X13,A11Y,Motion,prefers-reduced-motion,Accessibility,—,—,Respected,Not performed,NOT TESTED,,
+TC-X14,A11Y,Semantics,html lang attribute,Accessibility,Production,DOM,Set,Set on all pages,PASS,evidence/browser_results.json,
+TC-E01,SEO,Meta,Unique titles on all pages,SEO,Production,DOM,Unique,Unique,PASS,evidence/browser_results.json,
+TC-E02,SEO,Meta,Meta descriptions,SEO,Production,Source,Present on indexable pages,Present,PASS,web/*.html,
+TC-E03,SEO,Meta,Canonical URLs,SEO,Production,Source,Present,Present,PASS,web/*.html,
+TC-E04,SEO,Crawl,sitemap.xml valid,SEO,Production,curl,200 XML,200 application/xml; 6 URLs,PASS,curl,
+TC-E05,SEO,Crawl,robots.txt,SEO,Production,curl,200; references sitemap,OK,PASS,curl,
+TC-E06,SEO,Schema,JSON-LD parses,SEO,Production,json.loads,Valid,WebApplication + WebSite + FAQPage(6),PASS,web/index.html:24-37,
+TC-E07,SEO,Social,Open Graph / Twitter tags,SEO,Production,Source,Present,Present; og-image 200,PASS,curl,
+TC-E08,SEO,Redirects,HTTP -> HTTPS,SEO,Production,curl,301,301,PASS,curl,
+TC-E09,SEO,Redirects,www -> apex,SEO,Production,curl,301 to apex,https://www serves 200 duplicate,FAIL,curl,TTS-BUG-026
+TC-E10,SEO,Status,Unknown HTML path returns HTML 404,SEO,Production,curl,HTML 404 page,JSON {'detail':'Not Found'},FAIL,curl,TTS-BUG-026
+TC-E11,SEO,i18n,hreflang + language URLs in sitemap,SEO,Production,Source,Present for 25 language paths,Absent; canonical for /xx/ set only by JS,FAIL,web/sitemap.xml,TTS-BUG-023
+TC-E12,SEO,Links,Internal links resolve,SEO,Production,curl,200,All 7 pages + assets 200,PASS,curl,
+TC-E13,SEO,Content,llms.txt accurate,Content,Production,Source,Accurate,'runs entirely in the browser' and 'word-level timings' are false,FAIL,web/llms.txt,TTS-BUG-015
+TC-E14,SEO,Legal,Privacy and Terms pages present,Content,Production,curl,200,200,PASS,curl,
+TC-E15,SEO,Contact,Working contact channel,Content,Production,Browser,Delivers,Support form is a mock,FAIL,evidence/browser_run.log,TTS-BUG-016
+TC-T01,TEST,Tests,Existing tests run from a clean checkout,DevOps,Local,node,Runs,jsdom undeclared; hardcoded port 8077; npm test exits 1,FAIL,tests/package.json,TTS-BUG-028
+TC-T02,TEST,Tests,Existing tests pass (deps supplied),DevOps,Local,node,Pass,LANG TESTS: 26 passed 0 failed,PASS,AUTOMATION_COVERAGE_REPORT.md,
+TC-T03,TEST,CI,CI pipeline,DevOps,Repo,Inspection,Present,No .github / CI config,FAIL,repo tree,TTS-BUG-028
+TC-T04,TEST,Monitoring,Error reporting / uptime monitoring,DevOps,Production,Source + network,Present,None found,FAIL,web/*.html; server.py,TTS-BUG-028
+TC-T05,TEST,Health,Health endpoint,DevOps,Production,curl,200,200,PASS,curl,
+TC-T06,TEST,Deploy,Reproducible deploy scripts,DevOps,Repo,Review,Present,setup.sh + systemd + nginx + Dockerfile,PASS,deploy/,
+TC-T07,TEST,Deploy,Production matches repo HEAD,DevOps,Production,diff,Identical,All 12 web files identical (ignoring CRLF),PASS,diff output,

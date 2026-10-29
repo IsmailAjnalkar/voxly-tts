@@ -9,5 +9,13 @@ jobs:
         with: { python-version: "3.12" }
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
       - run: pip install -r requirements.txt httpx pip-audit
-      - run: python -m unittest tests/test_api.py -v
+      - name: API tests (speech provider mocked)
+        run: python -m unittest tests/test_api.py -v
       - run: pip-audit -r requirements.txt
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - name: UI-language tests (fetches the public voice catalog; no synthesis)
+        run: |
+          VOXLY_VOICE_SWEEP=0 uvicorn server:app --port 8077 &
+          for i in $(seq 1 30); do curl -sf localhost:8077/api/health && break; sleep 1; done
+          cd tests && npm ci && npm test

@@ -1,0 +1,44 @@
+empty text                                    400   0.28s PASS {'detail': 'Text is empty'}
+whitespace-only text                          400   0.24s PASS {'detail': 'Text is empty'}
+unknown voice                                 400   0.30s PASS {'detail': 'Unknown voice'}
+missing voice                                 400   0.25s PASS {'detail': 'Unknown voice'}
+bad format ogg                                400   0.46s PASS {'detail': 'Format must be mp3 or wav'}
+only break markers                            200   0.42s FAIL {'id': '0c39cd472b7d', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 3.0, 'snippet': ' ', 'created
+missing session id                            400   0.41s PASS {'detail': 'Missing session id'}
+malformed JSON (expect 4xx)                   500   0.31s FAIL Internal Server Error
+JSON array body (expect 4xx)                  500   0.30s FAIL Internal Server Error
+speed non-numeric (expect 4xx)                500   0.31s FAIL Internal Server Error
+speed out of range 1000 (expect 4xx/clamp)    200   0.63s FAIL {'id': '4ee5b8ecdfe7', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 0.84, 'snippet': 'hello', 'cr
+speed float 10.5                              200   0.70s PASS {'id': '1cb2254c40b1', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 1.87, 'snippet': 'hello', 'cr
+one char                                      200   0.91s PASS {'id': '31ddd53d3988', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 1.87, 'snippet': 'a', 'create
+one word                                      200   0.72s PASS {'id': 'f8955f3393f1', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 1.61, 'snippet': 'Hello', 'cr
+paragraph mp3                                 200   0.92s PASS {'id': '473188fee3bb', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 11.06, 'snippet': 'The quick 
+paragraph wav                                 200   0.73s PASS {'id': 'e28a75e39c33', 'voice': 'en-US-AriaNeural', 'format': 'wav', 'duration': 11.06, 'snippet': 'The quick 
+html/js-looking text                          200   0.69s PASS {'id': '70a94c089ef5', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 4.9, 'snippet': '<script>aler
+emoji + unicode                               200   0.60s PASS {'id': '0ad8cfcbafcc', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 4.44, 'snippet': 'Café déjà v
+numbers/currency/dates                        200   0.91s PASS {'id': '30d369d182e9', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 15.22, 'snippet': 'On 03/14/2
+break markers                                 200   1.69s PASS {'id': '4754e5d9f20e', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 8.69, 'snippet': 'First sente
+speed+50 pitch-20                             200   0.88s PASS {'id': '950f09e69cbd', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 7.39, 'snippet': 'The quick b
+1001 chars                                    200   1.49s PASS {'id': '5ffed385fcd9', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 91.34, 'snippet': 'Testing le
+lang en en-US-AriaNeural                      200   0.68s PASS {'id': 'ddae0b87fa96', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 4.08, 'snippet': 'Good mornin
+lang hi hi-IN-SwaraNeural                     200   0.58s PASS {'id': '04c1b02c1091', 'voice': 'hi-IN-SwaraNeural', 'format': 'mp3', 'duration': 5.02, 'snippet': 'सुप्रभात। 
+lang te te-IN-ShrutiNeural                    200   1.83s PASS {'id': 'f53b75e9e655', 'voice': 'te-IN-ShrutiNeural', 'format': 'mp3', 'duration': 4.32, 'snippet': 'శుభోదయం. 
+lang ar ar-SA-ZariyahNeural                   200   1.57s PASS {'id': 'ec8ffd7ec687', 'voice': 'ar-SA-ZariyahNeural', 'format': 'mp3', 'duration': 4.56, 'snippet': 'صباح الخ
+lang es es-ES-ElviraNeural                    200   0.82s PASS {'id': '7ef70c8088ef', 'voice': 'es-ES-ElviraNeural', 'format': 'mp3', 'duration': 4.34, 'snippet': 'Buenos dí
+lang fr fr-FR-DeniseNeural                    200   0.82s PASS {'id': '3c4d02f1b532', 'voice': 'fr-FR-DeniseNeural', 'format': 'mp3', 'duration': 3.98, 'snippet': "Bonjour. 
+lang de de-DE-KatjaNeural                     200   1.19s PASS {'id': 'c6511ee08623', 'voice': 'de-DE-KatjaNeural', 'format': 'mp3', 'duration': 4.39, 'snippet': 'Guten Morg
+lang zh zh-CN-XiaoxiaoNeural                  200   0.74s PASS {'id': '7d518f842267', 'voice': 'zh-CN-XiaoxiaoNeural', 'format': 'mp3', 'duration': 3.29, 'snippet': '早上好。今天天
+lang ja ja-JP-NanamiNeural                    200   1.43s PASS {'id': '10b7f419a233', 'voice': 'ja-JP-NanamiNeural', 'format': 'mp3', 'duration': 4.49, 'snippet': 'おはようございます
+lang ko ko-KR-SunHiNeural                     200   1.04s PASS {'id': '766f462c7c7e', 'voice': 'ko-KR-SunHiNeural', 'format': 'mp3', 'duration': 4.58, 'snippet': '좋은 아침입니다. 
+lang he he-IL-HilaNeural                      200   2.06s PASS {'id': '2769a980751f', 'voice': 'he-IL-HilaNeural', 'format': 'mp3', 'duration': 4.42, 'snippet': 'בוקר טוב. מ
+lang ru ru-RU-SvetlanaNeural                  200   5.66s PASS {'id': '79b3f8c9a954', 'voice': 'ru-RU-SvetlanaNeural', 'format': 'mp3', 'duration': 4.85, 'snippet': 'Доброе 
+mismatch: hindi text on en voice              502   0.58s FAIL {'detail': 'Synthesis failed: NoAudioReceived: No audio was received. Please verify that your parameters are c
+item for isolation tests                      200   0.69s PASS {'id': '0b7851852f40', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 2.14, 'snippet': 'Isolation c
+other session cannot read file                404   0.20s PASS {'detail': 'Not found'}
+path traversal encoded                        404   0.17s PASS {'detail': 'Not Found'}
+own metadata json readable                    200   0.25s PASS {'id': '0b7851852f40', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 2.14, 'snippet': 'Isolation c
+delete item                                   200   0.21s PASS {'ok': True}
+file gone after delete                        404   0.17s PASS {'detail': 'Not found'}
+delete nonexistent (idempotent)               200   0.34s PASS {'ok': True}
+file without session                          400   0.23s PASS {'detail': 'Missing session id'}
+TOTAL 43 PASS 37 FAIL 6

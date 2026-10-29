@@ -7,11 +7,30 @@ word-timed SRT/VTT subtitles, [break:...] pause markers, session-only results,
 of the classic free-TTS tool layout — original code, copy and branding.
 
 ## Run locally
+Needs Python 3.12 and ffmpeg on PATH.
 ```bash
-cd ~/workspace/projects/voxly-tts
-.venv/bin/uvicorn server:app --port 8137
-# open http://localhost:8137/
+python -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/uvicorn server:app --port 8137        # open http://localhost:8137/
 ```
+Set `VOXLY_VOICE_SWEEP=0` to skip the startup voice-health sweep (one short
+synthesis per voice) when you don't need it.
+
+## Tests
+```bash
+.venv/bin/pip install httpx pytest
+.venv/bin/python -m pytest tests/test_api.py          # API, speech provider mocked
+VOXLY_VOICE_SWEEP=0 .venv/bin/uvicorn server:app --port 8077 &
+cd tests && npm ci && npm test                        # UI-language tests (BASE=http://localhost:8077)
+```
+CI (`.github/workflows/ci.yml`) runs both plus `pip-audit`. Browser, audio and
+load checks against the real service live in `audit/scripts/` (see
+`audit/AUTOMATION_COVERAGE_REPORT.md`).
+
+## Support inbox
+Messages from the Support page are appended to `support/inbox.jsonl` on the
+server (one JSON object per line: time, email, topic, message). It is never
+served over HTTP; read it on the host, e.g.
+`tail -n 20 /opt/voxly/support/inbox.jsonl`.
 
 ## Architecture
 - `server.py` — FastAPI backend.

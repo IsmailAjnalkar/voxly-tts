@@ -1,0 +1,646 @@
+{
+ "viewports": [
+  {
+   "width": 320,
+   "scrollW": 320,
+   "clientW": 320,
+   "hOverflow": false,
+   "over": [],
+   "smallTargets": [
+    "a \"👤\" 24x38",
+    "input#speed_on \"on\" 16x16",
+    "input#speed \"0\" 139x16",
+    "input#pitch_on \"on\" 16x16",
+    "input#pitch \"0\" 139x16",
+    "input#autoplay \"on\" 16x16",
+    "a \"Home\" 105x19",
+    "a \"Tutorial\" 105x19",
+    "a \"Donate\" 105x19",
+    "a \"Support\" 105x19"
+   ],
+   "navVisible": false,
+   "burgerVisible": true,
+   "genBtnVisible": true
+  },
+  {
+   "width": 375,
+   "scrollW": 375,
+   "clientW": 375,
+   "hOverflow": false,
+   "over": [],
+   "smallTargets": [
+    "a \"👤\" 24x38",
+    "input#speed_on \"on\" 16x16",
+    "input#speed \"0\" 190x16",
+    "input#pitch_on \"on\" 16x16",
+    "input#pitch \"0\" 190x16",
+    "input#autoplay \"on\" 16x16",
+    "a \"Home\" 105x19",
+    "a \"Tutorial\" 105x19",
+    "a \"Donate\" 105x19",
+    "a \"Support\" 105x19"
+   ],
+   "navVisible": false,
+   "burgerVisible": true,
+   "genBtnVisible": true
+  },
+  {
+   "width": 390,
+   "scrollW": 390,
+   "clientW": 390,
+   "hOverflow": false,
+   "over": [],
+   "smallTargets": [
+    "a \"👤\" 24x38",
+    "input#speed_on \"on\" 16x16",
+    "input#speed \"0\" 205x16",
+    "input#pitch_on \"on\" 16x16",
+    "input#pitch \"0\" 205x16",
+    "input#autoplay \"on\" 16x16",
+    "a \"Home\" 105x19",
+    "a \"Tutorial\" 105x19",
+    "a \"Donate\" 105x19",
+    "a \"Support\" 105x19"
+   ],
+   "navVisible": false,
+   "burgerVisible": true,
+   "genBtnVisible": true
+  },
+  {
+   "width": 430,
+   "scrollW": 430,
+   "clientW": 430,
+   "hOverflow": false,
+   "over": [],
+   "smallTargets": [
+    "a \"👤\" 24x38",
+    "input#speed_on \"on\" 16x16",
+    "input#speed \"0\" 245x16",
+    "input#pitch_on \"on\" 16x16",
+    "input#pitch \"0\" 245x16",
+    "input#autoplay \"on\" 16x16",
+    "a \"Home\" 105x19",
+    "a \"Tutorial\" 105x19",
+    "a \"Donate\" 105x19",
+    "a \"Support\" 105x19"
+   ],
+   "navVisible": false,
+   "burgerVisible": true,
+   "genBtnVisible": true
+  },
+  {
+   "width": 768,
+   "scrollW": 768,
+   "clientW": 768,
+   "hOverflow": false,
+   "over": [],
+   "smallTargets": [
+    "input#speed_on \"on\" 16x16",
+    "input#speed \"0\" 583x16",
+    "input#pitch_on \"on\" 16x16",
+    "input#pitch \"0\" 583x16",
+    "input#autoplay \"on\" 16x16",
+    "a \"Home\" 105x19",
+    "a \"Tutorial\" 105x19",
+    "a \"Donate\" 105x19",
+    "a \"Support\" 105x19",
+    "a \"Privacy Policy\" 100x19"
+   ],
+   "navVisible": false,
+   "burgerVisible": true,
+   "genBtnVisible": true
+  },
+  {
+   "width": 1024,
+   "scrollW": 1024,
+   "clientW": 1024,
+   "hOverflow": false,
+   "over": [],
+   "smallTargets": [
+    "a \"Home\" 41x20",
+    "a \"Tutorial\" 50x20",
+    "a \"Donate\" 48x20",
+    "a \"Support\" 53x20",
+    "input#speed_on \"on\" 16x16",
+    "input#speed \"0\" 195x16",
+    "input#pitch_on \"on\" 16x16",
+    "input#pitch \"0\" 195x16",
+    "input#autoplay \"on\" 16x16",
+    "a \"Home\" 105x19"
+   ],
+   "navVisible": true,
+   "burgerVisible": false,
+   "genBtnVisible": true
+  },
+  {
+   "width": 1280,
+   "scrollW": 1280,
+   "clientW": 1280,
+   "hOverflow": false,
+   "over": [],
+   "smallTargets": [
+    "a \"Home\" 41x20",
+    "a \"Tutorial\" 50x20",
+    "a \"Donate\" 48x20",
+    "a \"Support\" 53x20",
+    "input#speed_on \"on\" 16x16",
+    "input#speed \"0\" 195x16",
+    "input#pitch_on \"on\" 16x16",
+    "input#pitch \"0\" 195x16",
+    "input#autoplay \"on\" 16x16",
+    "a \"Home\" 105x19"
+   ],
+   "navVisible": true,
+   "burgerVisible": false,
+   "genBtnVisible": true
+  },
+  {
+   "width": 1440,
+   "scrollW": 1440,
+   "clientW": 1440,
+   "hOverflow": false,
+   "over": [],
+   "smallTargets": [
+    "a \"Home\" 41x20",
+    "a \"Tutorial\" 50x20",
+    "a \"Donate\" 48x20",
+    "a \"Support\" 53x20",
+    "input#speed_on \"on\" 16x16",
+    "input#speed \"0\" 195x16",
+    "input#pitch_on \"on\" 16x16",
+    "input#pitch \"0\" 195x16",
+    "input#autoplay \"on\" 16x16",
+    "a \"Home\" 105x19"
+   ],
+   "navVisible": true,
+   "burgerVisible": false,
+   "genBtnVisible": true
+  },
+  {
+   "width": 1920,
+   "scrollW": 1920,
+   "clientW": 1920,
+   "hOverflow": false,
+   "over": [],
+   "smallTargets": [
+    "a \"Home\" 41x20",
+    "a \"Tutorial\" 50x20",
+    "a \"Donate\" 48x20",
+    "a \"Support\" 53x20",
+    "input#speed_on \"on\" 16x16",
+    "input#speed \"0\" 195x16",
+    "input#pitch_on \"on\" 16x16",
+    "input#pitch \"0\" 195x16",
+    "input#autoplay \"on\" 16x16",
+    "a \"Home\" 105x19"
+   ],
+   "navVisible": true,
+   "burgerVisible": false,
+   "genBtnVisible": true
+  }
+ ],
+ "axe": {
+  "/": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "nodes": 6,
+    "sample": [
+     "button[data-g=\"All\"]",
+     ".badge",
+     "button[data-f=\"mp3\"]"
+    ]
+   },
+   {
+    "id": "label",
+    "impact": "critical",
+    "help": "Form elements must have labels",
+    "nodes": 4,
+    "sample": [
+     "#speed",
+     "#speed_num",
+     "#pitch"
+    ]
+   },
+   {
+    "id": "nested-interactive",
+    "impact": "serious",
+    "help": "Interactive controls must not be nested",
+    "nodes": 47,
+    "sample": [
+     "div[data-id=\"en-NG-AbeoNeural\"]",
+     "div[data-id=\"en-US-AnaNeural\"]",
+     "div[data-id=\"en-US-AndrewNeural\"]"
+    ]
+   },
+   {
+    "id": "target-size",
+    "impact": "serious",
+    "help": "All touch targets must be 24px large, or leave sufficient space",
+    "nodes": 6,
+    "sample": [
+     "div:nth-child(1) > a[data-i18n=\"nav_home\"][href=\"/\"]",
+     "div:nth-child(1) > a[data-i18n=\"nav_tutorial\"][href$=\"tutorial.html\"]",
+     "div:nth-child(1) > a[data-i18n=\"nav_donate\"][href$=\"donate.html\"]"
+    ]
+   }
+  ],
+  "/tutorial.html": [],
+  "/donate.html": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "nodes": 4,
+    "sample": [
+     ".card:nth-child(1) > button",
+     ".card:nth-child(2) > button",
+     ".card:nth-child(3) > button"
+    ]
+   },
+   {
+    "id": "label",
+    "impact": "critical",
+    "help": "Form elements must have labels",
+    "nodes": 1,
+    "sample": [
+     "input"
+    ]
+   }
+  ],
+  "/support.html": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "nodes": 1,
+    "sample": [
+     "button"
+    ]
+   },
+   {
+    "id": "select-name",
+    "impact": "critical",
+    "help": "Select element must have an accessible name",
+    "nodes": 1,
+    "sample": [
+     ".card:nth-child(4) > select"
+    ]
+   }
+  ],
+  "/auth.html": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "nodes": 1,
+    "sample": [
+     "button"
+    ]
+   }
+  ],
+  "/privacy.html": [],
+  "/terms.html": [],
+  "/ (light theme)": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "nodes": 57,
+    "sample": [
+     ".on[data-i18n=\"nav_home\"][href=\"/\"]",
+     "p[data-i18n=\"hero_sub\"]",
+     "button[data-g=\"All\"]"
+    ]
+   }
+  ]
+ },
+ "perf": {
+  "desktop": {
+   "ttfb": 134,
+   "domContentLoaded": 189,
+   "load": 494,
+   "htmlTransferKB": 36,
+   "fcp": 572,
+   "lcp": 572,
+   "cls": 0.0245,
+   "resources": [
+    {
+     "name": "/api/voices",
+     "kb": 58,
+     "ms": 160
+    }
+   ],
+   "voicesReadyMs": 624,
+   "interactionToPaintMs": 8
+  },
+  "mobile": {
+   "ttfb": 91,
+   "domContentLoaded": 545,
+   "load": 546,
+   "htmlTransferKB": 36,
+   "fcp": 576,
+   "lcp": 576,
+   "cls": 0,
+   "resources": [
+    {
+     "name": "/api/voices",
+     "kb": 58,
+     "ms": 160
+    }
+   ],
+   "voicesReadyMs": 613,
+   "interactionToPaintMs": 9
+  }
+ },
+ "e2e": [
+  {
+   "check": "cookie banner shown on first visit",
+   "result": true
+  },
+  {
+   "check": "language dropdown lists 75 languages",
+   "result": true,
+   "detail": 75
+  },
+  {
+   "check": "default language English",
+   "result": true
+  },
+  {
+   "check": "a default voice is preselected",
+   "result": true,
+   "detail": "Natasha - AU"
+  },
+  {
+   "check": "generate disabled on empty text",
+   "result": true
+  },
+  {
+   "check": "preview disabled on empty text",
+   "result": true
+  },
+  {
+   "check": "counter counts characters (emoji = 1 char, 'Hi 😀\\nline2' = 10)",
+   "result": false,
+   "detail": "11 characters (2 lines)"
+  },
+  {
+   "check": "gender filter partitions English voices",
+   "result": true,
+   "detail": {
+    "all": 47,
+    "fem": 24,
+    "male": 23
+   }
+  },
+  {
+   "check": "search 'aria' finds Aria",
+   "result": true,
+   "detail": [
+    "Aria - US"
+   ]
+  },
+  {
+   "check": "search 'united states' finds voices",
+   "result": true
+  },
+  {
+   "check": "no-match search shows an empty-state message",
+   "result": false,
+   "detail": "\"\""
+  },
+  {
+   "check": "voice labels are unique within English",
+   "result": false,
+   "detail": [
+    "Andrew - US",
+    "Ava - US",
+    "Brian - US",
+    "Emma - US"
+   ]
+  },
+  {
+   "check": "switching to Hindi lists Hindi voices",
+   "result": true,
+   "detail": [
+    "Madhur - IN",
+    "Swara - IN"
+   ]
+  },
+  {
+   "check": "keyboard Enter selects a focused voice row",
+   "result": false,
+   "detail": {
+    "target": "en-US-AndrewNeural",
+    "afterEnter": "en-AU-NatashaNeural"
+   }
+  },
+  {
+   "check": "keyboard Space selects a focused voice row",
+   "result": false
+  },
+  {
+   "check": "speed number box 33 -> value sent is 33",
+   "result": false,
+   "detail": {
+    "slider": "35",
+    "numberBox": "33"
+   }
+  },
+  {
+   "check": "speed number box rejects 150",
+   "result": false,
+   "detail": {
+    "numberBox": "150",
+    "slider": "100"
+   }
+  },
+  {
+   "check": "Ctrl+B inserts [break:500ms]",
+   "result": true
+  },
+  {
+   "check": "generate button shows busy state",
+   "result": true
+  },
+  {
+   "check": "generate stays disabled while a job runs (after typing)",
+   "result": false,
+   "detail": {
+    "enabledMidJob": true
+   }
+  },
+  {
+   "check": "only one /api/tts request per intended generation",
+   "result": false,
+   "detail": {
+    "requests": 2
+   }
+  },
+  {
+   "check": "result item rendered",
+   "result": true,
+   "detail": 2
+  },
+  {
+   "check": "audio element loads with duration > 0",
+   "result": true,
+   "detail": {
+    "duration": 4.2,
+    "src": "/api/file/c314a614848f.mp3?item=c314a614848f&s=edbc411f-d702-4af2-b687-ddc11cbdc38c",
+    "paused": false
+   }
+  },
+  {
+   "check": "autoplay starts playback (headless, no gesture policy)",
+   "result": true,
+   "detail": {
+    "paused": false
+   }
+  },
+  {
+   "check": "player play/pause/seek/volume/ended work",
+   "result": true,
+   "detail": {
+    "playing": true,
+    "stillPaused": true,
+    "restarted": true,
+    "v0": 0,
+    "ended": true
+   }
+  },
+  {
+   "check": "download produces non-empty file: c314a614848f.mp3",
+   "result": true,
+   "detail": 25724
+  },
+  {
+   "check": "download produces non-empty file: subtitles.srt",
+   "result": true,
+   "detail": 125
+  },
+  {
+   "check": "download produces non-empty file: subtitles.vtt",
+   "result": true,
+   "detail": 129
+  },
+  {
+   "check": "delete removes the item from the list",
+   "result": true
+  },
+  {
+   "check": "results survive a page refresh within the session (as 'kept for this browser session' implies)",
+   "result": false,
+   "detail": {
+    "afterReload": 0
+   }
+  },
+  {
+   "check": "Hindi text on English voice gives an actionable error",
+   "result": false,
+   "detail": "Generation failed: Synthesis failed: NoAudioReceived: No audio was received. Please verify that your parameters are correct. — the speech service may be unreachable from this network right now. Your text and settings are untouched; please try again shortly."
+  },
+  {
+   "check": "toast is announced to screen readers (aria-live/role)",
+   "result": false,
+   "detail": null
+  },
+  {
+   "check": "mobile burger toggles navigation",
+   "result": true
+  },
+  {
+   "check": "/es/tutorial.html renders Spanish",
+   "result": true,
+   "detail": "Tutorial"
+  },
+  {
+   "check": "/es/ home translates FAQ/steps content",
+   "result": false,
+   "detail": "Is Text 2 Speech free to use?▾"
+  },
+  {
+   "check": "/ar/ home sets dir=rtl",
+   "result": false,
+   "detail": ""
+  },
+  {
+   "check": "/auth.html primary action performs a real request",
+   "result": false,
+   "detail": {
+    "alert": "Accounts arrive with the public launch. Everything on Text 2 Speech already works signed-out.",
+    "requests": 0
+   }
+  },
+  {
+   "check": "/support.html primary action performs a real request",
+   "result": false,
+   "detail": {
+    "alert": "Thanks — the support inbox opens with the public launch. For now, the FAQ covers the common cases.",
+    "requests": 0
+   }
+  },
+  {
+   "check": "/donate.html primary action performs a real request",
+   "result": false,
+   "detail": {
+    "alert": "Donation checkout opens with the public launch. Thank you for offering!",
+    "requests": 0
+   }
+  }
+ ],
+ "console": [],
+ "pages": {
+  "/": {
+   "title": "Text 2 Speech — Free Text to Speech Online",
+   "brand": "Text 2 SpeechTurn written words into spe",
+   "h1": "Free Text to Speech Online",
+   "lang": "en",
+   "status": 200
+  },
+  "/tutorial.html": {
+   "title": "Text to Speech Tutorial — How to Make Voiceovers | Text 2 Speech",
+   "brand": "Voxly",
+   "h1": "Tutorial",
+   "lang": "en",
+   "status": 200
+  },
+  "/donate.html": {
+   "title": "Donate — Keep Text 2 Speech Free for Everyone | Text 2 Speech",
+   "brand": "Voxly",
+   "h1": "Donate",
+   "lang": "en",
+   "status": 200
+  },
+  "/support.html": {
+   "title": "Support & FAQ — Text 2 Speech Text to Speech Help",
+   "brand": "Voxly",
+   "h1": "Support",
+   "lang": "en",
+   "status": 200
+  },
+  "/auth.html": {
+   "title": "Account — Text 2 Speech",
+   "brand": "Voxly",
+   "h1": "Welcome back",
+   "lang": "en",
+   "status": 200
+  },
+  "/privacy.html": {
+   "title": "Privacy Policy — Text 2 Speech",
+   "brand": "Voxly",
+   "h1": "Privacy Policy",
+   "lang": "en",
+   "status": 200
+  },
+  "/terms.html": {
+   "title": "Terms of Service — Text 2 Speech",
+   "brand": "Voxly",
+   "h1": "Terms of Service",
+   "lang": "en",
+   "status": 200
+  }
+ }
+}

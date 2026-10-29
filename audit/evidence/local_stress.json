@@ -1,0 +1,47 @@
+{
+ "break_amplification": {
+  "input_chars": 663,
+  "status": 200,
+  "seconds": 8.91,
+  "audio_duration_s": 1801.61
+ },
+ "health_latency_during_amp": {
+  "n": 3,
+  "max_s": 5.904,
+  "median_s": 2.492
+ },
+ "large_20000": {
+  "status": 502,
+  "seconds": 45.07,
+  "result": "{\"detail\":\"Synthesis failed: TimeoutError: \"}"
+ },
+ "large_60000": {
+  "status": 502,
+  "seconds": 45.0,
+  "result": "{\"detail\":\"Synthesis failed: TimeoutError: \"}"
+ },
+ "concurrent_6": {
+  "wall_s": 2.07,
+  "statuses": [
+   200,
+   200,
+   200,
+   200,
+   200,
+   200
+  ],
+  "each_s": [
+   1.82,
+   2.06,
+   1.82,
+   1.18,
+   1.82,
+   0.88
+  ]
+ },
+ "dir_creation_by_get": {
+  "before": 10,
+  "after": 35,
+  "created": 25
+ }
+}
