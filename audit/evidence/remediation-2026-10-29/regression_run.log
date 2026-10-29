@@ -1,0 +1,42 @@
+===== 1. API tests (pytest)
+34 passed, 1 warning in 6.76s
+===== 2. lang_test (npm test)
+        Alex - PESelec
+===== 3. verify_full (a11y, keyboard, support, RTL, 404, subtitles)
+ALL PASSED
+===== 4. verify_ui (user-reported UI fixes)
+ALL PASSED
+===== 5. verify_day1 (limits, busy flag, CSP)
+(day1 done)
+===== 6. reported voices (after startup sweep)
+catalog after sweep: 311 voices, 75 languages
+ar-SY-AmanyNeural            HIDDEN  -> 422 This voice is currently unavailable from the speech service. Please choose another voice.
+cs-CZ-VlastaNeural           HIDDEN  -> 422 This voice is currently unavailable from the speech service. Please choose another voice.
+en-ZA-LeahNeural             HIDDEN  -> 422 This voice is currently unavailable from the speech service. Please choose another voice.
+en-SG-WayneNeural            HIDDEN  -> 422 This voice is currently unavailable from the speech service. Please choose another voice.
+fr-FR-EloiseNeural           HIDDEN  -> 422 This voice is currently unavailable from the speech service. Please choose another voice.
+iu-Cans-CA-SiqiniqNeural     listed  -> 200 2.28
+iu-Latn-CA-SiqiniqNeural     listed  -> 200 2.33
+iu-Cans-CA-TaqqiqNeural      listed  -> 200 2.3
+iu-Latn-CA-TaqqiqNeural      listed  -> 200 2.33
+mn-MN-YesuiNeural            HIDDEN  -> 422 This voice is currently unavailable from the speech service. Please choose another voice.
+ta-SG-AnbuNeural             HIDDEN  -> 422 This voice is currently unavailable from the speech service. Please choose another voice.
+ta-LK-KumarNeural            HIDDEN  -> 422 This voice is currently unavailable from the speech service. Please choose another voice.
+ta-MY-SuryaNeural            HIDDEN  -> 422 This voice is currently unavailable from the speech service. Please choose another voice.
+ta-IN-ValluvarNeural         HIDDEN  -> 422 This voice is currently unavailable from the speech service. Please choose another voice.
+te-IN-MohanNeural            HIDDEN  -> 422 This voice is currently unavailable from the speech service. Please choose another voice.
+sk-SK-LukasNeural            listed  -> 422 This voice can't read this text. Choose a Voice Language that matches the language of your text.
+control: Hindi text on Aria -> 422 {'detail': "This voice can't read this text. Choose a Voice Language that matches the language of your text."}
+control: Tamil on Pallavi    -> 200
+===== 7. abuse/stress (local only)
+warm (200, {'id': '8be39703cb5f', 'voice': 'en-US-AriaNeural', 'format': 'mp3', 'duration': 1.87, 'snippet': 'warm up', 'created': 1793239898, 'audio': '/api/file/8be39703cb5f.mp3?item=8be39703cb5f', 
+amplification {'input_chars': 663, 'status': 400, 'seconds': 0.0, 'audio_duration_s': '{"detail":"Too many [break] markers (max 25)"}'} {'n': 1, 'max_s': 0.004, 'median_s': 0.004}
+large 20000 {'status': 422, 'seconds': 0.01, 'result': '{"detail":"text: String should have at most 5000 characters"}'}
+large 60000 {'status': 422, 'seconds': 0.02, 'result': '{"detail":"text: String should have at most 5000 characters"}'}
+concurrent {'wall_s': 1.18, 'statuses': [200, 200, 200, 200, 200, 200], 'each_s': [0.82, 1.17, 1.17, 1.01, 0.68, 1.15]}
+dirs {'before': 57, 'after': 57, 'created': 0}
+===== 8. 5,000-char generation: word-timed subtitles across chunks
+4807 chars -> 331.86 s audio; 102 cues; last cue ends 330.99 s (audio 331.86 s: gap 0.87 s); 48 cues end with sentence punctuation
+===== done
+
+[exited with code 0]

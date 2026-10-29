@@ -1,0 +1,37 @@
+PASS pitch 250 clamps to 100 on blur 
+PASS pitch -180 clamps to -100 on Enter 
+PASS typed 33 sends 33 (not the slider's 35); unblurred 250 sends 100 {"speed":33,"pitch":100}
+PASS 2 results survive a reload 
+PASS restored results show voice names, not ids "Natasha - AU"
+PASS restored results don't autoplay 
+PASS results survive a UI-language switch (/fr/) 
+PASS a deleted result stays deleted after reload 
+PASS restored download link still works 200
+PASS items missing on the server are dropped on restore 
+PASS import into an empty box needs no confirmation 
+PASS import over existing text asks first; Cancel keeps the draft "Replace the text in the box with the imported file?"
+PASS OK replaces the text (same file picked twice still fires) 
+PASS confirmation is localized (fr) "Remplacer le texte de la zone par le fichier importé ?"
+PASS 320px /fr/tutorial.html: brand, theme+account icons, no overflow, no wrapped links {"brand":"Text 2 Speech","overflow":false,"wrapped":[],"theme":true,"account":true,"on":"/fr/tutorial.html"}
+PASS 320px /fr/donate.html: brand, theme+account icons, no overflow, no wrapped links {"brand":"Text 2 Speech","overflow":false,"wrapped":[],"theme":true,"account":true,"on":"/fr/donate.html"}
+PASS 320px /fr/support.html: brand, theme+account icons, no overflow, no wrapped links {"brand":"Text 2 Speech","overflow":false,"wrapped":[],"theme":true,"account":true,"on":"/fr/support.html"}
+PASS 320px /fr/auth.html: brand, theme+account icons, no overflow, no wrapped links {"brand":"Text 2 Speech","overflow":false,"wrapped":[],"theme":true,"account":true,"on":null}
+PASS 320px /fr/privacy.html: brand, theme+account icons, no overflow, no wrapped links {"brand":"Text 2 Speech","overflow":false,"wrapped":[],"theme":true,"account":true,"on":null}
+PASS 320px /fr/terms.html: brand, theme+account icons, no overflow, no wrapped links {"brand":"Text 2 Speech","overflow":false,"wrapped":[],"theme":true,"account":true,"on":null}
+PASS 1280px /fr/tutorial.html: brand, theme+account icons, no overflow, no wrapped links {"brand":"Text 2 Speech","overflow":false,"wrapped":[],"theme":true,"account":true,"on":"/fr/tutorial.html"}
+PASS 1280px /fr/donate.html: brand, theme+account icons, no overflow, no wrapped links {"brand":"Text 2 Speech","overflow":false,"wrapped":[],"theme":true,"account":true,"on":"/fr/donate.html"}
+PASS 1280px /fr/support.html: brand, theme+account icons, no overflow, no wrapped links {"brand":"Text 2 Speech","overflow":false,"wrapped":[],"theme":true,"account":true,"on":"/fr/support.html"}
+PASS 1280px /fr/auth.html: brand, theme+account icons, no overflow, no wrapped links {"brand":"Text 2 Speech","overflow":false,"wrapped":[],"theme":true,"account":true,"on":null}
+PASS 1280px /fr/privacy.html: brand, theme+account icons, no overflow, no wrapped links {"brand":"Text 2 Speech","overflow":false,"wrapped":[],"theme":true,"account":true,"on":null}
+PASS 1280px /fr/terms.html: brand, theme+account icons, no overflow, no wrapped links {"brand":"Text 2 Speech","overflow":false,"wrapped":[],"theme":true,"account":true,"on":null}
+PASS sub-page theme toggle switches to light [true,"rgb(246, 244, 239)"]
+PASS theme carries to the home page 
+PASS and back: dark on sub-page after home toggle 
+PASS auth: notice shown, form disabled, no '#' links 
+PASS donate: notice shown, all 4 Donate buttons disabled 
+PASS support: live form, Send enabled, email + message required 
+PASS axe (excluding contrast) clean on donate []
+PASS axe (excluding contrast) clean on support []
+PASS axe (excluding contrast) clean on auth []
+PASS no page errors or CSP violations []
+ALL PASSED

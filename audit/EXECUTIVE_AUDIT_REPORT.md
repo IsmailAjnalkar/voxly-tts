@@ -1,5 +1,80 @@
 # Executive Audit Report — text-2-speech.com
 
+## Update 2026-10-29 — full remediation (branch `fix/full-remediation`, not deployed)
+
+| | Before (audit, 2026-10-28) | After (this branch + fixes already live) |
+|---|---:|---:|
+| **Readiness score** (untested = 0) | 63.8 / 100 | **96.2 / 100** |
+| Tested-only score | 67.9 / 100 | 97.5 / 100 |
+| Test coverage | 94.1 % (176/187) | 98.4 % (188/191) |
+| Open P0 / P1 / P2 / P3 | 0 / 3 / 9 / 17 | **0 / 0 / 0 / 0 fully open** — 3 partly fixed (see limitations) |
+| Test cases PASS / PARTIAL / FAIL / NOT TESTED | 116 / 5 / 55 / 10 (+1 blocked) | 180 / 7 / 1 / 3 |
+
+Method unchanged (`python audit/scripts/score.py [matrix]`): PASS 1, PARTIAL 0.5, FAIL 0; readiness also counts NOT TESTED/BLOCKED as 0. The before-matrix is kept at `evidence/TEST_CASE_MATRIX_2026-10-28_before.csv`. Every changed row cites a run in `evidence/remediation-2026-10-29/` or a named test.
+
+| Dimension | Weight | After (readiness) | Notes |
+|---|---:|---:|---|
+| Core TTS | 25 | 24.53 | Real-device playback not tested |
+| Audio & languages | 10 | 9.47 | No human listening panel |
+| UI/UX | 10 | 9.44 | Account/Donate are labelled placeholders; home marketing text English-only in other UIs |
+| API | 10 | 10.00 | |
+| Security & privacy | 15 | 15.00 | Includes the P0 below, fixed on the branch |
+| Performance | 10 | 8.93 | gzip/HTTP2 apply with the nginx config at deploy; no multi-hour soak |
+| Auth & data integrity | 5 | 5.00 | No accounts by design |
+| Accessibility | 5 | 4.67 | No screen-reader walkthrough |
+| SEO | 5 | 4.83 | www→apex applies with the nginx config at deploy |
+| Testing & ops | 5 | 4.29 | No external uptime monitoring yet |
+
+### New critical finding: TTS-BUG-030 (P0) — arbitrary file read, live in production
+`/es/tutorial.html?page=../server.py` returns the server source: the language page routes were registered as `lambda page=_page: ...`, and FastAPI turns default arguments into query parameters. Any file readable by the `voxly` user can be read (root-only files such as the TLS key are not). Reproduced on the exact production commit run locally; **not exploited against production**. Fixed with parameterless handlers + regression test, available two ways:
+- `hotfix/page-route-file-read` (`3f4d4fe`): one-file fix on top of production, deployable on its own in minutes;
+- included in `fix/full-remediation`.
+
+### What changed on the branch
+| Defect | Fix | Verified by |
+|---|---|---|
+| 030 P0 | Parameterless page handlers | `test_page_routes_ignore_query_params` (fails on old code) |
+| 005 | Engine word timings, mapped back onto the source text (punctuation, CJK spacing, abbreviations) | `test_subtitles_keep_punctuation_and_cjk_spacing`; 4,807 chars → 102 cues ending 0.87 s before the audio |
+| 008, 011 | Voice list as a native radio group, roving tab stop for Preview; labels, group names, `aria-pressed`, alert/status regions | Keyboard checks on Chromium, Firefox, WebKit |
+| 010 | Contrast-safe on-accent colours, darker light-theme accent | axe WCAG 2.2 AA: 0 violations, 8 pages × 2 themes × 2 widths × 3 engines |
+| 012 | "(Multilingual)" tag | `test_voice_display_names_unique`, lang_test |
+| 015 | Cookie banner removed (no cookies exist); privacy policy names Microsoft, retention, support-data handling (25 languages); FAQ symbol claim corrected | verify_full |
+| 016 | Live Support form → `POST /api/support` → `support/inbox.jsonl` (validation, honeypot, 5 MB cap, nginx 3 req/min) | `test_support_inbox`; browser send in en/fr |
+| 017, 018 | 320 px header wraps; pitch unit "Hz"; Firefox grid overflow fixed | 3-engine suite |
+| 019 | Reads never create session dirs; cleanup every 10 min | 25 probes → 0 dirs; `test_expired_sessions_are_cleaned` |
+| 023 | Server-side `lang`/`dir`, canonical + 26 hreflang per page, sitemap of 156 URLs, RTL for ar/fa | `test_localized_pages_server_side`, `test_sitemap_lists_every_language` |
+| 025, 029 | Empty-search message (25 languages); placeholder link removed | verify_full |
+| 026, 027 | HTML 404 (API stays JSON); voices cacheable 1 h; `deploy/nginx-voxy-tls.conf` adds www→apex 301, gzip for JS/CSS/JSON, HTTP/2, support rate limit | `test_html_404_for_pages_json_for_api`, `test_voices_cacheable` |
+| 028 | `npm ci && npm test` works (declared jsdom, `BASE` env); CI runs API + UI-language tests + pip-audit; README run/test steps | CI config; local runs |
+| — | Flaky-voice message names both causes; `prefers-reduced-motion` honoured | API tests |
+
+Already live from earlier today: 001–004, 006, 007, 009, 013, 014, 017 (sub-pages), 018, 020–022, 024, and the 15 broken voices.
+
+### Test evidence (this branch, real speech service unless noted)
+- API: **34/34** (`pytest tests/test_api.py`; provider mocked); 10 of the new tests fail against the old code.
+- UI-language: **25/25** (`npm test`).
+- Browser, full suite: **57/57 on Chromium, Firefox and WebKit** each (axe, keyboard, RTL, support form, 404, subtitles, no console/CSP errors).
+- Browser, earlier suites: user-reported UI fixes all pass; Day-1 fixes 10/10; reload/offline mid-generation 4/4; re-checks of touched features 6/6.
+- Voices: 311 listed / 75 languages; exactly the 11 dead voices hidden; Inuktitut works.
+- Abuse: 20k/60k chars → 422 in ≤ 0.02 s; break bomb → 400; 0 dirs from 25 probes.
+- Load (local, 1 worker): 10 users × 6 = 60 requests, twice: **0 errors**, p95 1.29 s, health p95 ≤ 16 ms, RSS 67.5 → 75.4 → 76.4 MB.
+
+### Remaining limitations (not faked as passes)
+1. **Accounts and donations** stay clearly labelled pre-launch placeholders: real sign-in or checkout needs an identity/payment provider and a product decision (TC-U25/U27 PARTIAL).
+2. **Home marketing content** (How-it-works, use cases, FAQ) is English in the 24 other UIs; now marked `lang="en"` so assistive tech reads it correctly. Needs professional translation (TC-U22 PARTIAL).
+3. **Uptime monitoring/alerting** is not set up (needs an external account): the only remaining FAIL (TC-T04).
+4. **Not tested:** real phones, human listening quality, screen-reader walkthrough. Multi-hour soak not run (short soak only).
+5. **Provider dependency:** still Microsoft's consumer Edge endpoint via an unofficial client — a business/legal decision, not a code defect.
+6. gzip, HTTP/2 and www→apex take effect only when `deploy/nginx-voxy-tls.conf` is installed (part of the deploy).
+
+### Decision
+- **Production as it runs now: NO-GO** — TTS-BUG-030 (P0) is live. Deploy `hotfix/page-route-file-read` immediately (approval required).
+- **This branch, once deployed with the nginx config and re-verified on production: CONDITIONAL GO** — readiness 96.2/100, no open P0/P1/P2. Conditions: (1) the post-deploy production checks pass; (2) uptime monitoring on `/api/health` and a one-sentence `/api/tts` is set up.
+
+---
+
+## Original audit (2026-10-28)
+
 | | |
 |---|---|
 | **APPLICATION** | text-2-speech.com ("Text 2 Speech", repo `IsmailAjnalkar/voxly-tts`) |

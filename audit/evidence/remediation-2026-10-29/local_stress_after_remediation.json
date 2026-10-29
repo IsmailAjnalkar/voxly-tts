@@ -1,0 +1,47 @@
+{
+ "break_amplification": {
+  "input_chars": 663,
+  "status": 400,
+  "seconds": 0.0,
+  "audio_duration_s": "{\"detail\":\"Too many [break] markers (max 25)\"}"
+ },
+ "health_latency_during_amp": {
+  "n": 1,
+  "max_s": 0.004,
+  "median_s": 0.004
+ },
+ "large_20000": {
+  "status": 422,
+  "seconds": 0.01,
+  "result": "{\"detail\":\"text: String should have at most 5000 characters\"}"
+ },
+ "large_60000": {
+  "status": 422,
+  "seconds": 0.02,
+  "result": "{\"detail\":\"text: String should have at most 5000 characters\"}"
+ },
+ "concurrent_6": {
+  "wall_s": 1.18,
+  "statuses": [
+   200,
+   200,
+   200,
+   200,
+   200,
+   200
+  ],
+  "each_s": [
+   0.82,
+   1.17,
+   1.17,
+   1.01,
+   0.68,
+   1.15
+  ]
+ },
+ "dir_creation_by_get": {
+  "before": 57,
+  "after": 57,
+  "created": 0
+ }
+}

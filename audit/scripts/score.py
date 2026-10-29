@@ -10,7 +10,8 @@ WEIGHTS = {"CORE": 25, "AUDIO": 10, "UI": 10, "API": 10, "SEC": 15,
            "PERF": 10, "AUTH": 5, "A11Y": 5, "SEO": 5, "TEST": 5}
 CREDIT = {"PASS": 1, "PARTIAL": 0.5, "FAIL": 0}
 
-rows = list(csv.DictReader(open(Path(__file__).parents[1] / "TEST_CASE_MATRIX.csv", encoding="utf-8")))
+SRC = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).parents[1] / "TEST_CASE_MATRIX.csv"
+rows = list(csv.DictReader(open(SRC, encoding="utf-8")))
 bad = [r["TC_ID"] for r in rows if None in r or r["Dimension"] not in WEIGHTS]
 assert not bad, f"malformed rows: {bad}"
 

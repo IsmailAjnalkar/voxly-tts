@@ -1,0 +1,59 @@
+engine: webkit
+PASS axe dark 1280px /: 0 violations []
+PASS axe dark 1280px /tutorial.html: 0 violations []
+PASS axe dark 1280px /donate.html: 0 violations []
+PASS axe dark 1280px /support.html: 0 violations []
+PASS axe dark 1280px /auth.html: 0 violations []
+PASS axe dark 1280px /privacy.html: 0 violations []
+PASS axe dark 1280px /terms.html: 0 violations []
+PASS axe dark 1280px /nope-404: 0 violations []
+PASS axe dark 375px /: 0 violations []
+PASS axe dark 375px /tutorial.html: 0 violations []
+PASS axe dark 375px /donate.html: 0 violations []
+PASS axe dark 375px /support.html: 0 violations []
+PASS axe dark 375px /auth.html: 0 violations []
+PASS axe dark 375px /privacy.html: 0 violations []
+PASS axe dark 375px /terms.html: 0 violations []
+PASS axe dark 375px /nope-404: 0 violations []
+PASS axe light 1280px /: 0 violations []
+PASS axe light 1280px /tutorial.html: 0 violations []
+PASS axe light 1280px /donate.html: 0 violations []
+PASS axe light 1280px /support.html: 0 violations []
+PASS axe light 1280px /auth.html: 0 violations []
+PASS axe light 1280px /privacy.html: 0 violations []
+PASS axe light 1280px /terms.html: 0 violations []
+PASS axe light 1280px /nope-404: 0 violations []
+PASS axe light 375px /: 0 violations []
+PASS axe light 375px /tutorial.html: 0 violations []
+PASS axe light 375px /donate.html: 0 violations []
+PASS axe light 375px /support.html: 0 violations []
+PASS axe light 375px /auth.html: 0 violations []
+PASS axe light 375px /privacy.html: 0 violations []
+PASS axe light 375px /terms.html: 0 violations []
+PASS axe light 375px /nope-404: 0 violations []
+PASS no cookie banner (there are no cookies) 
+PASS no placeholder friend links 
+PASS pitch unit shows Hz 
+PASS Tab from search lands on the selected voice radio 
+PASS ArrowDown selects the next voice and keeps focus on it {"first":"en-AU-NatashaNeural","after":"en-IN-NeerjaNeural"}
+PASS ArrowUp moves back 
+PASS Tab from the selected voice reaches its Preview button 
+PASS no-match search shows an empty-state message 
+PASS voice labels unique within English 
+PASS Multilingual tag shown 
+PASS gender buttons expose aria-pressed 
+PASS subtitles keep punctuation and split at sentences (real engine word timings) "1\r\n00:00:00,100 --> 00:00:01,112\r\nHello, world!\r\n\r\n2\r\n00:00:02,100 --> 00:00:03,038\r\nIt is a fine day.\r\n\r\n3\r\n00:00:04,112 --> 00:00:04,312\r\nBye.\r\n"
+PASS /ar/ home is right-to-left 
+PASS /ar/ English-only FAQ marked lang=en dir=ltr 
+PASS English home: FAQ has no lang override 
+PASS 320 px: no overflow, language select readable (>= 90 px) {"overflow":false,"w":110}
+PASS empty email is blocked by the browser (no request sent) 
+PASS malformed email is blocked 
+PASS valid message is sent and confirmed "Thanks — your message has been sent. We'll reply by email."
+PASS form cleared after sending 
+PASS confirmation is localized (fr) "Merci — votre message a été envoyé. Nous vous répondrons par e-mail."
+PASS unknown page: HTML 404 with a way home 
+PASS unknown API path stays JSON 404 [404,"application/json"]
+PASS privacy names Microsoft, states no cookies/analytics, no consent banner claims 
+PASS no page errors, console errors or CSP violations []
+ALL PASSED
