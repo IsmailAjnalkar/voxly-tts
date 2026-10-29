@@ -1,6 +1,6 @@
 # Text 2 Speech — Free Text to Speech Online
 
-> Text 2 Speech (at text-2-speech.com) is a free online text-to-speech tool that turns written text into natural, lifelike speech. It offers 322 AI voices in 75 languages, runs entirely in the browser with no sign-up, and lets users listen instantly or download the audio.
+> Text 2 Speech (at text-2-speech.com) is a free online text-to-speech tool that turns written text into natural, lifelike speech. It offers 322 AI voices in 75 languages, works in any browser with no sign-up, and lets users listen instantly or download the audio.
 
 Key facts:
 - Price: free. No account or sign-up is required.
@@ -9,7 +9,7 @@ Key facts:
 - Controls: speaking speed and pitch adjustment; [break:200ms] / [break:2s] pause markers insert exact silences (Ctrl+B inserts a 500ms pause).
 - Output formats: MP3 or WAV audio, plus SRT and VTT subtitles generated from word-level timings.
 - Preview: every voice can be previewed with a short sample before generating.
-- Character limit: no fixed limit per generation; chapter-by-chapter generation is recommended for book-length text.
+- Character limit: 5,000 characters per generation; longer text should be generated in parts.
 - Privacy: generated files exist only for the visitor's current browser session and are removed afterwards; downloads happen promptly by design.
 - Commercial use: personal and learning use is fully covered; anyone using generated audio commercially should make sure the use complies with applicable laws and the rights of the text converted.
 

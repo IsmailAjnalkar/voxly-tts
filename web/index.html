@@ -27,7 +27,7 @@
 {"@type":"WebSite","name":"Text 2 Speech","url":"https://text-2-speech.com/"},
 {"@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"Is Text 2 Speech free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes. Listening, generating and downloading are free and need no account. Personal and learning use is fully covered; if you use generated audio commercially, make sure your use complies with applicable laws and the rights of any text you convert."}},
-{"@type":"Question","name":"Is there a character limit per generation?","acceptedAnswer":{"@type":"Answer","text":"No fixed limit. A single generation accepts long text, but for book-length material we recommend generating chapter by chapter and stitching the files — each render is faster, and re-doing one chapter is cheaper than re-doing a book."}},
+{"@type":"Question","name":"Is there a character limit per generation?","acceptedAnswer":{"@type":"Answer","text":"Up to 5,000 characters per generation (roughly five to seven minutes of speech). For longer material such as book chapters, generate it in parts and stitch the files — each render is faster, and re-doing one part is cheaper than re-doing a book."}},
 {"@type":"Question","name":"What can I type into the text box?","acceptedAnswer":{"@type":"Answer","text":"Plain text in any of the supported languages, including mixed Chinese and English, numbers and common punctuation. Special symbols are cleaned up automatically, punctuation is interpreted for natural pausing, and [break:…] markers insert exact silences."}},
 {"@type":"Question","name":"How do I add a pause?","acceptedAnswer":{"@type":"Answer","text":"Insert a break marker anywhere in the text: [break:200ms] for a short beat, [break:2s] for two seconds. Pressing Ctrl+B inserts [break:500ms] at the cursor. Markers are silent in the output — you hear only the pause."}},
 {"@type":"Question","name":"Which formats can I download?","acceptedAnswer":{"@type":"Answer","text":"Audio in MP3 or WAV (chosen before generating), plus subtitles in SRT and VTT built from the engine's word-level timings — ideal for captioning videos with the same narration."}},
@@ -294,7 +294,7 @@
   <div id="faqlist">
     <!-- Static copy of the FAQ in the FAQ array below, so crawlers and AI answer engines can read it without running JavaScript. Keep the two in sync. -->
     <div class="faqitem"><button class="q" type="button">Is Text 2 Speech free to use?<span>▾</span></button><div class="a">Yes. Listening, generating and downloading are free and need no account. Personal and learning use is fully covered; if you use generated audio commercially, make sure your use complies with applicable laws and the rights of any text you convert.</div></div>
-    <div class="faqitem"><button class="q" type="button">Is there a character limit per generation?<span>▾</span></button><div class="a">No fixed limit. A single generation accepts long text, but for book-length material we recommend generating chapter by chapter and stitching the files — each render is faster, and re-doing one chapter is cheaper than re-doing a book.</div></div>
+    <div class="faqitem"><button class="q" type="button">Is there a character limit per generation?<span>▾</span></button><div class="a">Up to 5,000 characters per generation (roughly five to seven minutes of speech). For longer material such as book chapters, generate it in parts and stitch the files — each render is faster, and re-doing one part is cheaper than re-doing a book.</div></div>
     <div class="faqitem"><button class="q" type="button">What can I type into the text box?<span>▾</span></button><div class="a">Plain text in any of the supported languages, including mixed Chinese and English, numbers and common punctuation. Special symbols are cleaned up automatically, punctuation is interpreted for natural pausing, and [break:…] markers insert exact silences.</div></div>
     <div class="faqitem"><button class="q" type="button">How do I add a pause?<span>▾</span></button><div class="a">Insert a break marker anywhere in the text: [break:200ms] for a short beat, [break:2s] for two seconds. Pressing Ctrl+B inserts [break:500ms] at the cursor. Markers are silent in the output — you hear only the pause.</div></div>
     <div class="faqitem"><button class="q" type="button">Which formats can I download?<span>▾</span></button><div class="a">Audio in MP3 or WAV (chosen before generating), plus subtitles in SRT and VTT built from the engine's word-level timings — ideal for captioning videos with the same narration.</div></div>
@@ -378,7 +378,7 @@ function applyI18n(code){
 /* ---------- Content: steps / use cases / FAQ (original wording) ---------- */
 const STEPS = [
  {h:"Set voice options", b:"In the panel on the left, choose the voice language first — it should match the language of your text. Then narrow the list with the gender filter or the search box (handy when you know a voice name). Ticking Speed or Pitch unlocks a slider plus a number box: speed runs from −100% to +100%, pitch from −100% to +100%. Preview a few voices before committing; two voices in the same language can sound completely different."},
- {h:"Write or import text", b:"Type or paste into the big text box, or use Import File to load a .txt, .md or .text document. The counter at the top right tracks characters and lines as you type. There is no per-generation character limit, but very long documents synthesize faster in chapters. To insert a pause, type a break marker such as [break:500ms] or [break:2s] — or press Ctrl+B to drop one at the cursor. Plain punctuation is handled automatically: commas and full stops become natural pauses."},
+ {h:"Write or import text", b:"Type or paste into the big text box, or use Import File to load a .txt, .md or .text document. The counter at the top right tracks characters and lines as you type. Each generation takes up to 5,000 characters; split longer documents into parts. To insert a pause, type a break marker such as [break:500ms] or [break:2s] — or press Ctrl+B to drop one at the cursor. Plain punctuation is handled automatically: commas and full stops become natural pauses."},
  {h:"Preview or generate", b:"Preview Audio reads the text aloud instantly using a voice on your device, so you can sanity-check wording and pacing in seconds. Generate Audio renders the real thing on the server with the exact voice, speed and pitch you picked, in MP3 or WAV. Break markers are honored in the generated file (and quietly removed while previewing). If Autoplay after generation is ticked, each finished render starts playing by itself."},
  {h:"Download audio & subtitle files", b:"Every generated item lands in the Results list with its own player. Download the audio (MP3 or WAV, whichever you selected), and — because the engine reports word timings — matching subtitle files in both SRT and VTT formats, ready for video editors and players. Results live only for this browser session, exactly like a scratchpad: when you close the tab, they are gone, so download what you want to keep."}
 ];
@@ -392,7 +392,7 @@ const USECASES = [
 ];
 const FAQ = [
  {q:"Is Text 2 Speech free to use?",a:"Yes. Listening, generating and downloading are free and need no account. Personal and learning use is fully covered; if you use generated audio commercially, make sure your use complies with applicable laws and the rights of any text you convert."},
- {q:"Is there a character limit per generation?",a:"No fixed limit. A single generation accepts long text, but for book-length material we recommend generating chapter by chapter and stitching the files — each render is faster, and re-doing one chapter is cheaper than re-doing a book."},
+ {q:"Is there a character limit per generation?",a:"Up to 5,000 characters per generation (roughly five to seven minutes of speech). For longer material such as book chapters, generate it in parts and stitch the files — each render is faster, and re-doing one part is cheaper than re-doing a book."},
  {q:"What can I type into the text box?",a:"Plain text in any of the supported languages, including mixed Chinese and English, numbers and common punctuation. Special symbols are cleaned up automatically, punctuation is interpreted for natural pausing, and [break:…] markers insert exact silences."},
  {q:"How do I add a pause?",a:"Insert a break marker anywhere in the text: [break:200ms] for a short beat, [break:2s] for two seconds. Pressing Ctrl+B inserts [break:500ms] at the cursor. Markers are silent in the output — you hear only the pause."},
  {q:"Which formats can I download?",a:"Audio in MP3 or WAV (chosen before generating), plus subtitles in SRT and VTT built from the engine's word-level timings — ideal for captioning videos with the same narration."},
@@ -524,11 +524,16 @@ $("#fmtrow").addEventListener("click", e=>{ const b=e.target.closest("button"); 
 
 /* ---------- Text area ---------- */
 const ta = $("#text");
+const MAX_CHARS = 5000; // keep in sync with MAX_CHARS in server.py
+let BUSY = false;       // a generation is in flight
 function updateCounter(){
-  const v = ta.value, lines = v ? v.split("\n").length : 0;
-  $("#counter").textContent = `${v.length} ${T.chars} (${lines} ${T.lines})`;
+  // [...v] counts code points, as the server does (an emoji is 1, not 2)
+  const v = ta.value, n = [...v].length, lines = v ? v.split("\n").length : 0, over = n > MAX_CHARS;
+  const c = $("#counter");
+  c.textContent = `${n} / ${MAX_CHARS} ${T.chars} (${lines} ${T.lines})`;
+  c.style.color = over ? "#ff6b4a" : "";
   const empty = !v.trim();
-  $("#previewbtn").disabled = empty; $("#genbtn").disabled = empty;
+  $("#previewbtn").disabled = empty; $("#genbtn").disabled = empty || over || BUSY;
 }
 ta.addEventListener("input", updateCounter);
 ta.addEventListener("keydown", e=>{
@@ -586,12 +591,15 @@ $("#resultlist").addEventListener("click", async e=>{
   fetch("/api/items/"+id, {method:"DELETE", headers:H}).catch(()=>{});
 });
 $("#genbtn").onclick = async ()=>{
+  if(BUSY) return;
   const btn = $("#genbtn"); const old = btn.innerHTML;
-  btn.disabled = true; btn.innerHTML = "⏳ " + T.generating;
+  BUSY = true; btn.disabled = true; btn.innerHTML = "⏳ " + T.generating;
   try{
     const r = await fetch("/api/tts", { method:"POST", headers:H, body: JSON.stringify({
       text: ta.value, voice: selectedVoice, speed: speedVal(), pitch: pitchVal(), format: FORMAT })});
     const d = await r.json().catch(()=>({}));
+    if(r.status === 429){ toast("Too many requests — please wait a minute and try again."); return; }
+    if(r.status < 500 && !r.ok){ toast("Generation failed: " + (d.detail || ("HTTP "+r.status))); return; }
     if(!r.ok) throw new Error(d.detail || ("HTTP "+r.status));
     const sess = SESSION;
     ITEMS.unshift({ id:d.id, voice:d.voice, format:d.format, duration:d.duration, snippet:d.snippet, created:d.created,
@@ -600,7 +608,7 @@ $("#genbtn").onclick = async ()=>{
     renderResults();
   }catch(err){
     toast("Generation failed: " + err.message + " — the speech service may be unreachable from this network right now. Your text and settings are untouched; please try again shortly.");
-  }finally{ btn.innerHTML = old; updateCounter(); }
+  }finally{ BUSY = false; btn.innerHTML = old; updateCounter(); }
 };
 
 /* ---------- UI language switcher ---------- */
