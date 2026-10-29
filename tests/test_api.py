@@ -17,10 +17,17 @@ import httpx  # noqa: E402
 import server  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 
+LONG = "Microsoft Server Speech Text to Speech Voice ({}, {})"
 VOICES = [
-    {"ShortName": "en-US-AriaNeural", "Locale": "en-US", "Gender": "Female", "FriendlyName": "Aria"},
-    {"ShortName": "en-US-AndrewNeural", "Locale": "en-US", "Gender": "Male", "FriendlyName": "Andrew"},
-    {"ShortName": "en-US-AndrewMultilingualNeural", "Locale": "en-US", "Gender": "Male", "FriendlyName": "Andrew ML"},
+    {"ShortName": "en-US-AriaNeural", "Locale": "en-US", "Gender": "Female", "FriendlyName": "Aria",
+     "Name": LONG.format("en-US", "AriaNeural")},
+    {"ShortName": "en-US-AndrewNeural", "Locale": "en-US", "Gender": "Male", "FriendlyName": "Andrew",
+     "Name": LONG.format("en-US", "AndrewNeural")},
+    {"ShortName": "en-US-AndrewMultilingualNeural", "Locale": "en-US", "Gender": "Male", "FriendlyName": "Andrew ML",
+     "Name": LONG.format("en-US", "AndrewMultilingualNeural")},
+    # Locale with a script part: edge-tts can't expand this short id itself.
+    {"ShortName": "iu-Cans-CA-TaqqiqNeural", "Locale": "iu-Cans-CA", "Gender": "Male", "FriendlyName": "Taqqiq",
+     "Name": LONG.format("iu-Cans-CA", "TaqqiqNeural")},
 ]
 H = {"X-Session-Id": "unittestsession"}
 ORIGINAL_SYNTH = server.synth_segment  # captured before setUpClass mocks it
@@ -50,6 +57,9 @@ class Api(unittest.TestCase):
         for p in cls.patches:
             p.stop()
         cls.tmp.cleanup()
+
+    def setUp(self):
+        server._dead_voices.clear()  # a test that kills a voice must not leak into the next
 
     def tts(self, **body):
         return self.c.post("/api/tts", json={"voice": "en-US-AriaNeural", **body}, headers=H)
@@ -134,11 +144,60 @@ class Api(unittest.TestCase):
         self.assertNotIn("secret-internal", r.text)
 
     def test_language_mismatch_is_actionable_422(self):  # TTS-BUG-007 (server side)
-        err = server.edge_tts.exceptions.NoAudioReceived("No audio was received.")
-        with mock.patch.object(server, "synth_segment", mock.AsyncMock(side_effect=err)):
+        async def only_english(text, *a):  # a live voice that can't read Devanagari
+            if text != "Hello.":
+                raise server.edge_tts.exceptions.NoAudioReceived("No audio was received.")
+            return self.tone, []
+        with mock.patch.object(server, "synth_segment", side_effect=only_english):
             r = self.tts(text="सुप्रभात")
         self.assertEqual(r.status_code, 422)
         self.assertIn("Voice Language", r.json()["detail"])
+        self.assertNotIn("en-US-AriaNeural", server._dead_voices)
+
+    # ---------- voices the service lists but won't speak (user report, 2026-10-29) ----------
+    def test_engine_gets_full_voice_name(self):
+        synth = mock.AsyncMock(return_value=(self.tone, []))
+        with mock.patch.object(server, "synth_segment", synth):
+            self.assertEqual(self.tts(text="ᐅᓪᓛᒃᑯᑦ", voice="iu-Cans-CA-TaqqiqNeural").status_code, 200)
+        self.assertEqual(synth.call_args.args[1], LONG.format("iu-Cans-CA", "TaqqiqNeural"))
+
+    def test_sweep_hides_dead_voices_only(self):
+        flaky = {"n": 0}
+
+        async def synth(text, engine, *a):
+            if "AndrewNeural" in engine:  # dead: never answers
+                raise server.edge_tts.exceptions.NoAudioReceived("No audio was received.")
+            if "AriaNeural" in engine:    # flaky: fails a few times, then answers
+                flaky["n"] += 1
+                if flaky["n"] <= server.SWEEP_ATTEMPTS - 1:
+                    raise server.edge_tts.exceptions.NoAudioReceived("No audio was received.")
+            if "Taqqiq" in engine:
+                raise ConnectionError("network blip")  # not evidence the voice is dead
+            return self.tone, []
+        try:
+            with mock.patch.object(server, "synth_segment", side_effect=synth), \
+                 mock.patch.object(server, "PROBE_SPACING", 0):
+                server.asyncio.run(server.sweep_dead_voices())
+            self.assertEqual(server._dead_voices, {"en-US-AndrewNeural"})
+            ids = [v["id"] for v in self.c.get("/api/voices").json()["voices"]]
+            self.assertNotIn("en-US-AndrewNeural", ids)
+            self.assertIn("iu-Cans-CA-TaqqiqNeural", ids)
+            r = self.tts(text="hi", voice="en-US-AndrewNeural")  # a stale page still offering it
+            self.assertEqual(r.status_code, 422)
+            self.assertIn("currently unavailable", r.json()["detail"])
+        finally:
+            server._dead_voices.clear()
+
+    def test_failing_voice_is_reported_but_not_hidden(self):
+        err = server.edge_tts.exceptions.NoAudioReceived("No audio was received.")
+        synth = mock.AsyncMock(side_effect=err)
+        with mock.patch.object(server, "synth_segment", synth):
+            r = self.tts(text="Hello there.", voice="en-US-AndrewNeural")
+        self.assertEqual(r.status_code, 422)
+        self.assertIn("currently unavailable", r.json()["detail"])
+        # request, its retry, then one probe; hiding is left to the sweep (flaky voices)
+        self.assertEqual([c.args[0] for c in synth.call_args_list], ["Hello there.", "Hello there.", "Hello."])
+        self.assertNotIn("en-US-AndrewNeural", server._dead_voices)
 
     def test_split_text(self):  # TTS-BUG-003
         text = "".join(f"Sentence {i} is here, with a clause! " if i % 3 else f"Line {i}\n"
@@ -176,7 +235,8 @@ class Api(unittest.TestCase):
         synth = mock.AsyncMock(side_effect=err)
         with mock.patch.object(server, "synth_segment", synth):
             self.assertEqual(self.tts(text="hi").status_code, 422)
-        self.assertEqual(synth.call_count, 1)  # content error: no retry
+        # no audio: one retry (flaky voices), then one probe to pick the message
+        self.assertEqual([c.args[0] for c in synth.call_args_list], ["hi", "hi", "Hello."])
 
     def test_ffmpeg_does_not_block_event_loop(self):  # TTS-BUG-004
         real_run = subprocess.run

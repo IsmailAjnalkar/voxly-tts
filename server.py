@@ -1,6 +1,6 @@
 """
 Voxly — free text-to-speech web app (server).
-Engine: Microsoft Edge neural voices via edge-tts (322 voices, 75+ languages).
+Engine: Microsoft Edge neural voices via edge-tts (300+ voices, 75 languages).
 Features: voice catalog API, synthesis with [break:Xms]/[break:Xs] markers,
 speed/pitch prosody, MP3/WAV output, SRT/VTT subtitles,
 session-scoped result storage (files live only for the browser session).
@@ -15,6 +15,7 @@ import ssl
 import subprocess
 import time
 import uuid
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Literal
 
@@ -57,7 +58,17 @@ SYNTH_CONCURRENCY = 4     # provider calls in flight per request
 SYNTH_TIMEOUT = 45        # seconds per provider call (one retry on failure)
 
 log = logging.getLogger("voxly")
-app = FastAPI(title="Voxly TTS", docs_url=None, redoc_url=None, openapi_url=None)
+
+
+@asynccontextmanager
+async def _lifespan(app):
+    sweep = asyncio.create_task(_voice_sweep_loop())  # hides voices the service won't speak
+    yield
+    sweep.cancel()
+
+
+app = FastAPI(title="Voxly TTS", docs_url=None, redoc_url=None, openapi_url=None,
+              lifespan=_lifespan)
 
 _SECURITY_HEADERS = {
     "Strict-Transport-Security": "max-age=31536000",
@@ -130,6 +141,9 @@ async def get_voices() -> list[dict]:
             "country": country,
             "gender": v.get("Gender", ""),
             "friendly": friendly,
+            # Full name sent to the engine (what Edge itself sends): edge-tts
+            # can't expand ids with a script part such as iu-Cans-CA-TaqqiqNeural.
+            "engine": v["Name"],
         })
     # Alphabetical by display name within each language, matching the
     # reference catalog's ordering (not grouped by region).
@@ -138,12 +152,67 @@ async def get_voices() -> list[dict]:
     return out
 
 
+# Voices the catalog lists but the service won't speak (11 of 322 on
+# 2026-10-29: no audio for any text). Found by a sweep every VOICE_SWEEP_EVERY.
+_dead_voices: set[str] = set()
+VOICE_SWEEP_EVERY = 6 * 3600
+VOICE_UNAVAILABLE = ("This voice is currently unavailable from the speech service. "
+                     "Please choose another voice.")
+
+
+SWEEP_ATTEMPTS = 8       # a voice is hidden only after this many failures in a row
+PROBE_SPACING = 2         # seconds between attempts: flaky voices fail in runs
+
+
+async def _voice_alive(engine: str, attempts: int = 1) -> bool:
+    """One-word probe. Every working voice accepts English text, whatever its
+    language, so 'no audio for Hello.' means the voice itself is unavailable.
+    Some voices are flaky (cs-CZ-AntoninNeural answered 2 of 6 rounds), hence
+    several spaced attempts before the sweep calls a voice dead."""
+    for i in range(attempts):
+        if i:
+            await asyncio.sleep(PROBE_SPACING)
+        try:
+            audio, _ = await asyncio.wait_for(synth_segment("Hello.", engine, "+0%", "+0Hz"), 20)
+            if audio:
+                return True
+        except edge_tts.exceptions.NoAudioReceived:
+            pass
+        except Exception:
+            return True  # network trouble is no evidence against the voice
+    return False
+
+
+async def sweep_dead_voices() -> None:
+    voices = await get_voices()
+    slots = asyncio.Semaphore(8)
+
+    async def check(v):
+        async with slots:
+            return v["id"], await _voice_alive(v["engine"], SWEEP_ATTEMPTS)
+
+    dead = {vid for vid, ok in await asyncio.gather(*(check(v) for v in voices)) if not ok}
+    _dead_voices.clear()
+    _dead_voices.update(dead)
+    log.warning("voice sweep: %d of %d voices unavailable: %s", len(dead), len(voices), sorted(dead))
+
+
+async def _voice_sweep_loop() -> None:
+    while True:
+        try:
+            await sweep_dead_voices()
+        except Exception:
+            log.exception("voice sweep failed")
+        await asyncio.sleep(VOICE_SWEEP_EVERY)
+
+
 @app.get("/api/voices")
 async def api_voices():
     try:
         voices = await get_voices()
     except Exception as e:  # network blocked etc.
         raise HTTPException(502, f"Voice catalog unavailable: {type(e).__name__}")
+    voices = [v for v in voices if v["id"] not in _dead_voices]
     langs = {}
     for v in voices:
         langs.setdefault(v["language"], 0)
@@ -265,9 +334,7 @@ async def synth_segment(text: str, voice: str, rate: str, pitch: str) -> tuple[b
 async def _synth_with_retry(text: str, voice: str, rate: str, pitch: str) -> tuple[bytes, list]:
     try:
         return await asyncio.wait_for(synth_segment(text, voice, rate, pitch), SYNTH_TIMEOUT)
-    except edge_tts.exceptions.NoAudioReceived:
-        raise  # the text doesn't fit the voice; retrying won't help
-    except Exception as e:
+    except Exception as e:  # incl. NoAudioReceived: some voices drop requests at random
         log.warning("provider call failed, retrying once (%s, %d chars)", type(e).__name__, len(text))
         return await asyncio.wait_for(synth_segment(text, voice, rate, pitch), SYNTH_TIMEOUT)
 
@@ -297,8 +364,11 @@ async def api_tts(body: TTSRequest, x_session_id: str = Header(default="")):
     except Exception:
         log.exception("voice catalog unavailable")
         raise HTTPException(502, "Voice catalog unavailable, please retry")
-    if voice not in {v["id"] for v in voices}:
+    engine = next((v["engine"] for v in voices if v["id"] == voice), None)
+    if engine is None:
         raise HTTPException(400, "Unknown voice")
+    if voice in _dead_voices:
+        raise HTTPException(422, VOICE_UNAVAILABLE)
     rate, pitch = f"{body.speed:+d}%", f"{body.pitch:+d}Hz"
 
     _cleanup_old_sessions()
@@ -318,7 +388,7 @@ async def api_tts(body: TTSRequest, x_session_id: str = Header(default="")):
             await _silence_mp3(part, seg["ms"])
             return part, seg["ms"] / 1000, []
         async with slots:
-            audio, words = await _synth_with_retry(seg["text"], voice, rate, pitch)
+            audio, words = await _synth_with_retry(seg["text"], engine, rate, pitch)
         if not audio:
             raise HTTPException(502, "Synthesis returned no audio")
         part.write_bytes(audio)
@@ -366,8 +436,11 @@ async def api_tts(body: TTSRequest, x_session_id: str = Header(default="")):
     except HTTPException:
         raise
     except edge_tts.exceptions.NoAudioReceived:
-        # What the service does when the text's script doesn't fit the voice
-        # (e.g. Hindi text on an English voice).
+        # Either the voice itself is gone upstream, or the text's script
+        # doesn't fit it (e.g. Hindi text on an English voice). A probe tells.
+        # Not hidden here: one failure can be a flaky voice; the sweep decides.
+        if not await _voice_alive(engine):
+            raise HTTPException(422, VOICE_UNAVAILABLE)
         raise HTTPException(422, "This voice can't read this text. Choose a Voice Language "
                                  "that matches the language of your text.")
     except Exception:
