@@ -50,6 +50,11 @@ SESSION_TTL = 2 * 3600  # generated files are session-only
 MAX_CHARS = 5000
 MAX_SILENCE_MS = 60_000   # total of all [break:...] markers in one request
 MAX_SEGMENTS = 50         # speak + silence pieces after splitting on markers
+# Long text is synthesized as sentence-aligned chunks, each its own provider
+# call with its own timeout: one call for 6,000 chars took ~40 s of a 45 s budget.
+CHUNK_CHARS = 1500
+SYNTH_CONCURRENCY = 4     # provider calls in flight per request
+SYNTH_TIMEOUT = 45        # seconds per provider call (one retry on failure)
 
 log = logging.getLogger("voxly")
 app = FastAPI(title="Voxly TTS", docs_url=None, redoc_url=None, openapi_url=None)
@@ -168,6 +173,32 @@ def parse_segments(text: str) -> list[dict]:
     return segments
 
 
+# A sentence: anything up to and including end punctuation or a newline, plus
+# trailing whitespace. Pieces concatenate back to the original text exactly.
+_SENTENCE = re.compile(r"[^.!?…。！？؟।\n]*(?:[.!?…。！？؟।]+|\n|$)\s*")
+
+
+def split_text(text: str, limit: int) -> list[str]:
+    """Split text into chunks of <= limit chars at sentence ends, else at the
+    last space, else hard, keeping the original separators inside chunks.
+    ponytail: '.' after abbreviations ("Dr.") counts as a sentence end; it only
+    matters if a chunk boundary lands exactly there."""
+    chunks, cur = [], ""
+    for piece in _SENTENCE.findall(text):
+        while len(cur) + len(piece) > limit:
+            if cur:
+                chunks.append(cur)
+                cur = ""
+            else:  # one sentence longer than the limit
+                cut = piece.rfind(" ", 0, limit) + 1 or limit
+                chunks.append(piece[:cut])
+                piece = piece[cut:]
+        cur += piece
+    if cur:
+        chunks.append(cur)
+    return [c.strip() for c in chunks if c.strip()]
+
+
 def fmt_ts(seconds: float, srt: bool) -> str:
     ms_total = int(round(seconds * 1000))
     h, rem = divmod(ms_total, 3600000)
@@ -231,6 +262,16 @@ async def synth_segment(text: str, voice: str, rate: str, pitch: str) -> tuple[b
     return audio, words
 
 
+async def _synth_with_retry(text: str, voice: str, rate: str, pitch: str) -> tuple[bytes, list]:
+    try:
+        return await asyncio.wait_for(synth_segment(text, voice, rate, pitch), SYNTH_TIMEOUT)
+    except edge_tts.exceptions.NoAudioReceived:
+        raise  # the text doesn't fit the voice; retrying won't help
+    except Exception as e:
+        log.warning("provider call failed, retrying once (%s, %d chars)", type(e).__name__, len(text))
+        return await asyncio.wait_for(synth_segment(text, voice, rate, pitch), SYNTH_TIMEOUT)
+
+
 class TTSRequest(BaseModel):
     text: str = Field("", max_length=MAX_CHARS)
     voice: str = ""
@@ -266,36 +307,51 @@ async def api_tts(body: TTSRequest, x_session_id: str = Header(default="")):
     work = sdir / f"tmp-{item_id}"
     work.mkdir(exist_ok=True)
 
-    part_files, all_words, offset = [], [], 0.0
+    pieces = [p for s in segments for p in (
+        [{"type": "speak", "text": t} for t in split_text(s["text"], CHUNK_CHARS)]
+        if s["type"] == "speak" else [s])]
+    slots = asyncio.Semaphore(SYNTH_CONCURRENCY)
+
+    async def render(i: int, seg: dict) -> tuple[Path, float, list]:
+        part = work / f"part{i}.mp3"
+        if seg["type"] == "silence":
+            await _silence_mp3(part, seg["ms"])
+            return part, seg["ms"] / 1000, []
+        async with slots:
+            audio, words = await _synth_with_retry(seg["text"], voice, rate, pitch)
+        if not audio:
+            raise HTTPException(502, "Synthesis returned no audio")
+        part.write_bytes(audio)
+        dur = await _probe_duration(part)
+        if not words:
+            # Speech service sent no word boundaries: estimate timings
+            # proportionally from the real segment duration so the
+            # SRT/VTT subtitles are never empty.
+            toks = seg["text"].split()
+            weights = [max(1, len(t)) for t in toks]
+            total = sum(weights) or 1
+            t = 0.0
+            for tok, wgt in zip(toks, weights):
+                span = dur * wgt / total
+                words.append((t, t + span, tok))
+                t += span
+        return part, dur, words
+
+    all_words, offset = [], 0.0
+    tasks = [asyncio.create_task(render(i, s)) for i, s in enumerate(pieces)]
     try:
-        for i, seg in enumerate(segments):
-            part = work / f"part{i}.mp3"
-            if seg["type"] == "silence":
-                await _silence_mp3(part, seg["ms"])
-                offset += seg["ms"] / 1000
-            else:
-                audio, words = await asyncio.wait_for(
-                    synth_segment(seg["text"], voice, rate, pitch), timeout=45)
-                if not audio:
-                    raise HTTPException(502, "Synthesis returned no audio")
-                part.write_bytes(audio)
-                dur = await _probe_duration(part)
-                if not words:
-                    # Speech service sent no word boundaries: estimate timings
-                    # proportionally from the real segment duration so the
-                    # SRT/VTT subtitles are never empty.
-                    toks = seg["text"].split()
-                    weights = [max(1, len(t)) for t in toks]
-                    total = sum(weights) or 1
-                    t = 0.0
-                    for tok, wgt in zip(toks, weights):
-                        span = dur * wgt / total
-                        words.append((t, t + span, tok))
-                        t += span
-                for (s, e, w) in words:
-                    all_words.append((offset + s, offset + e, w))
-                offset += dur
-            part_files.append(part)
+        try:
+            rendered = await asyncio.gather(*tasks)
+        except BaseException:
+            # One piece failed: stop the rest before the work dir is removed.
+            for t in tasks:
+                t.cancel()
+            await asyncio.gather(*tasks, return_exceptions=True)
+            raise
+        for _, dur, words in rendered:
+            all_words += [(offset + s, offset + e, w) for s, e, w in words]
+            offset += dur
+        part_files = [part for part, _, _ in rendered]
 
         # Concat -> final mp3
         listfile = work / "list.txt"

@@ -140,6 +140,44 @@ class Api(unittest.TestCase):
         self.assertEqual(r.status_code, 422)
         self.assertIn("Voice Language", r.json()["detail"])
 
+    def test_split_text(self):  # TTS-BUG-003
+        text = "".join(f"Sentence {i} is here, with a clause! " if i % 3 else f"Line {i}\n"
+                       for i in range(400)) + "x" * 40
+        for limit in (50, 300, 1500):
+            chunks = server.split_text(text, limit)
+            self.assertTrue(all(0 < len(c) <= limit for c in chunks))
+            self.assertEqual("".join(chunks).replace(" ", "").replace("\n", ""),
+                             text.replace(" ", "").replace("\n", ""))  # nothing lost or reordered
+        self.assertEqual(server.split_text("Short. Text!\nKept as is.", 1500), ["Short. Text!\nKept as is."])
+        self.assertEqual(server.split_text("a" * 25, 10), ["a" * 10, "a" * 10, "a" * 5])
+
+    def test_long_text_is_chunked_in_order(self):  # TTS-BUG-003
+        text = " ".join(f"This is sentence number {i}." for i in range(170))  # ~4,800 chars
+        synth = mock.AsyncMock(return_value=(self.tone, []))
+        with mock.patch.object(server, "synth_segment", synth):
+            r = self.tts(text=text)
+        self.assertEqual(r.status_code, 200, r.text)
+        sent = [c.args[0] for c in synth.call_args_list]
+        self.assertGreater(len(sent), 1)
+        self.assertTrue(all(len(s) <= server.CHUNK_CHARS for s in sent))
+        self.assertEqual(" ".join(sent), text)
+        self.assertAlmostEqual(r.json()["duration"], len(sent), delta=0.3)  # 1 s tone per chunk
+
+    def test_provider_call_retried_once(self):  # TTS-BUG-003
+        synth = mock.AsyncMock(side_effect=[RuntimeError("blip"), (self.tone, [])])
+        with mock.patch.object(server, "synth_segment", synth), self.assertLogs("voxly", "WARNING"):
+            self.assertEqual(self.tts(text="hi").status_code, 200)
+        self.assertEqual(synth.call_count, 2)
+        synth = mock.AsyncMock(side_effect=RuntimeError("down"))
+        with mock.patch.object(server, "synth_segment", synth), self.assertLogs("voxly", "WARNING"):
+            self.assertEqual(self.tts(text="hi").status_code, 502)
+        self.assertEqual(synth.call_count, 2)
+        err = server.edge_tts.exceptions.NoAudioReceived("no audio")
+        synth = mock.AsyncMock(side_effect=err)
+        with mock.patch.object(server, "synth_segment", synth):
+            self.assertEqual(self.tts(text="hi").status_code, 422)
+        self.assertEqual(synth.call_count, 1)  # content error: no retry
+
     def test_ffmpeg_does_not_block_event_loop(self):  # TTS-BUG-004
         real_run = subprocess.run
 
