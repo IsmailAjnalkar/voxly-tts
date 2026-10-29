@@ -303,7 +303,8 @@ class Api(unittest.TestCase):
     def test_break_marker_limits(self):  # TTS-BUG-002
         self.assertEqual(self.tts(text="[break:30s]" * 2 + " hi").status_code, 200)  # exactly 60 s
         self.assertEqual(self.tts(text="[break:30s]" * 2 + "[break:1ms] hi").status_code, 400)
-        self.assertEqual(self.tts(text="a [break:1ms] " * 26).status_code, 400)  # 51 segments
+        self.assertEqual(self.tts(text="a [break:1ms] " * 25 + "end").status_code, 200)  # 25 markers: allowed
+        self.assertEqual(self.tts(text="a [break:1ms] " * 26 + "end").status_code, 400)  # 26: rejected
 
     def test_break_only_text_is_rejected(self):  # TTS-BUG-009
         self.assertEqual(self.tts(text="[break:1s][break:2s]").status_code, 400)

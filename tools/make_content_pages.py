@@ -10,7 +10,7 @@ style = re.search(r"<style>.*?</style>", tpl, re.S).group(0).replace(
     "main h2{font-size:22px;margin:30px 0 8px}main h3{font-size:17px;margin:20px 0 6px}"
     ".lead{font-size:17px}.updated{color:var(--muted);font-size:13px}"
     "table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}"
-    "thead th{background:var(--panel2)}pre{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;font-size:13px;line-height:1.5}"
+    "thead th{background:var(--panel2)}.voices td:nth-child(3){white-space:nowrap}pre{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;font-size:13px;line-height:1.5}"
     "code{background:var(--panel2);border-radius:5px;padding:1px 5px}.tablewrap{overflow-x:auto}"
     "</style>")
 boot = re.search(r"<script>if\(localStorage.*?</script>", tpl).group(0)
@@ -216,7 +216,7 @@ page("voices.html", "Text to Speech Voices and Languages (300+ Voices) | Text 2 
 <h1>Text to speech voices and languages</h1>
 <p class="lead"><!--voices:summary--> Choose the language of your text in <a href="/">the converter</a>, then try two or three voices: voices in the same language can sound very different.</p>
 <p>The list comes straight from the speech service and is refreshed daily. Voices that stop producing audio are hidden until they work again. <em>Multilingual</em> voices can read mixed-language text.</p>
-<div class="tablewrap"><table>
+<div class="tablewrap"><table class="voices">
 <thead><tr><th scope="col">Language</th><th scope="col">Locales</th><th scope="col">Voices</th><th scope="col">Voice names</th></tr></thead>
 <tbody><!--voices:rows--></tbody></table></div>
 <p>Not sure which to pick? The <a href="/tutorial.html">tutorial</a> explains how to compare voices, and <a href="/how-it-works.html">how it works</a> covers limits and formats.</p>

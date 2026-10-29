@@ -52,7 +52,7 @@ SESSION_TTL = 2 * 3600  # generated files are session-only
 # web/index.html (MAX_CHARS) and stated in the FAQ and llms.txt.
 MAX_CHARS = 5000
 MAX_SILENCE_MS = 60_000   # total of all [break:...] markers in one request
-MAX_SEGMENTS = 50         # speak + silence pieces after splitting on markers
+MAX_BREAKS = 25           # [break:...] markers per generation (each one is an ffmpeg job)
 # Long text is synthesized as sentence-aligned chunks, each its own provider
 # call with its own timeout: one call for 6,000 chars took ~40 s of a 45 s budget.
 CHUNK_CHARS = 1500
@@ -413,8 +413,8 @@ async def api_tts(body: TTSRequest, x_session_id: str = Header(default="")):
     segments = parse_segments(text)
     if not any(s["type"] == "speak" for s in segments):
         raise HTTPException(400, "Nothing to synthesize")
-    if len(segments) > MAX_SEGMENTS:
-        raise HTTPException(400, f"Too many [break] markers (max {MAX_SEGMENTS // 2})")
+    if sum(s["type"] == "silence" for s in segments) > MAX_BREAKS:
+        raise HTTPException(400, f"Too many [break] markers (max {MAX_BREAKS})")
     if sum(s.get("ms", 0) for s in segments) > MAX_SILENCE_MS:
         raise HTTPException(400, f"Total pause length exceeds {MAX_SILENCE_MS // 1000} s")
     try:
