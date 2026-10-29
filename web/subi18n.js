@@ -50,5 +50,23 @@
     });
   }
 
+  document.querySelectorAll("nav a").forEach(function (a) {
+    if (fname && a.getAttribute("href").slice(-fname.length - 1) === "/" + fname) a.classList.add("on");
+  });
+
+  // Theme: same storage key and default (dark) as the home page; the <head>
+  // boot script applies "light" before first paint.
+  var tb = document.getElementById("themebtn");
+  if (tb) {
+    var root = document.documentElement;
+    var paint = function () { tb.textContent = root.classList.contains("light") ? "☾" : "☀"; };
+    paint();
+    tb.addEventListener("click", function () {
+      root.classList.toggle("light");
+      localStorage.setItem("voxly-theme", root.classList.contains("light") ? "light" : "dark");
+      paint();
+    });
+  }
+
   window.subAlert = function (key) { var v = str(key); alert(v != null ? v : key); };
 })();

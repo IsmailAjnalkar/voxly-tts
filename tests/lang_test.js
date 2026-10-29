@@ -83,16 +83,15 @@ async function loadDom(url) {
     ck("de tut: footer links prefixed", !!foot);
     dom.window.close();
   }
-  // 4) French support: options + placeholder + alert hook translated
+  // 4) French support: options + placeholder + pre-launch notice translated
   {
     const dom = await loadDom(BASE + "/fr/support.html");
     const d = dom.window.document, w = dom.window;
     const fr = (w.SUBI18N || {}).fr || {};
     ck("fr sup: bug option French", d.querySelector('[data-i18n="sup_o3"]').textContent === fr.sup_o3 && fr.sup_o3 !== "Bug report", fr.sup_o3);
     ck("fr sup: placeholder French", d.querySelector("[data-i18n-ph]").getAttribute("placeholder") === fr.sup_msg_ph);
-    const btn = [...d.querySelectorAll("button")].find(b => (b.getAttribute("onclick") || "").includes("subAlert"));
-    ck("fr sup: send uses subAlert('sup_alert')", !!btn && btn.getAttribute("onclick").includes("sup_alert"));
-    ck("fr sup: subAlert defined", typeof w.subAlert === "function");
+    ck("fr sup: pre-launch notice French", d.querySelector('[data-i18n="sup_notice"]').textContent === fr.sup_notice && !!fr.sup_notice);
+    ck("fr sup: send disabled until launch", d.querySelector('button[type="submit"]').matches(":disabled"));
     dom.window.close();
   }
   // 5) Arabic privacy: RTL + translated heading

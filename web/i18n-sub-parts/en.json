@@ -42,7 +42,7 @@
  "sup_msg": "Message",
  "sup_msg_ph": "Describe what happened, which voice you used, and what you expected...",
  "sup_send": "Send message",
- "sup_alert": "Thanks — the support inbox opens with the public launch. For now, the FAQ covers the common cases.",
+ "sup_alert": "Thanks — the support inbox opens with the public launch. For now, the FAQ covers the common cases.", "sup_notice": "The contact form opens with the public launch. Until then, the FAQ on the home page covers the most common questions.",
  "auth_h1": "Welcome back",
  "auth_sub": "Accounts are optional — the converter works fully without one. Sign in to keep your voice favorites and history in sync (rolling out with the public launch).",
  "auth_email": "Email",
