@@ -1,5 +1,25 @@
 # Executive Audit Report — text-2-speech.com
 
+## Deployed 2026-10-29 14:17 — `master@290162e` live, verified on production
+
+| | Audit (10-28) | Live now |
+|---|---:|---:|
+| Readiness (untested = 0) | 63.8 | **98.0** |
+| Tested-only | 67.9 | **99.3** |
+| FAIL / PARTIAL / NOT TESTED | 55 / 5 / 10 | **0 / 2 / 3** |
+| Defects fixed and deployed | — | **29 of 30** (TTS-BUG-016 Account/Donate kept as labelled placeholders by owner decision) |
+
+Verified against https://text-2-speech.com after the deploy (logs in `evidence/production-2026-10-29/`):
+- Browser: full suite 59/59 (axe 0 violations on 8 pages × 2 themes × 2 widths, keyboard, RTL, 25-language home content, support form in no-store mode, 404, word-timed subtitles, no console/CSP errors); UI 36/36; Day-1 10/10; reload/offline 4/4; re-checks 6/6.
+- Server: P0 payloads return HTML; `lang`/canonical/26 hreflang per language; sitemap 156 URLs; www and http → 301 to https://text-2-speech.com; HTTP/2 (ALPN h2); 6/6 security headers, `Server: nginx`; HTML 404 / JSON API 404; voices cacheable and gzipped; support validation and honeypot.
+- Voices: all 16 reported voices generate (Microsoft restored the 11 dead ones today; the sweep correctly un-hid them; the 4 Inuktitut voices work through the code fix).
+- Monitoring: GitHub uptime check every 15 min (manual run 40898304135: 322 voices, real generation 12,476 B); server watchdog timer active.
+- Rollback points: `/root/voxly-backup-2026-10-29-1417.tgz`, `/root/nginx-voxly.bak-2026-10-29-1417`.
+
+Open: gzip for `.js` (fixed in `4da3cd2`, needs one more `bash deploy/release.sh`); no multi-hour soak; real phones, listening panel and screen-reader walkthrough need people/devices.
+
+**Decision: GO.** No open P0–P2 in production; core workflows verified live.
+
 ## Update 2026-10-29 (round 2) — "fix all" (branch `fix/remaining`, not deployed)
 
 | | Audit | Round 1 | **Round 2** |

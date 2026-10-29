@@ -115,12 +115,14 @@ for (const theme of ["dark", "light"]) {
   await p.fill("#sup_email", "not-an-email"); await p.click('button[type="submit"]'); await p.waitForTimeout(300);
   ck("malformed email is blocked", posts.length === 0);
   await p.fill("#sup_email", "qa@example.com"); await p.selectOption("#sup_topic", "bug");
+  if (process.env.NO_STORE) await p.evaluate(() => { document.querySelector('[name="website"]').value = "qa-check"; });  // production: honeypot, nothing stored
   await p.click('button[type="submit"]');
   await p.waitForFunction(() => document.getElementById("supstatus").textContent.length > 0, null, { timeout: 10000 });
   ck("valid message is sent and confirmed", posts.length === 1 && /sent/.test(await p.textContent("#supstatus")), await p.textContent("#supstatus"));
   ck("form cleared after sending", (await p.inputValue("#sup_msg")) === "");
   await p.goto(BASE + "/fr/support.html", { waitUntil: "networkidle" });
   await p.fill("#sup_email", "qa@example.com"); await p.fill("#sup_msg", "Message de test en français.");
+  if (process.env.NO_STORE) await p.evaluate(() => { document.querySelector('[name="website"]').value = "qa-check"; });  // production: honeypot, nothing stored
   await p.click('button[type="submit"]');
   await p.waitForFunction(() => document.getElementById("supstatus").textContent.length > 0, null, { timeout: 10000 });
   ck("confirmation is localized (fr)", /envoyé/.test(await p.textContent("#supstatus")), await p.textContent("#supstatus"));

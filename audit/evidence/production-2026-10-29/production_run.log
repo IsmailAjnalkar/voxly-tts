@@ -1,0 +1,33 @@
+===== voices (prod)
+catalog after sweep: 322 voices, 75 languages
+ar-SY-AmanyNeural            listed  -> 200 2.06
+cs-CZ-VlastaNeural           listed  -> 200 1.94
+en-ZA-LeahNeural             listed  -> 200 1.7
+en-SG-WayneNeural            listed  -> 200 1.94
+fr-FR-EloiseNeural           listed  -> 200 1.56
+iu-Cans-CA-SiqiniqNeural     listed  -> 200 2.28
+iu-Latn-CA-SiqiniqNeural     listed  -> 200 2.33
+iu-Cans-CA-TaqqiqNeural      listed  -> 200 2.3
+iu-Latn-CA-TaqqiqNeural      listed  -> 200 2.33
+mn-MN-YesuiNeural            listed  -> 200 1.8
+ta-SG-AnbuNeural             listed  -> 200 1.87
+ta-LK-KumarNeural            listed  -> 200 1.87
+ta-MY-SuryaNeural            listed  -> 200 1.44
+ta-IN-ValluvarNeural         listed  -> 200 1.37
+te-IN-MohanNeural            listed  -> 200 1.13
+sk-SK-LukasNeural            listed  -> 200 1.87
+control: Hindi text on Aria -> 422 {'detail': 'The speech service returned no audio for this text. Check that the Voice Language matches the
+control: Tamil on Pallavi    -> 200
+===== verify_full chromium (prod, NO_STORE)
+59 pass, 0 fail
+===== verify_ui (prod)
+36 pass, 0 fail
+===== verify_day1 (prod)
+10 pass, 0 fail
+===== verify_interrupt (prod)
+4 pass, 0 fail
+===== recheck_touched (prod)
+6 pass, 0 fail
+===== done
+
+[exited with code 0]

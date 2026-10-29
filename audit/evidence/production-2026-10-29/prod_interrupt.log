@@ -1,0 +1,5 @@
+PASS after a mid-generation reload the page is usable (Generate enabled, no stuck busy state) 
+PASS and a new generation works 
+PASS offline: clear error, text kept, button usable again "Generation failed: Failed to fetch — the speech service may be unreachable from this netwo"
+PASS back online: retry succeeds 
+ALL PASSED

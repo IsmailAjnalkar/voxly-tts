@@ -140,13 +140,13 @@ TC-F02,PERF,Web vitals,LCP < 2.5 s,Performance,Production,PerformanceObserver,<2
 TC-F03,PERF,Web vitals,CLS < 0.1,Performance,Production,PerformanceObserver,<0.1,0.0245 / 0,PASS,evidence/browser_results.json,
 TC-F04,PERF,Web vitals,Interaction-to-paint < 200 ms (INP proxy),Performance,Production,Scripted click,<200 ms,8-9 ms,PASS,evidence/browser_results.json,
 TC-F05,PERF,Payload,Initial page weight,Performance,Production,Resource Timing,<500 KB,36 KB HTML (gzip) + 58 KB voices JSON,PASS,evidence/browser_results.json,
-TC-F06,PERF,Payload,/api/voices compressed,Performance,"Local, branch fix/full-remediation (real speech service)",curl,gzip/br,Cache-Control 1 h in app; gzip for JSON/JS/CSS in deploy/nginx-voxy-tls.conf (applied at deploy),PARTIAL,test_voices_cacheable,TTS-BUG-027
+TC-F06,PERF,Payload,/api/voices compressed,Performance,Production 2026-10-29,curl,gzip/br,"JSON gzip + Cache-Control live; .js (text/javascript) gzip fixed in 4da3cd2, not yet applied",PARTIAL,evidence/production-2026-10-29/curl checks,TTS-BUG-027
 TC-F07,PERF,Generation,Short-text generation latency,Performance,Production,API timing,p90 < 3 s,median 0.91 s; p90 1.69 s; max 5.66 s (n=23),PASS,evidence/prod_api_results.json,
 TC-F08,PERF,Download,Audio download latency,Performance,Production,API timing,<1 s,median 0.32 s; max 0.63 s,PASS,evidence/prod_api_results.json,
 TC-F09,PERF,Concurrency,6 parallel generations,Performance,Local,API,No errors,6/6 in 2.07 s,PASS,evidence/local_stress.json,
 TC-F10,PERF,Concurrency,Event loop stays responsive during heavy request,Performance,Production 2026-10-29,Health probe,<100 ms,Health p95 14-16 ms under 10 concurrent users,PASS,evidence/remediation-2026-10-29/load_test.log,TTS-BUG-004 (fixed)
 TC-F11,PERF,Generation,Long-text latency well below timeout,Performance,Production 2026-10-29,API timing,Margin > 50%,"Max 1,500 chars per provider call; 4,807 chars in 3.2 s",PASS,prod check 2026-10-29,TTS-BUG-003 (fixed)
-TC-F12,PERF,Transport,HTTP/2,Performance,"Local, branch fix/full-remediation (real speech service)",curl ALPN,h2,http2 on in deploy/nginx-voxy-tls.conf (applied at deploy),PARTIAL,deploy/nginx-voxy-tls.conf,TTS-BUG-027
+TC-F12,PERF,Transport,HTTP/2,Performance,Production 2026-10-29,curl ALPN,h2,ALPN h2 negotiated,PASS,openssl s_client -alpn h2,TTS-BUG-027
 TC-F13,PERF,Soak,Memory/disk growth over time,Reliability,Local,—,Stable,"Short soak: 2 x 60 requests, RSS 67.5 -> 75.4 -> 76.4 MB (levels off); no multi-hour soak",PARTIAL,evidence/remediation-2026-10-29/load_test.log,
 TC-F14,PERF,Load,Load test at agreed concurrency,Load,Local (no staging exists),—,SLO met,"10 users x 6: 0 errors, p95 1.29 s, 11 req/s",PASS,evidence/remediation-2026-10-29/load_test.log,
 TC-D01,AUTH,Isolation,Session isolation of generated files,Data integrity,Production,API,Isolated,Isolated,PASS,evidence/prod_api_results.json,
@@ -176,7 +176,7 @@ TC-E05,SEO,Crawl,robots.txt,SEO,Production,curl,200; references sitemap,OK,PASS,
 TC-E06,SEO,Schema,JSON-LD parses,SEO,Production,json.loads,Valid,WebApplication + WebSite + FAQPage(6),PASS,web/index.html:24-37,
 TC-E07,SEO,Social,Open Graph / Twitter tags,SEO,Production,Source,Present,Present; og-image 200,PASS,curl,
 TC-E08,SEO,Redirects,HTTP -> HTTPS,SEO,Production,curl,301,301,PASS,curl,
-TC-E09,SEO,Redirects,www -> apex,SEO,"Local, branch fix/full-remediation (real speech service)",curl,301 to apex,301 www -> apex in deploy/nginx-voxy-tls.conf (applied at deploy),PARTIAL,deploy/nginx-voxy-tls.conf,TTS-BUG-026
+TC-E09,SEO,Redirects,www -> apex,SEO,Production 2026-10-29,curl,301 to apex,https://www -> 301 https://text-2-speech.com/...; http -> 301 https,PASS,evidence/production-2026-10-29/curl checks,TTS-BUG-026
 TC-E10,SEO,Status,Unknown HTML path returns HTML 404,SEO,"Local, branch fix/full-remediation (real speech service)",curl,HTML 404 page,HTML 404 page; API keeps JSON 404,PASS,test_html_404_for_pages_json_for_api,TTS-BUG-026 (fixed)
 TC-E11,SEO,i18n,hreflang + language URLs in sitemap,SEO,"Local, branch fix/full-remediation (real speech service)",Source,Present for 25 language paths,Server-side canonical + 26 hreflang per page; sitemap 156 URLs,PASS,test_localized_pages_server_side; test_sitemap_lists_every_language,TTS-BUG-023 (fixed)
 TC-E12,SEO,Links,Internal links resolve,SEO,Production,curl,200,All 7 pages + assets 200,PASS,curl,
@@ -186,7 +186,7 @@ TC-E15,SEO,Contact,Working contact channel,Content,"Local, branch fix/full-remed
 TC-T01,TEST,Tests,Existing tests run from a clean checkout,DevOps,"Local, branch fix/full-remediation (real speech service)",node,Runs,npm ci && npm test with BASE env,PASS,tests/package.json,TTS-BUG-028 (fixed)
 TC-T02,TEST,Tests,Existing tests pass (deps supplied),DevOps,Local,node,Pass,LANG TESTS: 26 passed 0 failed,PASS,AUTOMATION_COVERAGE_REPORT.md,
 TC-T03,TEST,CI,CI pipeline,DevOps,GitHub Actions,Inspection,Present,"API tests, UI-language tests, pip-audit",PASS,.github/workflows/ci.yml,TTS-BUG-028 (fixed)
-TC-T04,TEST,Monitoring,Error reporting / uptime monitoring,DevOps,"Repo, branch fix/remaining",Source + network,Present,"Uptime workflow (15 min, emails on failure) + server watchdog written and syntax-checked; active only once on master / installed at deploy",PARTIAL,.github/workflows/uptime.yml; deploy/voxly-watchdog.*,TTS-BUG-028
+TC-T04,TEST,Monitoring,Error reporting / uptime monitoring,DevOps,Production + GitHub Actions,Source + network,Present,"Uptime workflow every 15 min: health, pages, 322 voices, real generation 12,476 B (run 40898304135); watchdog timer active on the server",PASS,https://github.com/IsmailAjnalkar/voxly-tts/actions/runs/40898304135,TTS-BUG-028
 TC-T05,TEST,Health,Health endpoint,DevOps,Production,curl,200,200,PASS,curl,
 TC-T06,TEST,Deploy,Reproducible deploy scripts,DevOps,Repo,Review,Present,setup.sh + systemd + nginx + Dockerfile,PASS,deploy/,
 TC-T07,TEST,Deploy,Production matches repo HEAD,DevOps,Production,diff,Identical,All 12 web files identical (ignoring CRLF),PASS,diff output,
