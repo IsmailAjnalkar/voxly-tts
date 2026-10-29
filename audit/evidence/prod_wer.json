@@ -1,0 +1,200 @@
+[
+ {
+  "case": "one word",
+  "voice": "en-US-AriaNeural",
+  "wer": 0.0,
+  "cer": 0.0,
+  "rtf": 0.448,
+  "ref": "Hello",
+  "hyp": "Hello"
+ },
+ {
+  "case": "paragraph mp3",
+  "voice": "en-US-AriaNeural",
+  "wer": 0.0,
+  "cer": 0.0,
+  "rtf": 0.083,
+  "ref": "The quick brown fox jumps over the lazy dog. Speech synthesis converts written text into s",
+  "hyp": "The quick brown fox jumps over the lazy dog.  Speech synthesis converts written text into "
+ },
+ {
+  "case": "paragraph wav",
+  "voice": "en-US-AriaNeural",
+  "wer": 0.0,
+  "cer": 0.0,
+  "rtf": 0.066,
+  "ref": "The quick brown fox jumps over the lazy dog. Speech synthesis converts written text into s",
+  "hyp": "The quick brown fox jumps over the lazy dog.  Speech synthesis converts written text into "
+ },
+ {
+  "case": "html/js-looking text",
+  "voice": "en-US-AriaNeural",
+  "wer": 0.625,
+  "cer": 0.5357142857142857,
+  "rtf": 0.14,
+  "ref": "<script>alert(1)</script> <b>bold</b> & done",
+  "hyp": "script alert 1 slash script be bold slash be and done"
+ },
+ {
+  "case": "emoji + unicode",
+  "voice": "en-US-AriaNeural",
+  "wer": 0.7142857142857143,
+  "cer": 0.8695652173913043,
+  "rtf": 0.136,
+  "ref": "Café déjà vu 😀 naïve — “quotes” ½",
+  "hyp": "Café Déjà vu grinning face naive, quotes one-half."
+ },
+ {
+  "case": "numbers/currency/dates",
+  "voice": "en-US-AriaNeural",
+  "wer": 0.16,
+  "cer": 0.14285714285714285,
+  "rtf": 0.06,
+  "ref": "On 03/14/2026 I paid $1,234.56 and €99 at 7:45 PM, about 12% more. Dr. Smith, NASA and the",
+  "hyp": "On March 14, 2026 I paid $1,234.56 and 99 euros at 7.45 p.m., about 12% more.  Dr. Smith, "
+ },
+ {
+  "case": "break markers",
+  "voice": "en-US-AriaNeural",
+  "wer": 0.0,
+  "cer": 0.0,
+  "rtf": 0.195,
+  "ref": "First sentence. [break:2s] Second sentence. [break:500ms] Third.",
+  "hyp": "First sentence  Second sentence  Third"
+ },
+ {
+  "case": "speed+50 pitch-20",
+  "voice": "en-US-AriaNeural",
+  "wer": 0.0,
+  "cer": 0.0,
+  "rtf": 0.119,
+  "ref": "The quick brown fox jumps over the lazy dog. Speech synthesis converts written text into s",
+  "hyp": "The quick brown fox jumps over the lazy dog.  Speech synthesis converts written text into "
+ },
+ {
+  "case": "1001 chars",
+  "voice": "en-US-AriaNeural",
+  "wer": 0.7857142857142857,
+  "cer": 0.7831184056271981,
+  "rtf": 0.016,
+  "ref": "Testing length boundaries. Testing length boundaries. Testing length boundaries. Testing l",
+  "hyp": "testing length boundaries  testing length boundaries  testing length boundaries  testing l"
+ },
+ {
+  "case": "lang en en-US-AriaNeural",
+  "voice": "en-US-AriaNeural",
+  "wer": 0.0,
+  "cer": 0.0,
+  "rtf": 0.167,
+  "ref": "Good morning. The weather is pleasant today.",
+  "hyp": "Good morning. The weather is pleasant today."
+ },
+ {
+  "case": "lang hi hi-IN-SwaraNeural",
+  "voice": "hi-IN-SwaraNeural",
+  "wer": 0.07692307692307693,
+  "cer": 0.05555555555555555,
+  "rtf": 0.116,
+  "ref": "सुप्रभात। आज मौसम बहुत सुहावना है।",
+  "hyp": "सुप्रभाद, आज मोसम बहुत सुहावना है"
+ },
+ {
+  "case": "lang te te-IN-ShrutiNeural",
+  "voice": "te-IN-ShrutiNeural",
+  "wer": 1.0714285714285714,
+  "cer": 1.1764705882352942,
+  "rtf": 0.423,
+  "ref": "శుభోదయం. ఈ రోజు వాతావరణం చాలా బాగుంది.",
+  "hyp": "सुबहुदेयम  ती रोजू वातावरनम चाला बागूंदी"
+ },
+ {
+  "case": "lang ar ar-SA-ZariyahNeural",
+  "voice": "ar-SA-ZariyahNeural",
+  "wer": 0.2,
+  "cer": 0.13043478260869565,
+  "rtf": 0.343,
+  "ref": "صباح الخير. الطقس جميل اليوم.",
+  "hyp": "صباح الخير  اتقص جميل اليوم"
+ },
+ {
+  "case": "lang es es-ES-ElviraNeural",
+  "voice": "es-ES-ElviraNeural",
+  "wer": 0.0,
+  "cer": 0.0,
+  "rtf": 0.189,
+  "ref": "Buenos días. Hoy hace muy buen tiempo.",
+  "hyp": "Buenos días. Hoy hace muy buen tiempo."
+ },
+ {
+  "case": "lang fr fr-FR-DeniseNeural",
+  "voice": "fr-FR-DeniseNeural",
+  "wer": 0.0,
+  "cer": 0.0,
+  "rtf": 0.206,
+  "ref": "Bonjour. Il fait très beau aujourd'hui.",
+  "hyp": "Bonjour. Il fait très beau aujourd'hui."
+ },
+ {
+  "case": "lang de de-DE-KatjaNeural",
+  "voice": "de-DE-KatjaNeural",
+  "wer": 0.0,
+  "cer": 0.0,
+  "rtf": 0.27,
+  "ref": "Guten Morgen. Das Wetter ist heute schön.",
+  "hyp": "Guten Morgen.  Das Wetter ist heute schön."
+ },
+ {
+  "case": "lang zh zh-CN-XiaoxiaoNeural",
+  "voice": "zh-CN-XiaoxiaoNeural",
+  "wer": null,
+  "cer": 0.1111111111111111,
+  "rtf": 0.225,
+  "ref": "早上好。今天天气很好。",
+  "hyp": "早上好!今天天氣很好!"
+ },
+ {
+  "case": "lang ja ja-JP-NanamiNeural",
+  "voice": "ja-JP-NanamiNeural",
+  "wer": null,
+  "cer": 0.05555555555555555,
+  "rtf": 0.32,
+  "ref": "おはようございます。今日はいい天気です。",
+  "hyp": "おはようございます 今日は良い天気です"
+ },
+ {
+  "case": "lang ko ko-KR-SunHiNeural",
+  "voice": "ko-KR-SunHiNeural",
+  "wer": null,
+  "cer": 0.0,
+  "rtf": 0.227,
+  "ref": "좋은 아침입니다. 오늘 날씨가 좋네요.",
+  "hyp": "좋은 아침입니다.  오늘 날씨가 좋네요."
+ },
+ {
+  "case": "lang he he-IL-HilaNeural",
+  "voice": "he-IL-HilaNeural",
+  "wer": 0.0,
+  "cer": 0.0,
+  "rtf": 0.466,
+  "ref": "בוקר טוב. מזג האוויר נעים היום.",
+  "hyp": "בוקר טוב. מזג האוויר נעים היום."
+ },
+ {
+  "case": "lang ru ru-RU-SvetlanaNeural",
+  "voice": "ru-RU-SvetlanaNeural",
+  "wer": 0.0,
+  "cer": 0.0,
+  "rtf": 1.166,
+  "ref": "Доброе утро. Сегодня хорошая погода.",
+  "hyp": "Доброе утро. Сегодня хорошая погода."
+ },
+ {
+  "case": "item for isolation tests",
+  "voice": "en-US-AriaNeural",
+  "wer": 0.0,
+  "cer": 0.0,
+  "rtf": 0.325,
+  "ref": "Isolation check.",
+  "hyp": "Isolation check."
+ }
+]

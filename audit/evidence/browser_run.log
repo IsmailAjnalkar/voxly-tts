@@ -1,0 +1,77 @@
+viewport 320 overflow false 320 small 10 nav false burger true
+viewport 375 overflow false 375 small 10 nav false burger true
+viewport 390 overflow false 390 small 10 nav false burger true
+viewport 430 overflow false 430 small 10 nav false burger true
+viewport 768 overflow false 768 small 10 nav false burger true
+viewport 1024 overflow false 1024 small 10 nav true burger false
+viewport 1280 overflow false 1280 small 10 nav true burger false
+viewport 1440 overflow false 1440 small 10 nav true burger false
+viewport 1920 overflow false 1920 small 10 nav true burger false
+axe / color-contrast(serious,6) label(critical,4) nested-interactive(serious,47) target-size(serious,6)
+axe /tutorial.html 
+axe /donate.html color-contrast(serious,4) label(critical,1)
+axe /support.html color-contrast(serious,1) select-name(critical,1)
+axe /auth.html color-contrast(serious,1)
+axe /privacy.html 
+axe /terms.html 
+perf desktop {"ttfb":134,"domContentLoaded":189,"load":494,"htmlTransferKB":36,"fcp":572,"lcp":572,"cls":0.0245,"resources":1,"voicesReady":624,"inp":8}
+perf mobile {"ttfb":91,"domContentLoaded":545,"load":546,"htmlTransferKB":36,"fcp":576,"lcp":576,"cls":0,"resources":1,"voicesReady":613,"inp":9}
+PASS cookie banner shown on first visit 
+PASS language dropdown lists 75 languages 75
+PASS default language English 
+PASS a default voice is preselected Natasha - AU
+PASS generate disabled on empty text 
+PASS preview disabled on empty text 
+FAIL counter counts characters (emoji = 1 char, 'Hi 😀\nline2' = 10) 11 characters (2 lines)
+PASS gender filter partitions English voices { all: 47, fem: 24, male: 23 }
+PASS search 'aria' finds Aria [ 'Aria - US' ]
+PASS search 'united states' finds voices 
+FAIL no-match search shows an empty-state message ""
+FAIL voice labels are unique within English [ 'Andrew - US', 'Ava - US', 'Brian - US', 'Emma - US' ]
+PASS switching to Hindi lists Hindi voices [ 'Madhur - IN', 'Swara - IN' ]
+FAIL keyboard Enter selects a focused voice row { target: 'en-US-AndrewNeural', afterEnter: 'en-AU-NatashaNeural' }
+FAIL keyboard Space selects a focused voice row 
+FAIL speed number box 33 -> value sent is 33 { slider: '35', numberBox: '33' }
+FAIL speed number box rejects 150 { numberBox: '150', slider: '100' }
+PASS Ctrl+B inserts [break:500ms] 
+PASS generate button shows busy state 
+FAIL generate stays disabled while a job runs (after typing) { enabledMidJob: true }
+FAIL only one /api/tts request per intended generation { requests: 2 }
+PASS result item rendered 2
+PASS audio element loads with duration > 0 {
+  duration: 4.2,
+  src: '/api/file/c314a614848f.mp3?item=c314a614848f&s=edbc411f-d702-4af2-b687-ddc11cbdc38c',
+  paused: false
+}
+PASS autoplay starts playback (headless, no gesture policy) { paused: false }
+PASS player play/pause/seek/volume/ended work {
+  playing: true,
+  stillPaused: true,
+  restarted: true,
+  v0: 0,
+  ended: true
+}
+PASS download produces non-empty file: c314a614848f.mp3 25724
+PASS download produces non-empty file: subtitles.srt 125
+PASS download produces non-empty file: subtitles.vtt 129
+PASS delete removes the item from the list 
+FAIL results survive a page refresh within the session (as 'kept for this browser session' implies) { afterReload: 0 }
+FAIL Hindi text on English voice gives an actionable error Generation failed: Synthesis failed: NoAudioReceived: No audio was received. Please verify that your parameters are correct. — the speech service may be unreachable from this network right now. Your text and settings are untouched; please try again shortly.
+FAIL toast is announced to screen readers (aria-live/role) 
+PASS mobile burger toggles navigation 
+PASS /es/tutorial.html renders Spanish Tutorial
+FAIL /es/ home translates FAQ/steps content Is Text 2 Speech free to use?▾
+FAIL /ar/ home sets dir=rtl 
+FAIL /auth.html primary action performs a real request {
+  alert: 'Accounts arrive with the public launch. Everything on Text 2 Speech already works signed-out.',
+  requests: 0
+}
+FAIL /support.html primary action performs a real request {
+  alert: 'Thanks — the support inbox opens with the public launch. For now, the FAQ covers the common cases.',
+  requests: 0
+}
+FAIL /donate.html primary action performs a real request {
+  alert: 'Donation checkout opens with the public launch. Thank you for offering!',
+  requests: 0
+}
+DONE

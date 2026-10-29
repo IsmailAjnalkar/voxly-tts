@@ -1,0 +1,11 @@
+1
+00:00:00,000 --> 00:00:03,088
+The quick brown fox jumps over the lazy dog.
+
+2
+00:00:03,088 --> 00:00:07,976
+Speech synthesis converts written text into spoken audio, and this
+
+3
+00:00:07,976 --> 00:00:11,064
+paragraph checks a normal length request.
