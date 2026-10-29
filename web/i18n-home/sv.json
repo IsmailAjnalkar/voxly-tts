@@ -1,0 +1,78 @@
+{
+ "steps": [
+  {
+   "h": "Ställ in röstalternativ",
+   "b": "I panelen ”Röstinställningar” väljer du först röstspråk — det ska matcha språket i din text. Begränsa sedan listan med könsfiltret eller sökrutan (smidigt om du vet vad rösten heter). Kryssar du i ”Hastighet” eller ”Tonhöjd” får du ett reglage och en sifferruta: hastigheten går från −100 % till +100 %, tonhöjden från −100 Hz till +100 Hz. Lyssna på några röster innan du bestämmer dig — två röster på samma språk kan låta helt olika."
+  },
+  {
+   "h": "Skriv eller importera text",
+   "b": "Skriv eller klistra in i den stora textrutan, eller använd ”Importera fil” för att läsa in ett dokument i formatet .txt, .md eller .text. Räknaren uppe till höger visar antal tecken och rader medan du skriver. Varje generering rymmer upp till 5 000 tecken; dela upp längre dokument i delar. Vill du lägga in en paus skriver du en pausmarkör som [break:500ms] eller [break:2s] — eller trycker Ctrl+B för att infoga en vid markören. Vanlig interpunktion hanteras automatiskt: kommatecken och punkter blir naturliga pauser."
+  },
+  {
+   "h": "Förhandslyssna eller generera",
+   "b": "”Förhandslyssna” läser upp texten direkt med en röst på din enhet, så att du på några sekunder kan kontrollera formuleringar och tempo. ”Generera ljud” skapar den riktiga versionen på servern med exakt den röst, hastighet och tonhöjd du valt, i MP3 eller WAV. Pausmarkörer respekteras i den genererade filen (och tas tyst bort vid förhandslyssning). Om ”Spela upp efter generering” är ikryssat börjar varje färdig fil spelas upp av sig själv."
+  },
+  {
+   "h": "Ladda ner ljud- och undertextfiler",
+   "b": "Varje genererat objekt hamnar i listan ”Resultat” med en egen spelare. Ladda ner ljudet (MP3 eller WAV, beroende på vad du valt) och — eftersom motorn rapporterar tidpunkter för varje ord — matchande undertextfiler i både SRT och VTT, redo för videoredigerare och spelare. Resultaten finns bara kvar under den här webbläsarsessionen, precis som ett kladdblock: när du stänger fliken försvinner de, så ladda ner det du vill behålla."
+  }
+ ],
+ "usecases": [
+  {
+   "e": "🎬",
+   "h": "Videodubbning",
+   "p": "Lägg till en ren speakerröst i guider, förklaringsvideor och kortvideor utan att boka studio eller röstskådespelare."
+  },
+  {
+   "e": "📚",
+   "h": "Ljudboksproduktion",
+   "p": "Gör om kapitel och långa dokument till ljud som du kan lyssna på och lära dig av när du är på språng."
+  },
+  {
+   "e": "🎙️",
+   "h": "Podcastinnehåll",
+   "p": "Ta fram utkast till avsnitt, intron och annonsuppläsningar på några minuter, och generera om en replik i stället för att spela in den igen."
+  },
+  {
+   "e": "📖",
+   "h": "Utbildningsmaterial",
+   "p": "Gör lektioner, minneskort och texter tillgängliga för elever som lär sig bättre genom att lyssna."
+  },
+  {
+   "e": "🤖",
+   "h": "Utveckling av röstassistenter",
+   "p": "Ta fram prototyper av uppmaningar, hälsningsfraser och svar för assistenter och interaktiva röstappar."
+  },
+  {
+   "e": "🌍",
+   "h": "Lokalisering av flerspråkigt innehåll",
+   "p": "Skapa samma budskap på dussintals språk med röster som låter infödda på varje marknad."
+  }
+ ],
+ "faq": [
+  {
+   "q": "Är Text 2 Speech gratis?",
+   "a": "Ja. Att lyssna, generera och ladda ner är gratis och kräver inget konto. Privat bruk och studier täcks fullt ut; om du använder genererat ljud kommersiellt, se till att det följer gällande lagar och rättigheterna till texten du omvandlar."
+  },
+  {
+   "q": "Finns det en teckengräns per generering?",
+   "a": "Upp till 5 000 tecken per generering (ungefär fem till sju minuters tal). Längre material, som bokkapitel, genererar du i delar och fogar sedan ihop filerna — varje generering går snabbare, och att göra om en del är billigare än att göra om en hel bok."
+  },
+  {
+   "q": "Vad kan jag skriva i textrutan?",
+   "a": "Vanlig text på något av de språk som stöds, inklusive blandad kinesiska och engelska, siffror och vanlig interpunktion. Interpunktion tolkas som naturliga pauser, och markörer som [break:…] lägger in exakta tystnader. Emoji och symboler läses upp med sina namn, så ta bort dem du inte vill ska läsas upp."
+  },
+  {
+   "q": "Hur lägger jag till en paus?",
+   "a": "Infoga en pausmarkör var som helst i texten: [break:200ms] för ett kort andrum, [break:2s] för två sekunder. Trycker du Ctrl+B infogas [break:500ms] vid markören. Markörerna hörs inte i resultatet — du hör bara pausen."
+  },
+  {
+   "q": "Vilka format kan jag ladda ner?",
+   "a": "Ljud i MP3 eller WAV (väljs före generering) samt undertexter i SRT och VTT byggda på motorns tidpunkter på ordnivå — perfekt för att texta videor med samma berättarröst."
+  },
+  {
+   "q": "Ligger mina genererade filer kvar online?",
+   "a": "Nej. Resultaten finns bara under din aktuella webbläsarsession och tas bort efteråt. Ladda ner det du vill behålla innan du stänger fliken."
+  }
+ ]
+}

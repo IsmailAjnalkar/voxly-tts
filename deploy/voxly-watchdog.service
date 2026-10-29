@@ -1,0 +1,8 @@
+[Unit]
+Description=Voxly health watchdog (restart after 2 failed checks)
+After=voxly.service
+
+[Service]
+Type=oneshot
+# Optional: Environment=ALERT_URL=https://ntfy.sh/<your-topic>
+ExecStart=/opt/voxly/voxly-watchdog.sh

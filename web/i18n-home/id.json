@@ -1,0 +1,78 @@
+{
+ "steps": [
+  {
+   "h": "Atur opsi suara",
+   "b": "Di panel “Pengaturan suara”, pilih “Bahasa suara” terlebih dahulu — sesuaikan dengan bahasa teks Anda. Lalu persempit daftar dengan filter “Jenis kelamin” atau kotak “Cari suara” (berguna jika Anda tahu nama suaranya). Mencentang “Kecepatan” atau “Nada” akan memunculkan penggeser dan kotak angka: kecepatan berkisar dari −100% hingga +100%, nada dari −100 Hz hingga +100 Hz. Pratinjau beberapa suara sebelum memutuskan; dua suara dalam bahasa yang sama bisa terdengar sangat berbeda."
+  },
+  {
+   "h": "Tulis atau impor teks",
+   "b": "Ketik atau tempel teks di kotak teks besar, atau gunakan “Impor file” untuk memuat dokumen .txt, .md, atau .text. Penghitung di kanan atas mencatat jumlah karakter dan baris saat Anda mengetik. Setiap pembuatan menampung hingga 5.000 karakter; bagi dokumen yang lebih panjang menjadi beberapa bagian. Untuk menyisipkan jeda, ketik penanda jeda seperti [break:500ms] atau [break:2s] — atau tekan Ctrl+B untuk menyisipkannya di posisi kursor. Tanda baca biasa ditangani otomatis: koma dan titik menjadi jeda alami."
+  },
+  {
+   "h": "Pratinjau atau buat audio",
+   "b": "“Pratinjau audio” langsung membacakan teks dengan suara yang ada di perangkat Anda, sehingga Anda dapat memeriksa susunan kata dan tempo dalam hitungan detik. “Buat audio” menghasilkan audio sebenarnya di server dengan suara, kecepatan, dan nada persis seperti yang Anda pilih, dalam format MP3 atau WAV. Penanda jeda diterapkan pada file yang dihasilkan (dan dihapus diam-diam saat pratinjau). Jika “Putar otomatis setelah dibuat” dicentang, setiap hasil yang selesai akan diputar dengan sendirinya."
+  },
+  {
+   "h": "Unduh file audio & subtitle",
+   "b": "Setiap item yang dibuat masuk ke daftar “Hasil” lengkap dengan pemutarnya sendiri. Unduh audionya (MP3 atau WAV, sesuai pilihan Anda), dan — karena mesin melaporkan waktu setiap kata — file subtitle yang sesuai dalam format SRT dan VTT, siap untuk editor video dan pemutar. Hasil hanya tersimpan selama sesi browser ini, persis seperti catatan sementara: begitu tab ditutup, semuanya hilang, jadi unduh yang ingin Anda simpan."
+  }
+ ],
+ "usecases": [
+  {
+   "e": "🎬",
+   "h": "Sulih suara video",
+   "p": "Tambahkan sulih suara yang jernih ke tutorial, video penjelasan, dan video pendek tanpa menyewa studio atau pengisi suara."
+  },
+  {
+   "e": "📚",
+   "h": "Produksi buku audio",
+   "p": "Ubah bab dan dokumen panjang menjadi audio yang enak didengar untuk belajar di perjalanan."
+  },
+  {
+   "e": "🎙️",
+   "h": "Konten podcast",
+   "p": "Buat draf episode, intro, dan bacaan iklan dalam hitungan menit, lalu buat ulang satu kalimat alih-alih merekamnya ulang."
+  },
+  {
+   "e": "📖",
+   "h": "Materi pendidikan",
+   "p": "Jadikan pelajaran, kartu belajar, dan bahan bacaan mudah diakses oleh siswa yang lebih mudah belajar dengan mendengarkan."
+  },
+  {
+   "e": "🤖",
+   "h": "Pengembangan asisten suara",
+   "p": "Buat prototipe prompt, sapaan, dan respons untuk asisten dan aplikasi suara interaktif."
+  },
+  {
+   "e": "🌍",
+   "h": "Lokalisasi konten multibahasa",
+   "p": "Sampaikan pesan yang sama dalam puluhan bahasa dengan suara yang terdengar seperti penutur asli di setiap pasar."
+  }
+ ],
+ "faq": [
+  {
+   "q": "Apakah Text 2 Speech gratis?",
+   "a": "Ya. Mendengarkan, membuat, dan mengunduh audio gratis dan tidak perlu akun. Penggunaan pribadi dan untuk belajar sepenuhnya diperbolehkan; jika Anda memakai audio yang dihasilkan untuk tujuan komersial, pastikan penggunaan Anda mematuhi hukum yang berlaku dan hak atas teks yang Anda ubah."
+  },
+  {
+   "q": "Apakah ada batas karakter per pembuatan?",
+   "a": "Hingga 5.000 karakter per pembuatan (kira-kira lima sampai tujuh menit ucapan). Untuk materi yang lebih panjang seperti bab buku, buat per bagian lalu gabungkan filenya — setiap proses lebih cepat, dan mengulang satu bagian lebih hemat daripada mengulang satu buku."
+  },
+  {
+   "q": "Apa yang bisa saya ketik di kotak teks?",
+   "a": "Teks biasa dalam bahasa apa pun yang didukung, termasuk campuran Tionghoa dan Inggris, angka, serta tanda baca umum. Tanda baca diolah menjadi jeda alami dan penanda [break:…] menyisipkan hening dengan durasi persis. Emoji dan simbol dibacakan namanya, jadi hapus yang tidak ingin Anda ucapkan."
+  },
+  {
+   "q": "Bagaimana cara menambahkan jeda?",
+   "a": "Sisipkan penanda jeda di mana saja dalam teks: [break:200ms] untuk jeda singkat, [break:2s] untuk dua detik. Menekan Ctrl+B menyisipkan [break:500ms] di posisi kursor. Penanda tidak terdengar dalam hasil — Anda hanya mendengar jedanya."
+  },
+  {
+   "q": "Format apa saja yang bisa saya unduh?",
+   "a": "Audio dalam MP3 atau WAV (dipilih sebelum membuat), ditambah subtitle SRT dan VTT yang disusun dari waktu per kata dari mesin — ideal untuk memberi teks pada video dengan narasi yang sama."
+  },
+  {
+   "q": "Apakah file yang saya buat tetap tersimpan online?",
+   "a": "Tidak. Hasil hanya ada selama sesi browser Anda saat ini dan dihapus setelahnya. Unduh apa pun yang ingin Anda simpan sebelum menutup tab."
+  }
+ ]
+}

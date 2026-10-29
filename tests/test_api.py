@@ -116,6 +116,23 @@ class Api(unittest.TestCase):
         self.assertIn('href="https://text-2-speech.com/zh-CN/tutorial.html"', self.c.get("/zh-CN/tutorial.html").text)
         self.assertNotIn("hreflang", self.c.get("/auth.html").text)  # noindex page
 
+    def test_home_content_localized_server_side(self):  # TTS-BUG-023
+        import re as _re
+        for path, lang, first_q in (("/", "en", "Is Text 2 Speech free to use?"), ("/de/", "de", None), ("/ar/", "ar", None)):
+            html = self.c.get(path).text
+            self.assertNotIn("<!--home:", html, path)
+            self.assertIn(f'id="homecontent" type="application/json" data-lang="{lang}"', html, path)
+            data = json.loads(_re.search(r'id="homecontent"[^>]*>(.*?)</script>', html, _re.S).group(1))
+            ld = json.loads(_re.search(r'application/ld\+json">(.*?)</script>', html, _re.S).group(1))
+            faq = [n for n in ld["@graph"] if n["@type"] == "FAQPage"][0]
+            self.assertEqual(faq["inLanguage"], lang, path)
+            self.assertEqual(faq["mainEntity"][0]["name"], data["faq"][0]["q"], path)
+            self.assertIn(server.html_lib.escape(data["faq"][0]["q"], quote=False), html, path)  # visible FAQ too
+            if first_q:
+                self.assertEqual(data["faq"][0]["q"], first_q)
+            else:
+                self.assertNotEqual(data["faq"][0]["q"], "Is Text 2 Speech free to use?", path)
+
     def test_sitemap_lists_every_language(self):  # TTS-BUG-023
         r = self.c.get("/sitemap.xml")
         self.assertEqual(r.headers["content-type"].split(";")[0], "application/xml")

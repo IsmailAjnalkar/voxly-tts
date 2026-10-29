@@ -1,0 +1,78 @@
+{
+ "steps": [
+  {
+   "h": "Stemopties instellen",
+   "b": "Kies in het paneel Steminstellingen eerst de stemtaal: die moet overeenkomen met de taal van je tekst. Verklein daarna de lijst met het filter Geslacht of met Stem zoeken (handig als je de naam van een stem al kent). Vink je Snelheid of Toonhoogte aan, dan verschijnen een schuifregelaar en een getalveld: de snelheid loopt van −100% tot +100%, de toonhoogte van −100 Hz tot +100 Hz. Beluister een paar stemmen voordat je kiest; twee stemmen in dezelfde taal kunnen totaal anders klinken."
+  },
+  {
+   "h": "Tekst schrijven of importeren",
+   "b": "Typ of plak je tekst in het grote tekstvak, of gebruik Bestand importeren om een .txt-, .md- of .text-document te laden. De teller rechtsboven houdt tijdens het typen tekens en regels bij. Per generatie kun je tot 5.000 tekens gebruiken; splits langere documenten op in delen. Wil je een pauze, typ dan een pauzemarkering zoals [break:500ms] of [break:2s], of druk op Ctrl+B om er een bij de cursor in te voegen. Gewone leestekens worden automatisch verwerkt: komma's en punten worden natuurlijke pauzes."
+  },
+  {
+   "h": "Voorbeluisteren of genereren",
+   "b": "Audiopreview leest de tekst direct voor met een stem op je apparaat, zodat je formulering en tempo binnen enkele seconden controleert. Audio genereren maakt de definitieve versie op de server, met precies de stem, snelheid en toonhoogte die je hebt gekozen, in MP3 of WAV. Pauzemarkeringen worden in het gegenereerde bestand toegepast (en tijdens de preview stilletjes weggelaten). Staat Automatisch afspelen na genereren aan, dan begint elk voltooid bestand vanzelf te spelen."
+  },
+  {
+   "h": "Audio- en ondertitelbestanden downloaden",
+   "b": "Elk gegenereerd item verschijnt in de lijst Resultaten met een eigen speler. Download de audio (MP3 of WAV, wat je ook hebt gekozen) en, omdat de engine de timing van elk woord doorgeeft, bijpassende ondertitelbestanden in SRT- en VTT-formaat, klaar voor video-editors en spelers. Resultaten blijven alleen bewaard tijdens deze browsersessie, net als een kladblok: sluit je het tabblad, dan zijn ze weg. Download dus wat je wilt houden."
+  }
+ ],
+ "usecases": [
+  {
+   "e": "🎬",
+   "h": "Video's nasynchroniseren",
+   "p": "Voeg een heldere voice-over toe aan tutorials, uitlegvideo's en shorts zonder studio of stemacteur te boeken."
+  },
+  {
+   "e": "📚",
+   "h": "Luisterboeken maken",
+   "p": "Zet hoofdstukken en lange documenten om in audio om onderweg te leren."
+  },
+  {
+   "e": "🎙️",
+   "h": "Podcastcontent",
+   "p": "Maak afleveringen, intro's en advertentieteksten in een paar minuten, en genereer één zin opnieuw in plaats van hem opnieuw op te nemen."
+  },
+  {
+   "e": "📖",
+   "h": "Lesmateriaal",
+   "p": "Maak lessen, flashcards en leesteksten toegankelijk voor leerlingen die beter leren door te luisteren."
+  },
+  {
+   "e": "🤖",
+   "h": "Spraakassistenten ontwikkelen",
+   "p": "Maak prototypes van prompts, begroetingen en antwoorden voor assistenten en interactieve spraakapps."
+  },
+  {
+   "e": "🌍",
+   "h": "Meertalige lokalisatie",
+   "p": "Breng dezelfde boodschap in tientallen talen, met stemmen die voor elke markt als moedertaalspreker klinken."
+  }
+ ],
+ "faq": [
+  {
+   "q": "Is Text 2 Speech gratis?",
+   "a": "Ja. Beluisteren, genereren en downloaden is gratis en je hebt geen account nodig. Persoonlijk en educatief gebruik valt er volledig onder; gebruik je gegenereerde audio commercieel, zorg dan dat je gebruik voldoet aan de geldende wetgeving en de rechten op de teksten die je omzet."
+  },
+  {
+   "q": "Is er een tekenlimiet per generatie?",
+   "a": "Tot 5.000 tekens per generatie (ongeveer vijf tot zeven minuten spraak). Genereer langer materiaal, zoals boekhoofdstukken, in delen en voeg de bestanden samen: elke generatie gaat sneller, en één deel opnieuw maken is goedkoper dan een heel boek opnieuw maken."
+  },
+  {
+   "q": "Wat kan ik in het tekstvak typen?",
+   "a": "Platte tekst in elk van de ondersteunde talen, ook gemengd Chinees en Engels, cijfers en gangbare leestekens. Leestekens worden gebruikt voor natuurlijke pauzes en [break:…]-markeringen voegen exacte stiltes in. Emoji en symbolen worden bij hun naam voorgelezen, dus verwijder de tekens die je niet uitgesproken wilt hebben."
+  },
+  {
+   "q": "Hoe voeg ik een pauze toe?",
+   "a": "Zet ergens in de tekst een pauzemarkering: [break:200ms] voor een korte adempauze, [break:2s] voor twee seconden. Met Ctrl+B voeg je [break:500ms] in bij de cursor. Markeringen zijn in de uitvoer niet te horen: je hoort alleen de pauze."
+  },
+  {
+   "q": "Welke formaten kan ik downloaden?",
+   "a": "Audio in MP3 of WAV (gekozen vóór het genereren), plus ondertitels in SRT en VTT, gemaakt op basis van de timing per woord van de engine: ideaal om video's met dezelfde voice-over te ondertitelen."
+  },
+  {
+   "q": "Blijven mijn gegenereerde bestanden online?",
+   "a": "Nee. Resultaten bestaan alleen tijdens je huidige browsersessie en worden daarna verwijderd. Download alles wat je wilt bewaren voordat je het tabblad sluit."
+  }
+ ]
+}

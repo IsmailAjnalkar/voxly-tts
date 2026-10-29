@@ -1,0 +1,78 @@
+{
+ "steps": [
+  {
+   "h": "Đặt tùy chọn giọng",
+   "b": "Trong bảng “Cài đặt giọng”, hãy chọn “Ngôn ngữ giọng” trước — ngôn ngữ này nên khớp với ngôn ngữ văn bản của bạn. Sau đó thu hẹp danh sách bằng bộ lọc “Giới tính” hoặc ô “Tìm giọng” (tiện khi bạn đã biết tên giọng). Đánh dấu “Tốc độ” hoặc “Cao độ” để mở thanh trượt và ô nhập số: tốc độ từ −100% đến +100%, cao độ từ −100 Hz đến +100 Hz. Hãy nghe thử vài giọng trước khi quyết định; hai giọng cùng một ngôn ngữ có thể nghe hoàn toàn khác nhau."
+  },
+  {
+   "h": "Viết hoặc nhập văn bản",
+   "b": "Gõ hoặc dán vào ô “Văn bản đầu vào”, hoặc dùng “Nhập tệp” để tải tài liệu .txt, .md hay .text. Bộ đếm ở góc trên bên phải theo dõi số ký tự và số dòng khi bạn gõ. Mỗi lần tạo tối đa 5.000 ký tự; hãy chia tài liệu dài thành nhiều phần. Để chèn khoảng dừng, hãy gõ một dấu ngắt như [break:500ms] hoặc [break:2s] — hoặc nhấn Ctrl+B để chèn ngay tại con trỏ. Dấu câu thông thường được xử lý tự động: dấu phẩy và dấu chấm sẽ thành những khoảng ngừng tự nhiên."
+  },
+  {
+   "h": "Nghe thử hoặc tạo",
+   "b": "“Nghe thử âm thanh” đọc to văn bản ngay lập tức bằng giọng có sẵn trên thiết bị của bạn, giúp bạn kiểm tra câu chữ và nhịp độ chỉ trong vài giây. “Tạo âm thanh” tạo bản chính thức trên máy chủ với đúng giọng, tốc độ và cao độ bạn đã chọn, ở định dạng MP3 hoặc WAV. Dấu ngắt được áp dụng trong tệp đã tạo (và được tự động lược bỏ khi nghe thử). Nếu bạn đánh dấu “Tự phát sau khi tạo”, mỗi bản vừa tạo xong sẽ tự động phát."
+  },
+  {
+   "h": "Tải âm thanh và tệp phụ đề",
+   "b": "Mọi mục đã tạo đều xuất hiện trong danh sách “Kết quả” kèm trình phát riêng. Bạn có thể tải âm thanh (MP3 hoặc WAV, tùy định dạng đã chọn), và — vì công cụ cung cấp thời gian của từng từ — cả tệp phụ đề tương ứng ở hai định dạng SRT và VTT, sẵn sàng dùng cho phần mềm dựng video và trình phát. Kết quả chỉ tồn tại trong phiên trình duyệt này, giống như một tờ giấy nháp: khi bạn đóng thẻ, chúng sẽ biến mất, vì vậy hãy tải xuống những gì bạn muốn giữ lại."
+  }
+ ],
+ "usecases": [
+  {
+   "e": "🎬",
+   "h": "Lồng tiếng video",
+   "p": "Thêm giọng thuyết minh rõ ràng cho video hướng dẫn, video giải thích và video ngắn mà không cần thuê phòng thu hay diễn viên lồng tiếng."
+  },
+  {
+   "e": "📚",
+   "h": "Sản xuất sách nói",
+   "p": "Chuyển các chương sách và tài liệu dài thành âm thanh dễ nghe để học cả khi đang di chuyển."
+  },
+  {
+   "e": "🎙️",
+   "h": "Nội dung podcast",
+   "p": "Soạn nháp tập, phần mở đầu và đoạn đọc quảng cáo trong vài phút, rồi tạo lại một câu thay vì phải thu âm lại."
+  },
+  {
+   "e": "📖",
+   "h": "Tài liệu giáo dục",
+   "p": "Giúp bài học, thẻ ghi nhớ và bài đọc dễ tiếp cận hơn với những học sinh học tốt hơn qua việc nghe."
+  },
+  {
+   "e": "🤖",
+   "h": "Phát triển trợ lý giọng nói",
+   "p": "Tạo mẫu thử lời nhắc, lời chào và câu trả lời cho trợ lý ảo và ứng dụng giọng nói tương tác."
+  },
+  {
+   "e": "🌍",
+   "h": "Bản địa hóa nội dung đa ngôn ngữ",
+   "p": "Tạo cùng một thông điệp bằng hàng chục ngôn ngữ, với giọng đọc như người bản xứ cho từng thị trường."
+  }
+ ],
+ "faq": [
+  {
+   "q": "Text 2 Speech có miễn phí không?",
+   "a": "Có. Nghe, tạo và tải xuống đều miễn phí và không cần tài khoản. Bạn hoàn toàn có thể dùng cho mục đích cá nhân và học tập; nếu dùng âm thanh đã tạo cho mục đích thương mại, hãy đảm bảo việc sử dụng tuân thủ pháp luật hiện hành và quyền đối với văn bản mà bạn chuyển đổi."
+  },
+  {
+   "q": "Mỗi lần tạo có giới hạn ký tự không?",
+   "a": "Tối đa 5.000 ký tự mỗi lần tạo (khoảng năm đến bảy phút giọng nói). Với nội dung dài hơn như các chương sách, hãy tạo theo từng phần rồi ghép các tệp lại — mỗi lần tạo sẽ nhanh hơn, và làm lại một phần thì đỡ tốn kém hơn nhiều so với làm lại cả cuốn sách."
+  },
+  {
+   "q": "Tôi có thể nhập gì vào ô văn bản?",
+   "a": "Văn bản thuần ở bất kỳ ngôn ngữ nào được hỗ trợ, kể cả văn bản trộn tiếng Trung và tiếng Anh, chữ số và dấu câu thông dụng. Dấu câu được hiểu thành các khoảng ngừng tự nhiên, còn dấu [break:…] chèn khoảng lặng chính xác. Emoji và ký hiệu sẽ được đọc theo tên, vì vậy hãy xóa những gì bạn không muốn bị đọc lên."
+  },
+  {
+   "q": "Làm thế nào để thêm khoảng dừng?",
+   "a": "Chèn dấu ngắt ở bất kỳ đâu trong văn bản: [break:200ms] cho một nhịp ngắn, [break:2s] cho hai giây. Nhấn Ctrl+B sẽ chèn [break:500ms] tại con trỏ. Các dấu này không được đọc trong bản âm thanh — bạn chỉ nghe thấy khoảng dừng."
+  },
+  {
+   "q": "Tôi có thể tải xuống những định dạng nào?",
+   "a": "Âm thanh ở định dạng MP3 hoặc WAV (chọn trước khi tạo), cùng phụ đề SRT và VTT được tạo từ thời gian theo từng từ của công cụ — lý tưởng để làm phụ đề cho video dùng chính phần thuyết minh đó."
+  },
+  {
+   "q": "Tệp đã tạo có được lưu trực tuyến không?",
+   "a": "Không. Kết quả chỉ tồn tại trong phiên trình duyệt hiện tại của bạn và sẽ bị xóa sau đó. Hãy tải xuống mọi thứ bạn muốn giữ trước khi đóng thẻ."
+  }
+ ]
+}

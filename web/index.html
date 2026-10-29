@@ -283,13 +283,13 @@
     <button data-t="2">3 · <span data-i18n="step3_t">Preview or generate</span></button>
     <button data-t="3">4 · <span data-i18n="step4_t">Download audio &amp; subtitles</span></button>
   </div>
-  <div class="tabpane i18n-en" id="tabpane"></div>
+  <div class="tabpane" id="tabpane"><!--home:step--></div>
 </section>
 
 <!-- USE CASES -->
 <section class="block">
   <h2 data-i18n="scenarios">What people make with it</h2>
-  <div class="grid3 i18n-en" id="usecases"></div>
+  <div class="grid3" id="usecases"><!--home:usecases--></div>
 </section>
 
 <!-- FAQ -->
@@ -299,15 +299,7 @@
     <button id="faqexpand" data-i18n="expand_all">Expand All</button>
     <button id="faqcollapse" data-i18n="collapse_all">Collapse All</button>
   </div>
-  <div id="faqlist" class="i18n-en">
-    <!-- Static copy of the FAQ in the FAQ array below, so crawlers and AI answer engines can read it without running JavaScript. Keep the two in sync. -->
-    <div class="faqitem"><button class="q" type="button">Is Text 2 Speech free to use?<span>▾</span></button><div class="a">Yes. Listening, generating and downloading are free and need no account. Personal and learning use is fully covered; if you use generated audio commercially, make sure your use complies with applicable laws and the rights of any text you convert.</div></div>
-    <div class="faqitem"><button class="q" type="button">Is there a character limit per generation?<span>▾</span></button><div class="a">Up to 5,000 characters per generation (roughly five to seven minutes of speech). For longer material such as book chapters, generate it in parts and stitch the files — each render is faster, and re-doing one part is cheaper than re-doing a book.</div></div>
-    <div class="faqitem"><button class="q" type="button">What can I type into the text box?<span>▾</span></button><div class="a">Plain text in any of the supported languages, including mixed Chinese and English, numbers and common punctuation. Punctuation is interpreted for natural pausing and [break:…] markers insert exact silences. Emoji and symbols are read out by name, so remove any you don't want spoken.</div></div>
-    <div class="faqitem"><button class="q" type="button">How do I add a pause?<span>▾</span></button><div class="a">Insert a break marker anywhere in the text: [break:200ms] for a short beat, [break:2s] for two seconds. Pressing Ctrl+B inserts [break:500ms] at the cursor. Markers are silent in the output — you hear only the pause.</div></div>
-    <div class="faqitem"><button class="q" type="button">Which formats can I download?<span>▾</span></button><div class="a">Audio in MP3 or WAV (chosen before generating), plus subtitles in SRT and VTT built from the engine's word-level timings — ideal for captioning videos with the same narration.</div></div>
-    <div class="faqitem"><button class="q" type="button">Do my generated files stay online?<span>▾</span></button><div class="a">No. Results exist only for your current browser session and are removed afterwards. Anything you want to keep, download before you close the tab.</div></div>
-  </div>
+  <div id="faqlist"><!--home:faq--></div>
 </section>
 
 <footer>
@@ -330,6 +322,7 @@
 
 <div id="toast" role="alert" aria-live="assertive"></div>
 
+<!--home:data-->
 <script>
 "use strict";
 const $ = s => document.querySelector(s);
@@ -369,46 +362,37 @@ function applyI18n(code){
   T = I18N[code] || I18N.en;
   document.documentElement.lang = code;
   document.documentElement.dir = (code==="ar" || code==="fa") ? "rtl" : "ltr";
-  // How-it-works, use cases and FAQ exist in English only: say so to screen readers
-  $$(".i18n-en").forEach(el=>{ if(code==="en"){ el.removeAttribute("lang"); el.removeAttribute("dir"); } else { el.lang="en"; el.dir="ltr"; } });
+  if(code !== HOME_LANG) loadHome(code);  // e.g. "/" opened with a saved non-English choice
   $$("[data-i18n]").forEach(el=>{ const k=el.dataset.i18n; if(T[k]) el.textContent=T[k]; });
   $$("[data-i18n-ph]").forEach(el=>{ const k=el.dataset.i18nPh; if(T[k]) el.placeholder=T[k]; });
   updateCounter(); renderSteps(currentStep); renderVoices(); renderResults();
   document.title = "Text 2 Speech — " + T.h1;
 }
 
-/* ---------- Content: steps / use cases / FAQ (original wording) ---------- */
-const STEPS = [
- {h:"Set voice options", b:"In the panel on the left, choose the voice language first — it should match the language of your text. Then narrow the list with the gender filter or the search box (handy when you know a voice name). Ticking Speed or Pitch unlocks a slider plus a number box: speed runs from −100% to +100%, pitch from −100% to +100%. Preview a few voices before committing; two voices in the same language can sound completely different."},
- {h:"Write or import text", b:"Type or paste into the big text box, or use Import File to load a .txt, .md or .text document. The counter at the top right tracks characters and lines as you type. Each generation takes up to 5,000 characters; split longer documents into parts. To insert a pause, type a break marker such as [break:500ms] or [break:2s] — or press Ctrl+B to drop one at the cursor. Plain punctuation is handled automatically: commas and full stops become natural pauses."},
- {h:"Preview or generate", b:"Preview Audio reads the text aloud instantly using a voice on your device, so you can sanity-check wording and pacing in seconds. Generate Audio renders the real thing on the server with the exact voice, speed and pitch you picked, in MP3 or WAV. Break markers are honored in the generated file (and quietly removed while previewing). If Autoplay after generation is ticked, each finished render starts playing by itself."},
- {h:"Download audio & subtitle files", b:"Every generated item lands in the Results list with its own player. Download the audio (MP3 or WAV, whichever you selected), and — because the engine reports word timings — matching subtitle files in both SRT and VTT formats, ready for video editors and players. Results live only for this browser session, exactly like a scratchpad: when you close the tab, they are gone, so download what you want to keep."}
-];
-const USECASES = [
- {e:"🎬",h:"Video dubbing",p:"Add a clean voiceover to tutorials, explainers and shorts without booking a studio or a voice actor."},
- {e:"📚",h:"Audiobook production",p:"Turn chapters and long documents into listenable audio for learning on the move."},
- {e:"🎙️",h:"Podcast content",p:"Draft episodes, intros and ad reads in minutes, then re-generate a line instead of re-recording it."},
- {e:"📖",h:"Educational materials",p:"Make lessons, flashcards and readings accessible for students who learn better by listening."},
- {e:"🤖",h:"Voice assistant development",p:"Prototype prompts, greetings and responses for assistants and interactive voice apps."},
- {e:"🌍",h:"Multilingual content localization",p:"Produce the same message in dozens of languages with native-sounding voices for each market."}
-];
-const FAQ = [
- {q:"Is Text 2 Speech free to use?",a:"Yes. Listening, generating and downloading are free and need no account. Personal and learning use is fully covered; if you use generated audio commercially, make sure your use complies with applicable laws and the rights of any text you convert."},
- {q:"Is there a character limit per generation?",a:"Up to 5,000 characters per generation (roughly five to seven minutes of speech). For longer material such as book chapters, generate it in parts and stitch the files — each render is faster, and re-doing one part is cheaper than re-doing a book."},
- {q:"What can I type into the text box?",a:"Plain text in any of the supported languages, including mixed Chinese and English, numbers and common punctuation. Punctuation is interpreted for natural pausing and [break:…] markers insert exact silences. Emoji and symbols are read out by name, so remove any you don't want spoken."},
- {q:"How do I add a pause?",a:"Insert a break marker anywhere in the text: [break:200ms] for a short beat, [break:2s] for two seconds. Pressing Ctrl+B inserts [break:500ms] at the cursor. Markers are silent in the output — you hear only the pause."},
- {q:"Which formats can I download?",a:"Audio in MP3 or WAV (chosen before generating), plus subtitles in SRT and VTT built from the engine's word-level timings — ideal for captioning videos with the same narration."},
- {q:"Do my generated files stay online?",a:"No. Results exist only for your current browser session and are removed afterwards. Anything you want to keep, download before you close the tab."}
-];
+/* ---------- Content: steps / use cases / FAQ ----------
+   One source per language: web/i18n-home/<lang>.json. The server renders it into
+   the page (crawlers see it) and embeds it in #homecontent; it is fetched here
+   only when the interface language differs from the page's. */
+const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const homeEl = $("#homecontent");
+let HOME = JSON.parse(homeEl.textContent), HOME_LANG = homeEl.dataset.lang;
 let currentStep = 0;
 function renderSteps(i){
   currentStep = i;
   $$("#steptabs button").forEach((b,j)=>b.classList.toggle("on", j===i));
-  $("#tabpane").innerHTML = "<h3>"+STEPS[i].h+"</h3><p>"+STEPS[i].b+"</p>";
+  $("#tabpane").innerHTML = `<h3>${esc(HOME.steps[i].h)}</h3><p>${esc(HOME.steps[i].b)}</p>`;
+}
+function renderHome(){
+  $("#usecases").innerHTML = HOME.usecases.map(u=>`<div class="ucard"><div class="emo">${esc(u.e)}</div><h3>${esc(u.h)}</h3><p>${esc(u.p)}</p></div>`).join("");
+  $("#faqlist").innerHTML = HOME.faq.map(f=>`<div class="faqitem"><button class="q" type="button">${esc(f.q)}<span>▾</span></button><div class="a">${esc(f.a)}</div></div>`).join("");
+}
+function loadHome(code){
+  fetch(`/i18n-home/${code}.json`).then(r=>r.ok ? r.json() : null).then(d=>{
+    if(!d) return;
+    HOME = d; HOME_LANG = code; renderHome(); renderSteps(currentStep);
+  }).catch(()=>{});
 }
 $("#steptabs").addEventListener("click", e=>{ const b=e.target.closest("button"); if(b) renderSteps(+b.dataset.t); });
-$("#usecases").innerHTML = USECASES.map(u=>`<div class="ucard"><div class="emo">${u.e}</div><h3>${u.h}</h3><p>${u.p}</p></div>`).join("");
-$("#faqlist").innerHTML = FAQ.map(f=>`<div class="faqitem"><button class="q" type="button">${f.q}<span>▾</span></button><div class="a">${f.a}</div></div>`).join("");
 $("#faqlist").addEventListener("click", e=>{ const q=e.target.closest(".q"); if(q) q.parentElement.classList.toggle("open"); });
 $("#faqexpand").onclick = ()=>$$(".faqitem").forEach(f=>f.classList.add("open"));
 $("#faqcollapse").onclick = ()=>$$(".faqitem").forEach(f=>f.classList.remove("open"));

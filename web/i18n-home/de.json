@@ -1,0 +1,78 @@
+{
+ "steps": [
+  {
+   "h": "Stimmoptionen festlegen",
+   "b": "Wählen Sie im Bereich Stimmeinstellungen zuerst die Stimmsprache – sie sollte zur Sprache Ihres Textes passen. Grenzen Sie die Liste dann mit dem Filter Geschlecht oder über Stimme suchen ein (praktisch, wenn Sie den Namen einer Stimme kennen). Wenn Sie Tempo oder Tonhöhe aktivieren, erscheinen ein Schieberegler und ein Zahlenfeld: Das Tempo reicht von −100 % bis +100 %, die Tonhöhe von −100 Hz bis +100 Hz. Hören Sie sich vorab ein paar Stimmen an – zwei Stimmen derselben Sprache können völlig unterschiedlich klingen."
+  },
+  {
+   "h": "Text schreiben oder importieren",
+   "b": "Tippen oder fügen Sie Ihren Text in das große Textfeld ein, oder laden Sie mit Datei importieren ein .txt-, .md- oder .text-Dokument. Der Zähler oben rechts zeigt beim Schreiben Zeichen und Zeilen an. Pro Generierung sind bis zu 5.000 Zeichen möglich; längere Dokumente teilen Sie in Abschnitte auf. Für eine Pause geben Sie eine Pausenmarke wie [break:500ms] oder [break:2s] ein – oder drücken Sie Ctrl+B, um eine an der Cursorposition einzufügen. Normale Satzzeichen werden automatisch berücksichtigt: Kommas und Punkte werden zu natürlichen Pausen."
+  },
+  {
+   "h": "Vorschau anhören oder generieren",
+   "b": "Audio-Vorschau liest den Text sofort mit einer Stimme Ihres Geräts vor – so prüfen Sie Formulierung und Sprechtempo in Sekunden. Audio generieren erzeugt die finale Fassung auf dem Server, mit genau der gewählten Stimme, Tempo und Tonhöhe, als MP3 oder WAV. Pausenmarken werden in der generierten Datei umgesetzt (in der Vorschau werden sie stillschweigend entfernt). Ist Nach Generierung automatisch abspielen aktiviert, startet jede fertige Datei von selbst."
+  },
+  {
+   "h": "Audio- und Untertiteldateien herunterladen",
+   "b": "Jedes generierte Element erscheint in der Liste Ergebnisse mit eigenem Player. Laden Sie das Audio herunter (MP3 oder WAV, je nach Auswahl) und – da die Engine Wort-Zeitstempel liefert – passende Untertiteldateien in den Formaten SRT und VTT, bereit für Videoeditoren und Player. Ergebnisse bleiben wie ein Notizzettel nur für diese Browsersitzung erhalten: Sobald Sie den Tab schließen, sind sie weg. Laden Sie also herunter, was Sie behalten möchten."
+  }
+ ],
+ "usecases": [
+  {
+   "e": "🎬",
+   "h": "Video-Vertonung",
+   "p": "Versehen Sie Tutorials, Erklärvideos und Shorts mit einem sauberen Voiceover – ganz ohne Studio oder Sprecher."
+  },
+  {
+   "e": "📚",
+   "h": "Hörbuchproduktion",
+   "p": "Verwandeln Sie Kapitel und lange Dokumente in hörbares Audio zum Lernen unterwegs."
+  },
+  {
+   "e": "🎙️",
+   "h": "Podcast-Inhalte",
+   "p": "Erstellen Sie Episoden, Intros und Werbespots in Minuten – und generieren Sie einen Satz einfach neu, statt ihn neu aufzunehmen."
+  },
+  {
+   "e": "📖",
+   "h": "Lernmaterialien",
+   "p": "Machen Sie Lektionen, Karteikarten und Lesetexte für Lernende zugänglich, die besser über das Zuhören lernen."
+  },
+  {
+   "e": "🤖",
+   "h": "Entwicklung von Sprachassistenten",
+   "p": "Erstellen Sie Prototypen für Prompts, Begrüßungen und Antworten von Assistenten und interaktiven Sprach-Apps."
+  },
+  {
+   "e": "🌍",
+   "h": "Mehrsprachige Lokalisierung",
+   "p": "Produzieren Sie dieselbe Botschaft in Dutzenden Sprachen – mit muttersprachlich klingenden Stimmen für jeden Markt."
+  }
+ ],
+ "faq": [
+  {
+   "q": "Ist Text 2 Speech kostenlos?",
+   "a": "Ja. Anhören, Generieren und Herunterladen sind kostenlos und ohne Konto möglich. Private Nutzung und Lernzwecke sind vollständig abgedeckt; wenn Sie generiertes Audio kommerziell nutzen, stellen Sie sicher, dass dies den geltenden Gesetzen und den Rechten an den umgewandelten Texten entspricht."
+  },
+  {
+   "q": "Gibt es ein Zeichenlimit pro Generierung?",
+   "a": "Bis zu 5.000 Zeichen pro Generierung (etwa fünf bis sieben Minuten Sprache). Längeres Material wie Buchkapitel generieren Sie in Abschnitten und fügen die Dateien anschließend zusammen – jeder Durchgang ist schneller, und einen Abschnitt neu zu erstellen ist weniger aufwendig als ein ganzes Buch."
+  },
+  {
+   "q": "Was kann ich in das Textfeld eingeben?",
+   "a": "Reinen Text in jeder unterstützten Sprache, auch gemischt Chinesisch und Englisch, Zahlen und gängige Satzzeichen. Satzzeichen werden für natürliche Pausen ausgewertet, und [break:…]-Marken fügen exakte Stille ein. Emojis und Symbole werden mit ihrem Namen vorgelesen – entfernen Sie also alle, die nicht gesprochen werden sollen."
+  },
+  {
+   "q": "Wie füge ich eine Pause ein?",
+   "a": "Setzen Sie an beliebiger Stelle im Text eine Pausenmarke: [break:200ms] für eine kurze Pause, [break:2s] für zwei Sekunden. Mit Ctrl+B fügen Sie [break:500ms] an der Cursorposition ein. Die Marken sind in der Ausgabe nicht hörbar – Sie hören nur die Pause."
+  },
+  {
+   "q": "Welche Formate kann ich herunterladen?",
+   "a": "Audio als MP3 oder WAV (vor dem Generieren gewählt) sowie Untertitel in SRT und VTT, erstellt aus den wortgenauen Zeitstempeln der Engine – ideal, um Videos mit derselben Sprachaufnahme zu untertiteln."
+  },
+  {
+   "q": "Bleiben meine generierten Dateien online?",
+   "a": "Nein. Ergebnisse existieren nur während Ihrer aktuellen Browsersitzung und werden danach entfernt. Alles, was Sie behalten möchten, sollten Sie herunterladen, bevor Sie den Tab schließen."
+  }
+ ]
+}

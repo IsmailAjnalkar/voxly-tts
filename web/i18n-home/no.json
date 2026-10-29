@@ -1,0 +1,78 @@
+{
+ "steps": [
+  {
+   "h": "Velg stemmealternativer",
+   "b": "I panelet «Stemmeinnstillinger» velger du først stemmespråk — det bør samsvare med språket i teksten din. Snevre deretter inn listen med kjønnsfilteret eller søkefeltet (nyttig hvis du vet hva stemmen heter). Huker du av for «Hastighet» eller «Tonehøyde», får du en glidebryter og et tallfelt: hastigheten går fra −100 % til +100 %, tonehøyden fra −100 Hz til +100 Hz. Lytt på noen stemmer før du bestemmer deg — to stemmer på samme språk kan høres helt forskjellige ut."
+  },
+  {
+   "h": "Skriv eller importer tekst",
+   "b": "Skriv eller lim inn i den store tekstboksen, eller bruk «Importer fil» for å laste inn et dokument i formatet .txt, .md eller .text. Telleren øverst til høyre viser antall tegn og linjer mens du skriver. Hver generering tar opptil 5 000 tegn; del lengre dokumenter opp i flere deler. For å legge inn en pause skriver du en pausemarkør som [break:500ms] eller [break:2s] — eller trykker Ctrl+B for å sette inn en ved markøren. Vanlig tegnsetting håndteres automatisk: komma og punktum blir naturlige pauser."
+  },
+  {
+   "h": "Forhåndslytt eller generer",
+   "b": "«Forhåndslytt» leser teksten høyt med en gang med en stemme på enheten din, så du på sekunder kan sjekke ordlyd og tempo. «Generer lyd» lager den ekte versjonen på serveren med nøyaktig den stemmen, hastigheten og tonehøyden du valgte, i MP3 eller WAV. Pausemarkører følges i den genererte filen (og fjernes stille under forhåndslytting). Er «Spill av etter generering» avhuket, begynner hver ferdige fil å spille av seg selv."
+  },
+  {
+   "h": "Last ned lyd- og undertekstfiler",
+   "b": "Hvert generert element havner i listen «Resultater» med sin egen avspiller. Last ned lyden (MP3 eller WAV, det du valgte) og — siden motoren rapporterer tidspunkter for hvert ord — tilhørende undertekstfiler i både SRT og VTT, klare for videoredigerere og avspillere. Resultatene finnes bare i denne nettleserøkten, akkurat som en kladdeblokk: når du lukker fanen, er de borte, så last ned det du vil beholde."
+  }
+ ],
+ "usecases": [
+  {
+   "e": "🎬",
+   "h": "Videodubbing",
+   "p": "Legg en ren voiceover på veiledninger, forklaringsvideoer og kortvideoer uten å booke studio eller stemmeskuespiller."
+  },
+  {
+   "e": "📚",
+   "h": "Lydbokproduksjon",
+   "p": "Gjør kapitler og lange dokumenter om til lyd du kan lytte til og lære av mens du er på farten."
+  },
+  {
+   "e": "🎙️",
+   "h": "Podkastinnhold",
+   "p": "Lag utkast til episoder, intro og reklameopplesninger på minutter, og generer en replikk på nytt i stedet for å spille den inn igjen."
+  },
+  {
+   "e": "📖",
+   "h": "Undervisningsmateriell",
+   "p": "Gjør leksjoner, huskekort og tekster tilgjengelige for elever som lærer bedre ved å lytte."
+  },
+  {
+   "e": "🤖",
+   "h": "Utvikling av stemmeassistenter",
+   "p": "Lag prototyper av ledetekster, hilsener og svar for assistenter og interaktive stemmeapper."
+  },
+  {
+   "e": "🌍",
+   "h": "Lokalisering av flerspråklig innhold",
+   "p": "Lag det samme budskapet på dusinvis av språk, med stemmer som høres ut som morsmålsbrukere i hvert marked."
+  }
+ ],
+ "faq": [
+  {
+   "q": "Er Text 2 Speech gratis?",
+   "a": "Ja. Lytting, generering og nedlasting er gratis og krever ingen konto. Personlig bruk og læring er fullt dekket; bruker du generert lyd kommersielt, må du sørge for at bruken følger gjeldende lover og rettighetene til teksten du konverterer."
+  },
+  {
+   "q": "Er det en tegngrense per generering?",
+   "a": "Opptil 5 000 tegn per generering (omtrent fem til sju minutter tale). Lengre materiale, som bokkapitler, genererer du i deler og setter sammen filene — hver generering går raskere, og å gjøre om én del er billigere enn å gjøre om en hel bok."
+  },
+  {
+   "q": "Hva kan jeg skrive i tekstboksen?",
+   "a": "Vanlig tekst på hvilket som helst av de støttede språkene, inkludert blandet kinesisk og engelsk, tall og vanlig tegnsetting. Tegnsetting tolkes som naturlige pauser, og markører som [break:…] setter inn nøyaktig stillhet. Emoji og symboler leses opp med navn, så fjern dem du ikke vil ha opplest."
+  },
+  {
+   "q": "Hvordan legger jeg inn en pause?",
+   "a": "Sett inn en pausemarkør hvor som helst i teksten: [break:200ms] for et kort opphold, [break:2s] for to sekunder. Trykker du Ctrl+B, settes [break:500ms] inn ved markøren. Markørene høres ikke i resultatet — du hører bare pausen."
+  },
+  {
+   "q": "Hvilke formater kan jeg laste ned?",
+   "a": "Lyd i MP3 eller WAV (velges før generering), pluss undertekster i SRT og VTT laget ut fra motorens tidspunkter på ordnivå — ideelt for teksting av videoer med samme fortellerstemme."
+  },
+  {
+   "q": "Blir de genererte filene mine liggende på nett?",
+   "a": "Nei. Resultatene finnes bare i den gjeldende nettleserøkten og fjernes etterpå. Last ned det du vil beholde før du lukker fanen."
+  }
+ ]
+}

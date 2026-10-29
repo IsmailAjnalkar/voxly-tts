@@ -1,0 +1,78 @@
+{
+ "steps": [
+  {
+   "h": "Set voice options",
+   "b": "In the Voice settings panel, choose the voice language first — it should match the language of your text. Then narrow the list with the gender filter or the search box (handy when you know a voice name). Ticking Speed or Pitch unlocks a slider plus a number box: speed runs from −100% to +100%, pitch from −100 Hz to +100 Hz. Preview a few voices before committing; two voices in the same language can sound completely different."
+  },
+  {
+   "h": "Write or import text",
+   "b": "Type or paste into the big text box, or use Import File to load a .txt, .md or .text document. The counter at the top right tracks characters and lines as you type. Each generation takes up to 5,000 characters; split longer documents into parts. To insert a pause, type a break marker such as [break:500ms] or [break:2s] — or press Ctrl+B to drop one at the cursor. Plain punctuation is handled automatically: commas and full stops become natural pauses."
+  },
+  {
+   "h": "Preview or generate",
+   "b": "Preview Audio reads the text aloud instantly using a voice on your device, so you can sanity-check wording and pacing in seconds. Generate Audio renders the real thing on the server with the exact voice, speed and pitch you picked, in MP3 or WAV. Break markers are honored in the generated file (and quietly removed while previewing). If Autoplay after generation is ticked, each finished render starts playing by itself."
+  },
+  {
+   "h": "Download audio & subtitle files",
+   "b": "Every generated item lands in the Results list with its own player. Download the audio (MP3 or WAV, whichever you selected), and — because the engine reports word timings — matching subtitle files in both SRT and VTT formats, ready for video editors and players. Results live only for this browser session, exactly like a scratchpad: when you close the tab, they are gone, so download what you want to keep."
+  }
+ ],
+ "usecases": [
+  {
+   "e": "🎬",
+   "h": "Video dubbing",
+   "p": "Add a clean voiceover to tutorials, explainers and shorts without booking a studio or a voice actor."
+  },
+  {
+   "e": "📚",
+   "h": "Audiobook production",
+   "p": "Turn chapters and long documents into listenable audio for learning on the move."
+  },
+  {
+   "e": "🎙️",
+   "h": "Podcast content",
+   "p": "Draft episodes, intros and ad reads in minutes, then re-generate a line instead of re-recording it."
+  },
+  {
+   "e": "📖",
+   "h": "Educational materials",
+   "p": "Make lessons, flashcards and readings accessible for students who learn better by listening."
+  },
+  {
+   "e": "🤖",
+   "h": "Voice assistant development",
+   "p": "Prototype prompts, greetings and responses for assistants and interactive voice apps."
+  },
+  {
+   "e": "🌍",
+   "h": "Multilingual content localization",
+   "p": "Produce the same message in dozens of languages with native-sounding voices for each market."
+  }
+ ],
+ "faq": [
+  {
+   "q": "Is Text 2 Speech free to use?",
+   "a": "Yes. Listening, generating and downloading are free and need no account. Personal and learning use is fully covered; if you use generated audio commercially, make sure your use complies with applicable laws and the rights of any text you convert."
+  },
+  {
+   "q": "Is there a character limit per generation?",
+   "a": "Up to 5,000 characters per generation (roughly five to seven minutes of speech). For longer material such as book chapters, generate it in parts and stitch the files — each render is faster, and re-doing one part is cheaper than re-doing a book."
+  },
+  {
+   "q": "What can I type into the text box?",
+   "a": "Plain text in any of the supported languages, including mixed Chinese and English, numbers and common punctuation. Punctuation is interpreted for natural pausing and [break:…] markers insert exact silences. Emoji and symbols are read out by name, so remove any you don't want spoken."
+  },
+  {
+   "q": "How do I add a pause?",
+   "a": "Insert a break marker anywhere in the text: [break:200ms] for a short beat, [break:2s] for two seconds. Pressing Ctrl+B inserts [break:500ms] at the cursor. Markers are silent in the output — you hear only the pause."
+  },
+  {
+   "q": "Which formats can I download?",
+   "a": "Audio in MP3 or WAV (chosen before generating), plus subtitles in SRT and VTT built from the engine's word-level timings — ideal for captioning videos with the same narration."
+  },
+  {
+   "q": "Do my generated files stay online?",
+   "a": "No. Results exist only for your current browser session and are removed afterwards. Anything you want to keep, download before you close the tab."
+  }
+ ]
+}

@@ -1,0 +1,78 @@
+{
+ "steps": [
+  {
+   "h": "Ustaw opcje głosu",
+   "b": "W panelu „Ustawienia głosu” najpierw wybierz język głosu — powinien odpowiadać językowi twojego tekstu. Potem zawęź listę filtrem płci lub polem wyszukiwania (przydatne, gdy znasz nazwę głosu). Zaznaczenie opcji „Prędkość” lub „Wysokość tonu” odblokowuje suwak i pole liczbowe: prędkość ustawisz od −100% do +100%, a wysokość tonu od −100 Hz do +100 Hz. Zanim się zdecydujesz, odsłuchaj kilka głosów — dwa głosy w tym samym języku mogą brzmieć zupełnie inaczej."
+  },
+  {
+   "h": "Napisz lub zaimportuj tekst",
+   "b": "Wpisz lub wklej tekst w duże pole tekstowe albo użyj przycisku „Importuj plik”, aby wczytać dokument .txt, .md lub .text. Licznik w prawym górnym rogu na bieżąco pokazuje liczbę znaków i wierszy. Jedno generowanie obejmuje maksymalnie 5000 znaków — dłuższe dokumenty podziel na części. Aby wstawić pauzę, wpisz znacznik przerwy, np. [break:500ms] lub [break:2s], albo naciśnij Ctrl+B, by wstawić go w miejscu kursora. Zwykła interpunkcja jest obsługiwana automatycznie: przecinki i kropki zamieniają się w naturalne pauzy."
+  },
+  {
+   "h": "Odsłuchaj lub wygeneruj",
+   "b": "„Podgląd audio” od razu czyta tekst na głos za pomocą głosu dostępnego na twoim urządzeniu, więc w kilka sekund sprawdzisz sformułowania i tempo. „Generuj audio” tworzy docelowe nagranie na serwerze — dokładnie z wybranym głosem, prędkością i wysokością tonu — w formacie MP3 lub WAV. Znaczniki przerw są uwzględniane w wygenerowanym pliku (a podczas podglądu po cichu pomijane). Jeśli zaznaczysz „Odtwarzaj po wygenerowaniu”, każde gotowe nagranie zacznie się odtwarzać samo."
+  },
+  {
+   "h": "Pobierz pliki audio i napisy",
+   "b": "Każdy wygenerowany element trafia na listę „Wyniki” z własnym odtwarzaczem. Pobierz audio (MP3 lub WAV, zależnie od wybranego formatu), a ponieważ silnik podaje czasy poszczególnych słów — także pasujące pliki napisów w formatach SRT i VTT, gotowe do edytorów wideo i odtwarzaczy. Wyniki istnieją tylko w bieżącej sesji przeglądarki, zupełnie jak brudnopis: po zamknięciu karty znikają, więc pobierz to, co chcesz zachować."
+  }
+ ],
+ "usecases": [
+  {
+   "e": "🎬",
+   "h": "Dubbing wideo",
+   "p": "Dodaj czysty głos lektora do poradników, filmów objaśniających i shortów bez rezerwowania studia czy lektora."
+  },
+  {
+   "e": "📚",
+   "h": "Produkcja audiobooków",
+   "p": "Zamień rozdziały i długie dokumenty w audio, którego posłuchasz, ucząc się w drodze."
+  },
+  {
+   "e": "🎙️",
+   "h": "Treści podcastowe",
+   "p": "Przygotuj szkice odcinków, intra i czytane reklamy w kilka minut, a potem wygeneruj ponownie jedno zdanie zamiast nagrywać je od nowa."
+  },
+  {
+   "e": "📖",
+   "h": "Materiały edukacyjne",
+   "p": "Udostępnij lekcje, fiszki i lektury uczniom, którzy lepiej uczą się, słuchając."
+  },
+  {
+   "e": "🤖",
+   "h": "Tworzenie asystentów głosowych",
+   "p": "Prototypuj komunikaty, powitania i odpowiedzi dla asystentów i interaktywnych aplikacji głosowych."
+  },
+  {
+   "e": "🌍",
+   "h": "Lokalizacja treści wielojęzycznych",
+   "p": "Przygotuj ten sam przekaz w dziesiątkach języków, z głosami brzmiącymi jak rodzimi użytkownicy na każdym rynku."
+  }
+ ],
+ "faq": [
+  {
+   "q": "Czy Text 2 Speech jest darmowy?",
+   "a": "Tak. Odsłuchiwanie, generowanie i pobieranie są bezpłatne i nie wymagają konta. Użytek osobisty i edukacyjny jest w pełni objęty; jeśli wykorzystujesz wygenerowane audio komercyjnie, upewnij się, że robisz to zgodnie z obowiązującym prawem i prawami do przetwarzanego tekstu."
+  },
+  {
+   "q": "Czy obowiązuje limit znaków na jedno generowanie?",
+   "a": "Do 5000 znaków na jedno generowanie (mniej więcej pięć do siedmiu minut mowy). Dłuższe materiały, takie jak rozdziały książek, generuj w częściach i połącz pliki — każde generowanie jest szybsze, a powtórzenie jednej części kosztuje mniej niż powtórzenie całej książki."
+  },
+  {
+   "q": "Co mogę wpisać w pole tekstowe?",
+   "a": "Zwykły tekst w dowolnym z obsługiwanych języków, w tym mieszankę chińskiego i angielskiego, liczby i typową interpunkcję. Interpunkcja zamienia się w naturalne pauzy, a znaczniki [break:…] wstawiają ciszę o dokładnej długości. Emoji i symbole są odczytywane z nazwy, więc usuń te, których nie chcesz usłyszeć."
+  },
+  {
+   "q": "Jak dodać pauzę?",
+   "a": "Wstaw znacznik przerwy w dowolnym miejscu tekstu: [break:200ms] dla krótkiej chwili, [break:2s] dla dwóch sekund. Naciśnięcie Ctrl+B wstawia [break:500ms] w miejscu kursora. Znaczniki nie są odczytywane — słyszysz tylko pauzę."
+  },
+  {
+   "q": "Jakie formaty mogę pobrać?",
+   "a": "Audio w MP3 lub WAV (wybierasz przed generowaniem) oraz napisy w SRT i VTT, tworzone na podstawie czasów poszczególnych słów podawanych przez silnik — idealne do napisów do filmów z tą samą narracją."
+  },
+  {
+   "q": "Czy wygenerowane pliki zostają w sieci?",
+   "a": "Nie. Wyniki istnieją tylko w bieżącej sesji przeglądarki, a potem są usuwane. Wszystko, co chcesz zachować, pobierz przed zamknięciem karty."
+  }
+ ]
+}

@@ -1,0 +1,78 @@
+{
+ "steps": [
+  {
+   "h": "Állítsd be a hangot",
+   "b": "A „Hangbeállítások” panelen először válaszd ki a hang nyelvét — ennek egyeznie kell a szöveged nyelvével. Ezután szűkítsd a listát a nem szerinti szűrővel vagy a keresőmezővel (jól jön, ha tudod egy hang nevét). A „Sebesség” vagy a „Hangmagasság” bejelölésével egy csúszka és egy számmező válik elérhetővé: a sebesség −100% és +100%, a hangmagasság −100 Hz és +100 Hz között állítható. Mielőtt döntesz, hallgass meg néhány hangot; két azonos nyelvű hang teljesen másként szólhat."
+  },
+  {
+   "h": "Írd be vagy importáld a szöveget",
+   "b": "Gépeld vagy illeszd be a szöveget a nagy szövegmezőbe, vagy a „Fájl importálása” gombbal tölts be egy .txt, .md vagy .text dokumentumot. A jobb felső számláló gépelés közben mutatja a karakterek és sorok számát. Egy generálás legfeljebb 5000 karaktert dolgoz fel; a hosszabb dokumentumokat oszd részekre. Szünethez írj be egy szünetjelölőt, például [break:500ms] vagy [break:2s] — vagy nyomd meg a Ctrl+B billentyűt, és a kurzor helyére kerül egy. A szokásos írásjeleket a rendszer automatikusan kezeli: a vesszőkből és pontokból természetes szünetek lesznek."
+  },
+  {
+   "h": "Előnézet vagy generálás",
+   "b": "A „Hang előnézet” azonnal felolvassa a szöveget az eszközödön elérhető hanggal, így másodpercek alatt ellenőrizheted a megfogalmazást és a tempót. A „Hang generálása” a szerveren készíti el a végleges hangfájlt pontosan a kiválasztott hanggal, sebességgel és hangmagassággal, MP3 vagy WAV formátumban. A szünetjelölőket a generált fájl betartja (előnézetkor pedig csendben kimaradnak). Ha be van jelölve az „Automatikus lejátszás generálás után”, minden elkészült hangfájl magától elindul."
+  },
+  {
+   "h": "Töltsd le a hang- és feliratfájlokat",
+   "b": "Minden generált elem saját lejátszóval kerül az „Eredmények” listába. Töltsd le a hangot (MP3 vagy WAV, amelyiket kiválasztottad), és — mivel a motor megadja a szavak időzítését — a hozzá illő feliratfájlokat is SRT és VTT formátumban, videószerkesztőkhöz és lejátszókhoz készen. Az eredmények csak az aktuális böngészőmunkamenetben élnek, akár egy jegyzetlap: a lap bezárásakor eltűnnek, ezért töltsd le, amit meg akarsz tartani."
+  }
+ ],
+ "usecases": [
+  {
+   "e": "🎬",
+   "h": "Videók szinkronizálása",
+   "p": "Adj tiszta narrációt oktatóvideókhoz, magyarázó videókhoz és rövid videókhoz stúdió vagy szinkronszínész nélkül."
+  },
+  {
+   "e": "📚",
+   "h": "Hangoskönyv-készítés",
+   "p": "Alakítsd a fejezeteket és hosszú dokumentumokat hallgatható hanganyaggá, hogy útközben is tanulhass."
+  },
+  {
+   "e": "🎙️",
+   "h": "Podcasttartalom",
+   "p": "Készíts epizódvázlatokat, intrókat és felolvasott hirdetéseket percek alatt, majd egy-egy mondatot generálj újra ahelyett, hogy újra felvennéd."
+  },
+  {
+   "e": "📖",
+   "h": "Oktatási anyagok",
+   "p": "Tedd hozzáférhetővé a leckéket, szókártyákat és olvasmányokat azoknak a diákoknak, akik hallás útján jobban tanulnak."
+  },
+  {
+   "e": "🤖",
+   "h": "Hangasszisztens-fejlesztés",
+   "p": "Készíts prototípust hangutasításokból, köszöntésekből és válaszokból asszisztensekhez és interaktív hangalapú alkalmazásokhoz."
+  },
+  {
+   "e": "🌍",
+   "h": "Többnyelvű tartalom lokalizálása",
+   "p": "Készítsd el ugyanazt az üzenetet több tucat nyelven, minden piacra anyanyelvi hatású hangokkal."
+  }
+ ],
+ "faq": [
+  {
+   "q": "Ingyenes a Text 2 Speech?",
+   "a": "Igen. A meghallgatás, a generálás és a letöltés ingyenes, és nem kell hozzá fiók. A személyes és tanulási célú használat teljesen lefedett; ha a generált hangot üzleti célra használod, győződj meg róla, hogy ez megfelel a vonatkozó jogszabályoknak és az átalakított szöveghez fűződő jogoknak."
+  },
+  {
+   "q": "Van karakterkorlát generálásonként?",
+   "a": "Generálásonként legfeljebb 5000 karakter (nagyjából öt–hét perc beszéd). Hosszabb anyagot, például könyvfejezeteket, részletekben generálj, és fűzd össze a fájlokat — minden generálás gyorsabb, és egy részt újracsinálni olcsóbb, mint egy egész könyvet."
+  },
+  {
+   "q": "Mit írhatok a szövegmezőbe?",
+   "a": "Egyszerű szöveget bármelyik támogatott nyelven, beleértve a vegyes kínai–angol szöveget, a számokat és a gyakori írásjeleket. Az írásjelekből természetes szünetek lesznek, a [break:…] jelölők pedig pontos hosszúságú csendet szúrnak be. Az emojikat és szimbólumokat a nevükkel olvassa fel, ezért töröld azokat, amelyeket nem szeretnél hallani."
+  },
+  {
+   "q": "Hogyan adhatok hozzá szünetet?",
+   "a": "Szúrj be egy szünetjelölőt bárhová a szövegben: [break:200ms] egy rövid megálláshoz, [break:2s] két másodperchez. A Ctrl+B megnyomása [break:500ms] jelölőt szúr be a kurzor helyére. A jelölők a kimenetben nem hallatszanak — csak a szünetet hallod."
+  },
+  {
+   "q": "Milyen formátumokat tölthetek le?",
+   "a": "Hangot MP3 vagy WAV formátumban (generálás előtt választod ki), valamint SRT és VTT feliratot, amely a motor szószintű időzítéséből készül — ideális ugyanazzal a narrációval készült videók feliratozásához."
+  },
+  {
+   "q": "Online maradnak a generált fájljaim?",
+   "a": "Nem. Az eredmények csak az aktuális böngészőmunkamenetben léteznek, utána törlődnek. Amit meg szeretnél tartani, töltsd le, mielőtt bezárod a lapot."
+  }
+ ]
+}

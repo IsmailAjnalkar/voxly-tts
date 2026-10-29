@@ -6,6 +6,7 @@ speed/pitch prosody, MP3/WAV output, SRT/VTT subtitles,
 session-scoped result storage (files live only for the browser session).
 """
 import asyncio
+import html as html_lib
 import json
 import logging
 import os
@@ -584,7 +585,36 @@ _PAGES = ["tutorial.html", "donate.html", "support.html", "auth.html",
           "privacy.html", "terms.html"]
 _INDEXED = ["", "tutorial.html", "donate.html", "support.html", "privacy.html", "terms.html"]
 _WEBDIR = BASE / "web"
+_HOMEDIR = _WEBDIR / "i18n-home"
 _page_cache: dict = {}
+
+
+def _home_content(html: str, code: str | None) -> str:
+    """Fill the home page's how-it-works, use cases, FAQ and FAQ JSON-LD from
+    web/i18n-home/<lang>.json, and embed the data for client-side tab switching."""
+    lang = code if code and (_HOMEDIR / f"{code}.json").exists() else "en"
+    c = json.loads((_HOMEDIR / f"{lang}.json").read_text(encoding="utf-8"))
+    e = lambda t: html_lib.escape(t, quote=False)
+    step = c["steps"][0]
+    html = html.replace("<!--home:step-->", f"<h3>{e(step['h'])}</h3><p>{e(step['b'])}</p>", 1)
+    html = html.replace("<!--home:usecases-->", "".join(
+        f'<div class="ucard"><div class="emo">{e(u["e"])}</div><h3>{e(u["h"])}</h3><p>{e(u["p"])}</p></div>'
+        for u in c["usecases"]), 1)
+    html = html.replace("<!--home:faq-->", "".join(
+        f'<div class="faqitem"><button class="q" type="button">{e(f["q"])}<span>▾</span></button>'
+        f'<div class="a">{e(f["a"])}</div></div>' for f in c["faq"]), 1)
+    data = json.dumps(c, ensure_ascii=False).replace("</", "<\\/")
+    html = html.replace("<!--home:data-->",
+                        f'<script id="homecontent" type="application/json" data-lang="{lang}">{data}</script>', 1)
+    m = re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
+    ld = json.loads(m.group(1))
+    for node in ld["@graph"]:
+        if node.get("@type") == "FAQPage":
+            node["inLanguage"] = _HREFLANG.get(lang, lang)
+            node["mainEntity"] = [{"@type": "Question", "name": f["q"],
+                                   "acceptedAnswer": {"@type": "Answer", "text": f["a"]}} for f in c["faq"]]
+    ld_text = json.dumps(ld, ensure_ascii=False).replace("</", "<\\/")
+    return html[:m.start(1)] + ld_text + html[m.end(1):]
 
 
 def _url(code: str | None, page: str) -> str:
@@ -596,6 +626,8 @@ def _page(name: str, code: str | None = None) -> HTMLResponse:
     if key not in _page_cache:
         html = (_WEBDIR / name).read_text(encoding="utf-8")
         page = "" if name == "index.html" else name
+        if name == "index.html":
+            html = _home_content(html, code)
         if page in _INDEXED:
             links = f'<link rel="canonical" href="{_url(code, page)}">' + "".join(
                 f'<link rel="alternate" hreflang="{_HREFLANG.get(c, c)}" href="{_url(c, page)}">'

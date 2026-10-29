@@ -1,0 +1,78 @@
+{
+ "steps": [
+  {
+   "h": "Nastavte možnosti hlasu",
+   "b": "V panelu „Nastavení hlasu“ nejprve zvolte jazyk hlasu — měl by odpovídat jazyku vašeho textu. Seznam pak zužte filtrem pohlaví nebo vyhledávacím polem (hodí se, když znáte název hlasu). Zaškrtnutím volby „Rychlost“ nebo „Výška tónu“ zpřístupníte posuvník a číselné pole: rychlost lze nastavit od −100 % do +100 %, výšku tónu od −100 Hz do +100 Hz. Než se rozhodnete, poslechněte si několik hlasů — dva hlasy ve stejném jazyce mohou znít úplně jinak."
+  },
+  {
+   "h": "Napište nebo importujte text",
+   "b": "Text napište nebo vložte do velkého textového pole, případně pomocí „Importovat soubor“ načtěte dokument .txt, .md nebo .text. Počítadlo vpravo nahoře průběžně ukazuje počet znaků a řádků. Jedno generování zvládne až 5 000 znaků; delší dokumenty rozdělte na části. Pauzu vložíte značkou, například [break:500ms] nebo [break:2s] — případně stiskněte Ctrl+B a značka se vloží na pozici kurzoru. Běžná interpunkce se zpracuje automaticky: čárky a tečky se promění v přirozené pauzy."
+  },
+  {
+   "h": "Náhled nebo generování",
+   "b": "„Náhled zvuku“ okamžitě přečte text nahlas hlasem z vašeho zařízení, takže během pár sekund ověříte formulace i tempo. „Generovat zvuk“ vytvoří na serveru finální nahrávku s přesně zvoleným hlasem, rychlostí a výškou tónu, ve formátu MP3 nebo WAV. Značky pauz se ve vygenerovaném souboru dodrží (a při náhledu se tiše vynechají). Je-li zaškrtnuto „Přehrát po vygenerování“, každá hotová nahrávka se spustí sama."
+  },
+  {
+   "h": "Stáhněte zvuk a titulky",
+   "b": "Každá vygenerovaná položka se objeví v seznamu „Výsledky“ s vlastním přehrávačem. Stáhněte si zvuk (MP3 nebo WAV, podle toho, co jste zvolili) a — protože engine hlásí časování jednotlivých slov — také odpovídající soubory titulků ve formátech SRT i VTT, připravené pro střihové programy a přehrávače. Výsledky existují jen v této relaci prohlížeče, podobně jako poznámkový blok: po zavření karty zmizí, proto si stáhněte vše, co si chcete ponechat."
+  }
+ ],
+ "usecases": [
+  {
+   "e": "🎬",
+   "h": "Dabing videí",
+   "p": "Doplňte čistý hlasový komentář k návodům, vysvětlujícím videím a shortům bez rezervace studia nebo dabéra."
+  },
+  {
+   "e": "📚",
+   "h": "Tvorba audioknih",
+   "p": "Proměňte kapitoly a dlouhé dokumenty v audio, které můžete poslouchat a učit se z něj na cestách."
+  },
+  {
+   "e": "🎙️",
+   "h": "Obsah pro podcasty",
+   "p": "Připravte koncepty epizod, úvody a čtené reklamy během pár minut a místo nového nahrávání pak jen znovu vygenerujte jednu větu."
+  },
+  {
+   "e": "📖",
+   "h": "Vzdělávací materiály",
+   "p": "Zpřístupněte lekce, kartičky a texty ke čtení studentům, kteří se lépe učí poslechem."
+  },
+  {
+   "e": "🤖",
+   "h": "Vývoj hlasových asistentů",
+   "p": "Prototypujte výzvy, pozdravy a odpovědi pro asistenty a interaktivní hlasové aplikace."
+  },
+  {
+   "e": "🌍",
+   "h": "Lokalizace vícejazyčného obsahu",
+   "p": "Vytvořte stejné sdělení v desítkách jazyků s hlasy, které na každém trhu znějí jako rodilí mluvčí."
+  }
+ ],
+ "faq": [
+  {
+   "q": "Je Text 2 Speech zdarma?",
+   "a": "Ano. Poslech, generování i stahování jsou zdarma a nevyžadují účet. Osobní a studijní použití je plně pokryto; pokud vygenerovaný zvuk využíváte komerčně, ujistěte se, že je to v souladu s platnými zákony a s právy k převáděnému textu."
+  },
+  {
+   "q": "Platí limit znaků na jedno generování?",
+   "a": "Až 5 000 znaků na jedno generování (zhruba pět až sedm minut řeči). Delší materiál, třeba kapitoly knihy, generujte po částech a soubory spojte — každé generování je rychlejší a předělat jednu část je levnější než předělat celou knihu."
+  },
+  {
+   "q": "Co mohu napsat do textového pole?",
+   "a": "Prostý text v kterémkoli z podporovaných jazyků, včetně kombinace čínštiny a angličtiny, čísla a běžnou interpunkci. Interpunkce se promítne do přirozených pauz a značky [break:…] vloží přesně dlouhé ticho. Emoji a symboly se čtou svým názvem, proto odstraňte ty, které nechcete slyšet."
+  },
+  {
+   "q": "Jak přidám pauzu?",
+   "a": "Vložte kamkoli do textu značku pauzy: [break:200ms] pro krátké zastavení, [break:2s] pro dvě sekundy. Stisknutím Ctrl+B vložíte na pozici kurzoru [break:500ms]. Značky ve výstupu nezazní — uslyšíte jen pauzu."
+  },
+  {
+   "q": "Jaké formáty si mohu stáhnout?",
+   "a": "Zvuk v MP3 nebo WAV (volí se před generováním) a titulky v SRT a VTT sestavené z časování jednotlivých slov, které poskytuje engine — ideální pro otitulkování videí se stejným komentářem."
+  },
+  {
+   "q": "Zůstávají vygenerované soubory online?",
+   "a": "Ne. Výsledky existují jen po dobu aktuální relace prohlížeče a poté se odstraní. Co si chcete ponechat, stáhněte před zavřením karty."
+  }
+ ]
+}

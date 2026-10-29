@@ -1,0 +1,78 @@
+{
+ "steps": [
+  {
+   "h": "Configura la voz",
+   "b": "En el panel Ajustes de voz, elige primero el idioma de la voz: debe coincidir con el idioma de tu texto. Después, acota la lista con el filtro Género o con Buscar voz (útil si ya conoces el nombre de una voz). Al marcar Velocidad o Tono aparecen un control deslizante y una casilla numérica: la velocidad va de −100 % a +100 % y el tono de −100 Hz a +100 Hz. Escucha varias voces antes de decidirte; dos voces del mismo idioma pueden sonar totalmente distintas."
+  },
+  {
+   "h": "Escribe o importa el texto",
+   "b": "Escribe o pega el texto en el cuadro grande, o usa Importar archivo para cargar un documento .txt, .md o .text. El contador de la esquina superior derecha muestra caracteres y líneas mientras escribes. Cada generación admite hasta 5.000 caracteres; divide los documentos más largos en partes. Para insertar una pausa, escribe un marcador como [break:500ms] o [break:2s], o pulsa Ctrl+B para añadir uno en la posición del cursor. La puntuación se interpreta automáticamente: las comas y los puntos se convierten en pausas naturales."
+  },
+  {
+   "h": "Escucha o genera",
+   "b": "Vista previa de audio lee el texto al instante con una voz de tu dispositivo, para que revises la redacción y el ritmo en segundos. Generar audio crea la versión final en el servidor con exactamente la voz, la velocidad y el tono que elegiste, en MP3 o WAV. Los marcadores de pausa se respetan en el archivo generado (y se omiten discretamente en la vista previa). Si Reproducir tras generar está marcado, cada resultado terminado se reproduce solo."
+  },
+  {
+   "h": "Descarga el audio y los subtítulos",
+   "b": "Cada elemento generado aparece en la lista Resultados con su propio reproductor. Descarga el audio (MP3 o WAV, según lo que elegiste) y, como el motor registra los tiempos de cada palabra, los archivos de subtítulos correspondientes en formato SRT y VTT, listos para editores y reproductores de vídeo. Los resultados solo duran esta sesión del navegador, como un bloc de notas: al cerrar la pestaña desaparecen, así que descarga lo que quieras conservar."
+  }
+ ],
+ "usecases": [
+  {
+   "e": "🎬",
+   "h": "Doblaje de vídeos",
+   "p": "Añade una locución limpia a tutoriales, vídeos explicativos y shorts sin reservar estudio ni contratar a un locutor."
+  },
+  {
+   "e": "📚",
+   "h": "Producción de audiolibros",
+   "p": "Convierte capítulos y documentos largos en audio para aprender sobre la marcha."
+  },
+  {
+   "e": "🎙️",
+   "h": "Contenido para podcasts",
+   "p": "Prepara episodios, intros y cuñas publicitarias en minutos, y vuelve a generar una frase en lugar de grabarla de nuevo."
+  },
+  {
+   "e": "📖",
+   "h": "Materiales educativos",
+   "p": "Haz que lecciones, tarjetas de estudio y lecturas sean accesibles para quienes aprenden mejor escuchando."
+  },
+  {
+   "e": "🤖",
+   "h": "Desarrollo de asistentes de voz",
+   "p": "Crea prototipos de indicaciones, saludos y respuestas para asistentes y apps de voz interactivas."
+  },
+  {
+   "e": "🌍",
+   "h": "Localización multilingüe",
+   "p": "Produce el mismo mensaje en decenas de idiomas con voces de sonido nativo para cada mercado."
+  }
+ ],
+ "faq": [
+  {
+   "q": "¿Text 2 Speech es gratis?",
+   "a": "Sí. Escuchar, generar y descargar es gratis y no requiere cuenta. El uso personal y educativo está totalmente cubierto; si usas el audio generado con fines comerciales, asegúrate de cumplir la legislación aplicable y los derechos de los textos que conviertas."
+  },
+  {
+   "q": "¿Hay un límite de caracteres por generación?",
+   "a": "Hasta 5.000 caracteres por generación (unos cinco a siete minutos de voz). Para material más largo, como capítulos de un libro, genéralo por partes y une los archivos: cada generación es más rápida, y rehacer una parte cuesta menos que rehacer un libro entero."
+  },
+  {
+   "q": "¿Qué puedo escribir en el cuadro de texto?",
+   "a": "Texto sin formato en cualquiera de los idiomas compatibles, incluida una mezcla de chino e inglés, números y signos de puntuación habituales. La puntuación se interpreta para crear pausas naturales y los marcadores [break:…] insertan silencios exactos. Los emojis y símbolos se leen por su nombre, así que elimina los que no quieras que se pronuncien."
+  },
+  {
+   "q": "¿Cómo añado una pausa?",
+   "a": "Inserta un marcador de pausa en cualquier punto del texto: [break:200ms] para una pausa breve, [break:2s] para dos segundos. Al pulsar Ctrl+B se inserta [break:500ms] en la posición del cursor. Los marcadores no suenan en el resultado: solo oirás la pausa."
+  },
+  {
+   "q": "¿Qué formatos puedo descargar?",
+   "a": "Audio en MP3 o WAV (elegido antes de generar) y subtítulos en SRT y VTT creados a partir de los tiempos por palabra del motor: ideales para subtitular vídeos con la misma narración."
+  },
+  {
+   "q": "¿Mis archivos generados quedan en línea?",
+   "a": "No. Los resultados solo existen durante tu sesión actual del navegador y se eliminan después. Descarga todo lo que quieras conservar antes de cerrar la pestaña."
+  }
+ ]
+}

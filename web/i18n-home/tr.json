@@ -1,0 +1,78 @@
+{
+ "steps": [
+  {
+   "h": "Ses seçeneklerini ayarlayın",
+   "b": "“Ses ayarları” panelinde önce “Ses dili” seçeneğini belirleyin — metninizin diliyle aynı olmalı. Ardından listeyi “Cinsiyet” filtresi veya “Ses ara” kutusuyla daraltın (bir sesin adını biliyorsanız kullanışlıdır). “Hız” veya “Perde” işaretlendiğinde bir kaydırıcı ve sayı kutusu açılır: hız −%100 ile +%100, perde −100 Hz ile +100 Hz arasında ayarlanır. Karar vermeden önce birkaç sesi önizleyin; aynı dildeki iki ses tamamen farklı duyulabilir."
+  },
+  {
+   "h": "Metni yazın veya içe aktarın",
+   "b": "Büyük metin kutusuna yazın veya yapıştırın ya da .txt, .md veya .text belgesi yüklemek için “Dosya içe aktar” düğmesini kullanın. Sağ üstteki sayaç, siz yazarken karakter ve satır sayısını gösterir. Her oluşturma en fazla 5.000 karakter alır; daha uzun belgeleri parçalara bölün. Duraklama eklemek için [break:500ms] veya [break:2s] gibi bir duraklama işareti yazın — ya da imlecin bulunduğu yere eklemek için Ctrl+B tuşuna basın. Normal noktalama işaretleri otomatik olarak işlenir: virgüller ve noktalar doğal duraklamalara dönüşür."
+  },
+  {
+   "h": "Önizleyin veya oluşturun",
+   "b": "“Ses önizleme”, cihazınızdaki bir sesle metni anında sesli okur; böylece ifadeyi ve tempoyu birkaç saniyede kontrol edebilirsiniz. “Ses oluştur” ise gerçek sesi sunucuda, seçtiğiniz ses, hız ve perdeyle birebir, MP3 veya WAV olarak üretir. Duraklama işaretleri oluşturulan dosyada uygulanır (önizleme sırasında ise sessizce kaldırılır). “Oluşturduktan sonra otomatik oynat” işaretliyse, tamamlanan her kayıt kendiliğinden çalmaya başlar."
+  },
+  {
+   "h": "Ses ve altyazı dosyalarını indirin",
+   "b": "Oluşturulan her öğe kendi oynatıcısıyla “Sonuçlar” listesine eklenir. Sesi (seçtiğiniz biçime göre MP3 veya WAV) indirin; motor kelime zamanlamalarını bildirdiği için eşleşen altyazı dosyalarını da hem SRT hem VTT biçiminde indirebilirsiniz — video düzenleyiciler ve oynatıcılar için hazır. Sonuçlar yalnızca bu tarayıcı oturumu boyunca kalır, tıpkı bir karalama defteri gibi: sekmeyi kapattığınızda silinirler, bu yüzden saklamak istediklerinizi indirin."
+  }
+ ],
+ "usecases": [
+  {
+   "e": "🎬",
+   "h": "Video seslendirme",
+   "p": "Stüdyo ya da seslendirme sanatçısı ayarlamadan eğitim videolarına, açıklayıcı videolara ve kısa videolara temiz bir seslendirme ekleyin."
+  },
+  {
+   "e": "📚",
+   "h": "Sesli kitap üretimi",
+   "p": "Bölümleri ve uzun belgeleri, yolda öğrenmek için dinlenebilir sese dönüştürün."
+  },
+  {
+   "e": "🎙️",
+   "h": "Podcast içeriği",
+   "p": "Bölüm, giriş ve reklam metinlerinin taslağını dakikalar içinde hazırlayın; bir satırı yeniden kaydetmek yerine yeniden oluşturun."
+  },
+  {
+   "e": "📖",
+   "h": "Eğitim materyalleri",
+   "p": "Dersleri, bilgi kartlarını ve okuma metinlerini dinleyerek daha iyi öğrenen öğrenciler için erişilebilir hâle getirin."
+  },
+  {
+   "e": "🤖",
+   "h": "Sesli asistan geliştirme",
+   "p": "Asistanlar ve etkileşimli sesli uygulamalar için yönlendirme, karşılama ve yanıt prototipleri hazırlayın."
+  },
+  {
+   "e": "🌍",
+   "h": "Çok dilli içerik yerelleştirme",
+   "p": "Aynı mesajı, her pazar için ana dili gibi konuşan seslerle onlarca dilde üretin."
+  }
+ ],
+ "faq": [
+  {
+   "q": "Text 2 Speech ücretsiz mi?",
+   "a": "Evet. Dinlemek, oluşturmak ve indirmek ücretsizdir ve hesap gerektirmez. Kişisel ve eğitim amaçlı kullanım tamamen serbesttir; oluşturulan sesi ticari olarak kullanıyorsanız, kullanımınızın yürürlükteki yasalara ve dönüştürdüğünüz metinlerin haklarına uygun olduğundan emin olun."
+  },
+  {
+   "q": "Oluşturma başına karakter sınırı var mı?",
+   "a": "Oluşturma başına en fazla 5.000 karakter (yaklaşık beş ila yedi dakikalık konuşma). Kitap bölümleri gibi daha uzun içerikleri parçalar hâlinde oluşturup dosyaları birleştirin — her oluşturma daha hızlı olur ve bir parçayı yeniden yapmak, bir kitabı yeniden yapmaktan daha ucuzdur."
+  },
+  {
+   "q": "Metin kutusuna neler yazabilirim?",
+   "a": "Desteklenen dillerden herhangi birinde düz metin; Çince ve İngilizce karışık metin, sayılar ve yaygın noktalama işaretleri dahil. Noktalama işaretleri doğal duraklamalar için yorumlanır, [break:…] işaretleri ise tam süreli sessizlik ekler. Emojiler ve semboller adlarıyla okunur; okunmasını istemediklerinizi kaldırın."
+  },
+  {
+   "q": "Nasıl duraklama eklerim?",
+   "a": "Metnin herhangi bir yerine bir duraklama işareti ekleyin: kısa bir es için [break:200ms], iki saniye için [break:2s]. Ctrl+B tuşuna basmak, imlecin bulunduğu yere [break:500ms] ekler. İşaretler çıktıda sessizdir — yalnızca duraklamayı duyarsınız."
+  },
+  {
+   "q": "Hangi biçimleri indirebilirim?",
+   "a": "MP3 veya WAV ses (oluşturmadan önce seçilir) ve motorun kelime düzeyindeki zamanlamalarından oluşturulan SRT ve VTT altyazılar — aynı anlatımla videolara altyazı eklemek için ideal."
+  },
+  {
+   "q": "Oluşturduğum dosyalar çevrimiçi kalıyor mu?",
+   "a": "Hayır. Sonuçlar yalnızca mevcut tarayıcı oturumunuz boyunca vardır ve sonrasında silinir. Saklamak istediğiniz her şeyi sekmeyi kapatmadan önce indirin."
+  }
+ ]
+}

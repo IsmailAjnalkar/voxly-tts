@@ -1,0 +1,30 @@
+name: uptime
+# External check of the live site. A failed run emails the repository owner
+# (GitHub's default for scheduled workflows). Scheduled runs only happen on the
+# default branch, and GitHub pauses them after 60 days without repository activity.
+on:
+  schedule: [{ cron: "*/15 * * * *" }]
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SITE: https://text-2-speech.com
+    steps:
+      - name: Pages and health
+        run: |
+          curl -sf --max-time 20 "$SITE/api/health" | grep -q '"ok":true'
+          curl -sf --max-time 20 "$SITE/" | grep -q "Text 2 Speech"
+          curl -sf --max-time 20 "$SITE/es/" | grep -q 'lang="es"'
+      - name: Voice catalog
+        run: |
+          n=$(curl -sf --max-time 20 "$SITE/api/voices" | python3 -c "import json,sys; print(json.load(sys.stdin)['count'])")
+          echo "voices: $n"; test "$n" -ge 250
+      - name: Generate one sentence and download it
+        run: |
+          meta=$(curl -sf --max-time 60 -X POST "$SITE/api/tts" -H "Content-Type: application/json" \
+            -H "X-Session-Id: uptime$GITHUB_RUN_ID" -d '{"text":"Uptime check.","voice":"en-US-AriaNeural"}')
+          url=$(echo "$meta" | python3 -c "import json,sys; print(json.load(sys.stdin)['audio'])")
+          bytes=$(curl -sf --max-time 30 "$SITE$url&s=uptime$GITHUB_RUN_ID" | wc -c)
+          echo "audio bytes: $bytes"; test "$bytes" -gt 1000
