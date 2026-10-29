@@ -95,8 +95,17 @@ async def _headers(request, call_next):
     resp.headers.update(_SECURITY_HEADERS)
     # HTML pages must revalidate on every load so a deploy reaches visitors
     # immediately (a stale cached page kept an old, broken script alive).
+    path = request.url.path
     if "text/html" in resp.headers.get("content-type", ""):
         resp.headers["Cache-Control"] = "no-cache"
+    elif resp.status_code == 200 and not path.startswith("/api/") and "cache-control" not in resp.headers:
+        # Static files. Pages reference subi18n.js?v=<version>, so that one is immutable.
+        if "v" in request.query_params:
+            resp.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        elif path.endswith((".png", ".svg", ".ico")):
+            resp.headers["Cache-Control"] = "public, max-age=604800"
+        else:
+            resp.headers["Cache-Control"] = "public, max-age=3600"
     return resp
 
 
@@ -572,21 +581,134 @@ async def api_support(body: SupportRequest):
 
 # --- Pages ------------------------------------------------------------------
 # Every page is served at / and under each UI-language prefix (/es/, /zh-CN/
-# ...). The server fills in lang/dir, the canonical URL and hreflang
-# alternates, so crawlers see each language without running JavaScript.
+# ...). The server renders each language completely - visible text, title,
+# description, social tags, canonical, hreflang, breadcrumbs - so crawlers
+# (including AI crawlers that run no JavaScript) see the right language.
 SITE = "https://text-2-speech.com"
 _UI_CODES = ["en", "zh", "zh-TW", "ar", "cs", "da", "de", "es", "fa", "fr",
              "hi", "hu", "id", "it", "ja", "ko", "nl", "no", "pl", "pt",
              "ru", "sv", "th", "tr", "vi"]
 _PATH_OF_UI = {"zh": "zh-CN"}            # URL segment for a UI code, when different
 _HREFLANG = {"zh": "zh-CN", "pt": "pt-BR"}  # the pt UI is Brazilian Portuguese
+_OG_LOCALE = {"en": "en_US", "zh": "zh_CN", "zh-TW": "zh_TW", "ar": "ar_AR", "cs": "cs_CZ", "da": "da_DK",
+              "de": "de_DE", "es": "es_ES", "fa": "fa_IR", "fr": "fr_FR", "hi": "hi_IN", "hu": "hu_HU",
+              "id": "id_ID", "it": "it_IT", "ja": "ja_JP", "ko": "ko_KR", "nl": "nl_NL", "no": "nb_NO",
+              "pl": "pl_PL", "pt": "pt_BR", "ru": "ru_RU", "sv": "sv_SE", "th": "th_TH", "tr": "tr_TR", "vi": "vi_VN"}
 _RTL = {"ar", "fa"}
-_PAGES = ["tutorial.html", "donate.html", "support.html", "auth.html",
-          "privacy.html", "terms.html"]
-_INDEXED = ["", "tutorial.html", "donate.html", "support.html", "privacy.html", "terms.html"]
+# Translated pages (all 25 languages) and English-only content pages.
+_PAGES = ["tutorial.html", "donate.html", "support.html", "auth.html", "privacy.html", "terms.html"]
+_EN_PAGES = ["how-it-works.html", "voices.html", "guides/subtitles.html", "guides/mp3-vs-wav.html"]
+_NOINDEX = {"donate.html", "auth.html"}  # placeholders until accounts/donations exist
+_INDEXED = ["", "tutorial.html", "support.html", "privacy.html", "terms.html"]
+# Description source and breadcrumb label for each translated sub-page.
+_SUB_META = {"tutorial.html": ("tut_g1p", "nav_tutorial"), "support.html": (("sup_sub", "sup_quick_p"), "nav_support"),
+             "privacy.html": ("priv_intro", "foot_privacy"), "terms.html": ("terms_s1p", "foot_terms"),
+             "donate.html": ("don_sub", "nav_donate"), "auth.html": ("auth_sub", None)}
 _WEBDIR = BASE / "web"
 _HOMEDIR = _WEBDIR / "i18n-home"
+_SUBDIR = _WEBDIR / "i18n-sub-parts"
 _page_cache: dict = {}
+_e = lambda t: html_lib.escape(t, quote=False)   # element text
+_a = lambda t: html_lib.escape(t, quote=True)    # attribute value
+
+
+def _home_ui_strings() -> dict:
+    """UI strings per language from the I18N object in index.html (one line per language)."""
+    src = (_WEBDIR / "index.html").read_text(encoding="utf-8")
+    block = src[src.index("const I18N = {"):src.index("\n};", src.index("const I18N = {"))]
+    out = {}
+    for line in block.splitlines()[1:]:
+        m = re.match(r'\s*"?([\w-]+)"?:\{(.*)\},?\s*$', line)
+        if m:
+            out[m.group(1)] = {k: json.loads(f'"{v}"') for k, v in
+                               re.findall(r'(\w+):"((?:[^"\\]|\\.)*)"', m.group(2))}
+    return out
+
+
+_HOME_UI = _home_ui_strings()
+_UI_NAMES = json.loads(re.search(r"const UI_LANGS = (\[.*?\]);", (_WEBDIR / "index.html").read_text(encoding="utf-8")).group(1))
+
+
+def _sub_strings(code: str) -> dict:
+    f = _SUBDIR / f"{code}.json"
+    return json.loads((f if f.exists() else _SUBDIR / "en.json").read_text(encoding="utf-8"))
+
+
+def _asset_version(path: str) -> str:
+    st = (_WEBDIR / path.lstrip("/")).stat()
+    return f"{int(st.st_mtime)}{st.st_size % 997}"
+
+
+def _url(code: str | None, page: str) -> str:
+    # English lives at the root: /en/ is an alias whose canonical is /.
+    return f"{SITE}/{_PATH_OF_UI.get(code, code)}/{page}" if code and code != "en" else f"{SITE}/{page}"
+
+
+def _width(text: str) -> int:
+    """Display width: CJK and other wide characters count double (as in search snippets)."""
+    return sum(2 if ord(ch) >= 0x2E80 else 1 for ch in text)
+
+
+def _clip(text: str, n: int = 158) -> str:
+    """Shorten to n display columns, at a sentence end, else a space, else hard."""
+    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", text)).strip()
+    if _width(text) <= n:
+        return text
+    w = i = 0
+    while i < len(text) and w + _width(text[i]) <= n - 1:
+        w += _width(text[i]); i += 1
+    cut = text[:i]
+    end = max(cut.rfind(". "), cut.rfind("。"), cut.rfind("? "), cut.rfind("! "), cut.rfind("！"), cut.rfind("？"))
+    if end > len(cut) // 2:
+        return cut[:end + 1]
+    space = cut.rfind(" ")
+    return (cut[:space] if space > len(cut) // 2 else cut).rstrip(",;:、，") + "…"
+
+
+def _translate(html: str, s: dict) -> str:
+    """Server-side version of the client i18n: data-i18n (text), data-i18n-ph
+    (placeholder) and data-i18n-html (inner HTML) take the language's strings."""
+    html = re.sub(r'(<[^>]*\bdata-i18n="([\w-]+)"[^>]*>)([^<]*)(<)',
+                  lambda m: m.group(1) + (_e(s[m.group(2)]) if m.group(2) in s else m.group(3)) + m.group(4), html)
+    html = re.sub(r'(<[^>]*\bdata-i18n-ph="([\w-]+)"[^>]*\bplaceholder=")([^"]*)(")',
+                  lambda m: m.group(1) + (_a(s[m.group(2)]) if m.group(2) in s else m.group(3)) + m.group(4), html)
+    html = re.sub(r'(<(\w+)[^>]*\bdata-i18n-html="([\w-]+)"[^>]*>)(.*?)(</\2>)',
+                  lambda m: m.group(1) + (s[m.group(3)] if m.group(3) in s else m.group(4)) + m.group(5), html, flags=re.S)
+    return html
+
+
+def _set_meta(html: str, title: str, desc: str | None, url: str | None, locale: str) -> str:
+    html = re.sub(r"<title>.*?</title>", lambda m: f"<title>{_e(title)}</title>", html, count=1, flags=re.S)
+    for attr, key, val in (("property", "og:title", title), ("name", "twitter:title", title),
+                           ("name", "description", desc), ("property", "og:description", desc),
+                           ("name", "twitter:description", desc), ("property", "og:url", url)):
+        if val is not None:
+            html = re.sub(rf'<meta {attr}="{key}" content="[^"]*">', lambda m: f'<meta {attr}="{key}" content="{_a(val)}">', html, count=1)
+    if '<meta property="og:site_name"' in html and "og:locale" not in html:
+        html = html.replace('<meta property="og:site_name" content="Text 2 Speech">',
+                            f'<meta property="og:site_name" content="Text 2 Speech"><meta property="og:locale" content="{locale}">', 1)
+    return html
+
+
+def _lang_options(code: str) -> str:
+    return "".join(f'<option value="{c}"{" selected" if c == code else ""}>{_e(n)}</option>' for c, n in _UI_NAMES)
+
+
+def _breadcrumbs(html: str, items: list[tuple[str, str]]) -> str:
+    """Visible breadcrumb at the top of <main> plus BreadcrumbList JSON-LD."""
+    links = " <span aria-hidden=\"true\">›</span> ".join(
+        f'<a href="{_a(u.replace(SITE, ""))}">{_e(n)}</a>' for n, u in items[:-1]) \
+        + f' <span aria-hidden="true">›</span> <span aria-current="page">{_e(items[-1][0])}</span>'
+    nav = f'<nav class="crumbs" aria-label="Breadcrumb">{links}</nav>'
+    html = re.sub(r"(<main[^>]*>)", lambda m: m.group(1) + nav, html, count=1)
+    ld = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": i, "name": n, "item": u} for i, (n, u) in enumerate(items, 1)]}
+    return _add_jsonld(html, ld)
+
+
+def _add_jsonld(html: str, data: dict) -> str:
+    body = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+    return html.replace("</head>", '<script type="application/ld+json">' + body + "</script></head>", 1)
 
 
 def _home_content(html: str, code: str | None) -> str:
@@ -594,15 +716,14 @@ def _home_content(html: str, code: str | None) -> str:
     web/i18n-home/<lang>.json, and embed the data for client-side tab switching."""
     lang = code if code and (_HOMEDIR / f"{code}.json").exists() else "en"
     c = json.loads((_HOMEDIR / f"{lang}.json").read_text(encoding="utf-8"))
-    e = lambda t: html_lib.escape(t, quote=False)
     step = c["steps"][0]
-    html = html.replace("<!--home:step-->", f"<h3>{e(step['h'])}</h3><p>{e(step['b'])}</p>", 1)
+    html = html.replace("<!--home:step-->", f"<h3>{_e(step['h'])}</h3><p>{_e(step['b'])}</p>", 1)
     html = html.replace("<!--home:usecases-->", "".join(
-        f'<div class="ucard"><div class="emo">{e(u["e"])}</div><h3>{e(u["h"])}</h3><p>{e(u["p"])}</p></div>'
+        f'<div class="ucard"><div class="emo">{_e(u["e"])}</div><h3>{_e(u["h"])}</h3><p>{_e(u["p"])}</p></div>'
         for u in c["usecases"]), 1)
     html = html.replace("<!--home:faq-->", "".join(
-        f'<div class="faqitem"><button class="q" type="button">{e(f["q"])}<span>▾</span></button>'
-        f'<div class="a">{e(f["a"])}</div></div>' for f in c["faq"]), 1)
+        f'<div class="faqitem"><button class="q" type="button">{_e(f["q"])}<span>▾</span></button>'
+        f'<div class="a">{_e(f["a"])}</div></div>' for f in c["faq"]), 1)
     data = json.dumps(c, ensure_ascii=False).replace("</", "<\\/")
     html = html.replace("<!--home:data-->",
                         f'<script id="homecontent" type="application/json" data-lang="{lang}">{data}</script>', 1)
@@ -613,31 +734,104 @@ def _home_content(html: str, code: str | None) -> str:
             node["inLanguage"] = _HREFLANG.get(lang, lang)
             node["mainEntity"] = [{"@type": "Question", "name": f["q"],
                                    "acceptedAnswer": {"@type": "Answer", "text": f["a"]}} for f in c["faq"]]
+        if node.get("@type") in ("WebApplication", "WebSite"):
+            node["inLanguage"] = _HREFLANG.get(lang, lang)
     ld_text = json.dumps(ld, ensure_ascii=False).replace("</", "<\\/")
     return html[:m.start(1)] + ld_text + html[m.end(1):]
 
 
-def _url(code: str | None, page: str) -> str:
-    return f"{SITE}/{_PATH_OF_UI.get(code, code)}/{page}" if code else f"{SITE}/{page}"
+def _render(name: str, code: str | None) -> str:
+    lang = code or "en"
+    html = (_WEBDIR / name).read_text(encoding="utf-8")
+    page = "" if name == "index.html" else name
+    canon = _url(code, page)
+    html = html.replace("/subi18n.js\"", f"/subi18n.js?v={_asset_version('subi18n.js')}\"")
+    if name == "index.html":
+        html = _home_content(html, code)
+        ui = {**_HOME_UI["en"], **_HOME_UI.get(lang, {})}
+        if lang != "en":
+            html = _translate(html, ui)
+            faq0 = json.loads((_HOMEDIR / f"{lang}.json").read_text(encoding="utf-8"))["faq"][0]["a"]
+            faq0 = re.sub(r"^[^.。!！?？]{1,12}[.。!！?？]\s*", "", faq0)  # drop a leading "Yes."
+            # The tagline alone when it fills a snippet; short ones (e.g. Chinese) get the free/no-sign-up
+            # answer appended. Thai marks sentences with spaces, so it keeps the tagline only.
+            desc = ui["hero_sub"] if _width(ui["hero_sub"]) >= 100 or lang == "th" else _clip(f"{ui['hero_sub']} {faq0}")
+            html = _set_meta(html, f"{ui['h1']} | Text 2 Speech", desc, canon, _OG_LOCALE[lang])
+        else:
+            html = _set_meta(html, re.search(r"<title>(.*?)</title>", html).group(1), None, canon, "en_US")
+        html = html.replace('<select class="uilang" id="uilang"', f'<select class="uilang" id="uilang" data-ssr="1"', 1)
+        html = re.sub(r'(<select class="uilang" id="uilang"[^>]*>)(</select>)', lambda m: m.group(1) + _lang_options(lang) + m.group(2), html, count=1)
+    elif name in _PAGES:
+        s = _sub_strings(lang)
+        html = _translate(html, s)
+        desc_key, crumb_key = _SUB_META[name]
+        if lang != "en":
+            title = s.get({"tutorial.html": "doc_tutorial", "support.html": "doc_support", "privacy.html": "doc_privacy",
+                           "terms.html": "doc_terms", "donate.html": "doc_donate", "auth.html": "doc_auth"}[name])
+            if _width(title) > 70:  # search results cut long titles; they show the site name anyway
+                title = title.replace(" | Text 2 Speech", "")
+            if _width(title) > 70 and " — " in title:
+                title = title.split(" — ")[0] + " | Text 2 Speech"
+            html = _set_meta(html, title, _clip(" ".join(s[k] for k in (desc_key if isinstance(desc_key, tuple) else (desc_key,)))), canon, _OG_LOCALE[lang])
+        else:
+            html = _set_meta(html, re.search(r"<title>(.*?)</title>", html).group(1), None, canon, "en_US")
+        html = html.replace('<script src="/subi18n.js',
+                            '<script id="substrings" type="application/json">'
+                            + json.dumps({k: s[k] for k in ("sup_ok", "sup_err")}, ensure_ascii=False)
+                            + '</script><script src="/subi18n.js', 1)
+        if crumb_key and name not in _NOINDEX:
+            html = _breadcrumbs(html, [(s["nav_home"], _url(code, "")), (s[crumb_key], canon)])
+        if name == "support.html":  # answer the common questions right on the support page
+            c = json.loads((_HOMEDIR / f"{lang if (_HOMEDIR / f'{lang}.json').exists() else 'en'}.json").read_text(encoding="utf-8"))
+            faq = "".join(f"<h3>{_e(f['q'])}</h3><p>{_e(f['a'])}</p>" for f in c["faq"])
+            html = html.replace('<div class="card"><h2 style="margin-top:0" data-i18n="sup_contact_h">',
+                                f'<div class="card"><h2 style="margin-top:0">FAQ</h2>{faq}</div>'
+                                '<div class="card"><h2 style="margin-top:0" data-i18n="sup_contact_h">', 1)
+    if name in _NOINDEX:
+        html = re.sub(r'<meta name="robots" content="[^"]*">', '<meta name="robots" content="noindex, follow">', html, count=1)
+    if name in _PAGES or name == "index.html":
+        html = re.sub(r'(<select id="sublang"[^>]*>)(</select>)', lambda m: m.group(1) + _lang_options(lang) + m.group(2), html, count=1)
+    if page in _INDEXED:
+        links = f'<link rel="canonical" href="{canon}">' + "".join(
+            f'<link rel="alternate" hreflang="{_HREFLANG.get(c, c)}" href="{_url(c, page)}">'
+            for c in _UI_CODES) + f'<link rel="alternate" hreflang="x-default" href="{_url(None, page)}">'
+        html = re.sub(r'<link rel="canonical" href="[^"]*">', lambda m: links, html, count=1)
+    html = html.replace('<html lang="en"', f'<html lang="{lang}"' + (' dir="rtl"' if lang in _RTL else "")
+                        + f' data-ui="{lang}"', 1)
+    return html
 
 
 def _page(name: str, code: str | None = None) -> HTMLResponse:
     key = (name, code)
     if key not in _page_cache:
-        html = (_WEBDIR / name).read_text(encoding="utf-8")
-        page = "" if name == "index.html" else name
-        if name == "index.html":
-            html = _home_content(html, code)
-        if page in _INDEXED:
-            links = f'<link rel="canonical" href="{_url(code, page)}">' + "".join(
-                f'<link rel="alternate" hreflang="{_HREFLANG.get(c, c)}" href="{_url(c, page)}">'
-                for c in _UI_CODES) + f'<link rel="alternate" hreflang="x-default" href="{_url(None, page)}">'
-            html = re.sub(r'<link rel="canonical" href="[^"]*">', lambda m: links, html, count=1)
-        if code:
-            html = html.replace('<html lang="en"', f'<html lang="{code}"'
-                                + (' dir="rtl"' if code in _RTL else ""), 1)
-        _page_cache[key] = html
+        _page_cache[key] = _render(name, code)
     return HTMLResponse(_page_cache[key])
+
+
+async def _voices_page() -> HTMLResponse:
+    """voices.html with the live catalog table (voices the service won't speak are left out)."""
+    html = _page("voices.html").body.decode("utf-8")
+    try:
+        voices = [v for v in await get_voices() if v["id"] not in _dead_voices]
+    except Exception:
+        voices = []
+    by_lang: dict = {}
+    for v in voices:
+        by_lang.setdefault(v["language"], []).append(v)
+    def lang_name(vs):
+        names = sorted({re.sub(r"\s*\(.*", "", v["friendly"].split(" - ", 1)[-1]) for v in vs if " - " in v["friendly"]})
+        return names[0] if names else vs[0]["language"]
+    rows = []
+    for code, vs in sorted(by_lang.items(), key=lambda kv: lang_name(kv[1]).lower()):
+        f = sum(v["gender"] == "Female" for v in vs)
+        locales = ", ".join(sorted({v["locale"] for v in vs}))
+        names = ", ".join(_e(v["name"]) for v in sorted(vs, key=lambda v: v["name"]))
+        rows.append(f"<tr><th scope=\"row\">{_e(lang_name(vs))}</th><td>{_e(locales)}</td>"
+                    f"<td>{len(vs)} ({f} female, {len(vs) - f} male)</td><td>{names}</td></tr>")
+    summary = (f"<strong>{len(voices)} voices in {len(by_lang)} languages</strong> are available right now."
+               if voices else "The live voice list could not be loaded just now; please reload the page.")
+    html = html.replace("<!--voices:summary-->", summary, 1).replace("<!--voices:rows-->", "".join(rows), 1)
+    return HTMLResponse(html, headers={"Cache-Control": "public, max-age=3600"})
 
 
 def _page_route(name: str, code: str | None):
@@ -654,11 +848,17 @@ for _code in [None] + _UI_CODES:
         app.get(_route, include_in_schema=False)(_page_route("index.html", _code))
     for _name in _PAGES:
         app.get(f"{_prefix}/{_name}", include_in_schema=False)(_page_route(_name, _code))
+app.get("/voices.html", include_in_schema=False)(_voices_page)
+for _name in _EN_PAGES:
+    if _name != "voices.html":
+        app.get(f"/{_name}", include_in_schema=False)(_page_route(_name, None))
 
 
 @app.get("/sitemap.xml", include_in_schema=False)
 async def sitemap():
-    urls = "".join(f"<url><loc>{_url(c, p)}</loc></url>" for p in _INDEXED for c in [None] + _UI_CODES)
+    locs = [_url(c, p) for p in _INDEXED for c in [None] + [c for c in _UI_CODES if c != "en"]]
+    locs += [f"{SITE}/{p}" for p in _EN_PAGES]
+    urls = "".join(f"<url><loc>{u}</loc></url>" for u in locs)
     return Response('<?xml version="1.0" encoding="UTF-8"?>\n'
                     f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n',
                     media_type="application/xml")

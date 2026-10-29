@@ -1,13 +1,17 @@
-/* Text 2 Speech sub-page language runtime. Boots the page in the language named by
-   the URL prefix (/es/, /de/ ...), falling back to the visitor's saved
-   language; translates every [data-i18n] string from window.SUBI18N;
-   keeps navigation inside the active language; drives the header
-   language switcher and translated alert messages. */
+/* Text 2 Speech sub-page runtime. The server renders each page in the language
+   of its URL (/es/, /de/ ...), so normally nothing needs translating here. When a
+   visitor's saved language differs from the one the server rendered (e.g. "/"
+   after choosing Español), the strings for that one language are fetched from
+   /i18n-sub-parts/<lang>.json and applied. Also: language switcher, theme
+   toggle, current-page highlight and the support form. */
 (function () {
   var NAMES = [["en", "English"], ["zh", "简体中文"], ["zh-TW", "繁體中文"], ["ar", "العربية"], ["cs", "Cestina"], ["da", "Dansk"], ["de", "Deutsch"], ["es", "Espanol"], ["fa", "فارسی"], ["fr", "Francais"], ["hi", "हिन्दी"], ["hu", "Magyar"], ["id", "Bahasa Indonesia"], ["it", "Italiano"], ["ja", "日本語"], ["ko", "한국어"], ["nl", "Nederlands"], ["no", "Norsk"], ["pl", "Polski"], ["pt", "Portugues (Brasil)"], ["ru", "Русский"], ["sv", "Svenska"], ["th", "ไทย"], ["tr", "Turkce"], ["vi", "Tieng Viet"]];
   var CODES = NAMES.map(function (n) { return n[0]; });
   var PATH2UI = { "zh-CN": "zh" }, UI2PATH = { "zh": "zh-CN" };
   function pathOf(c) { return UI2PATH[c] || c; }
+  var root = document.documentElement;
+  var served = root.getAttribute("data-ui") || "en";        // language the server rendered
+  var enOnly = root.hasAttribute("data-en-only");           // English-only content page (guides)
 
   var seg = location.pathname.split("/")[1] || "";
   var urlLang = PATH2UI[seg] || (CODES.indexOf(seg) >= 0 ? seg : null);
@@ -15,22 +19,27 @@
   if (CODES.indexOf(lang) < 0) lang = "en";
   if (urlLang) localStorage.setItem("voxly-ui", lang);
 
-  var ALL = window.SUBI18N || {};
-  var D = ALL[lang] || ALL.en || {};
-  function str(k) { return D[k] != null ? D[k] : (ALL.en || {})[k]; }
-
   var parts = location.pathname.split("/").filter(Boolean);
   if (urlLang) parts.shift();
   var fname = parts.length ? parts[parts.length - 1] : "";
+  var embedded = document.getElementById("substrings");
+  var D = embedded ? JSON.parse(embedded.textContent) : {};
+  function str(k) { return D[k]; }
+
   var TITLES = { "tutorial.html": "doc_tutorial", "donate.html": "doc_donate", "support.html": "doc_support", "auth.html": "doc_auth", "privacy.html": "doc_privacy", "terms.html": "doc_terms" };
-  if (TITLES[fname] && str(TITLES[fname])) document.title = str(TITLES[fname]);
-
-  document.documentElement.lang = lang;
-  if (lang === "ar" || lang === "fa") document.documentElement.dir = "rtl";
-
-  document.querySelectorAll("[data-i18n]").forEach(function (el) { var v = str(el.getAttribute("data-i18n")); if (v != null) el.textContent = v; });
-  document.querySelectorAll("[data-i18n-html]").forEach(function (el) { var v = str(el.getAttribute("data-i18n-html")); if (v != null) el.innerHTML = v; });
-  document.querySelectorAll("[data-i18n-ph]").forEach(function (el) { var v = str(el.getAttribute("data-i18n-ph")); if (v != null) el.setAttribute("placeholder", v); });
+  function apply() {
+    if (TITLES[fname] && str(TITLES[fname])) document.title = str(TITLES[fname]);
+    root.lang = lang;
+    root.dir = (lang === "ar" || lang === "fa") && !enOnly ? "rtl" : "ltr";
+    document.querySelectorAll("[data-i18n]").forEach(function (el) { var v = str(el.getAttribute("data-i18n")); if (v != null) el.textContent = v; });
+    if (enOnly) return;  // guide bodies are English; only the header/footer were translated above
+    document.querySelectorAll("[data-i18n-html]").forEach(function (el) { var v = str(el.getAttribute("data-i18n-html")); if (v != null) el.innerHTML = v; });
+    document.querySelectorAll("[data-i18n-ph]").forEach(function (el) { var v = str(el.getAttribute("data-i18n-ph")); if (v != null) el.setAttribute("placeholder", v); });
+  }
+  if (lang !== served) {
+    fetch("/i18n-sub-parts/" + lang + ".json").then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { if (d) { D = d; apply(); } }).catch(function () {});
+  }
 
   if (lang !== "en") {
     var p = "/" + pathOf(lang);
@@ -42,11 +51,12 @@
 
   var sel = document.getElementById("sublang");
   if (sel) {
-    sel.innerHTML = NAMES.map(function (n) { return '<option value="' + n[0] + '">' + n[1] + "</option>"; }).join("");
+    if (!sel.options.length) sel.innerHTML = NAMES.map(function (n) { return '<option value="' + n[0] + '">' + n[1] + "</option>"; }).join("");
     sel.value = lang;
     sel.addEventListener("change", function () {
       localStorage.setItem("voxly-ui", sel.value);
-      location.href = "/" + pathOf(sel.value) + "/" + (fname || "");
+      // English-only pages have no translated copy: go to the language's home page instead
+      location.href = "/" + pathOf(sel.value) + "/" + (enOnly ? "" : fname);
     });
   }
 
@@ -58,7 +68,6 @@
   // boot script applies "light" before first paint.
   var tb = document.getElementById("themebtn");
   if (tb) {
-    var root = document.documentElement;
     var paint = function () { tb.textContent = root.classList.contains("light") ? "☾" : "☀"; };
     paint();
     tb.addEventListener("click", function () {
@@ -82,10 +91,10 @@
                                message: form.message.value, website: form.website.value })
       }).then(function (r) {
         if (!r.ok) throw new Error("HTTP " + r.status);
-        out.textContent = str("sup_ok");
+        out.textContent = str("sup_ok") || "Thanks — your message has been sent.";
         form.reset();
       }).catch(function () {
-        out.textContent = str("sup_err");
+        out.textContent = str("sup_err") || "Sorry, your message could not be sent. Please try again later.";
       }).then(function () { btn.disabled = false; });
     });
   }

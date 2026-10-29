@@ -23,8 +23,9 @@
 <meta name="twitter:image" content="https://text-2-speech.com/og-image.png">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
-{"@type":"WebApplication","name":"Text 2 Speech","url":"https://text-2-speech.com/","applicationCategory":"MultimediaApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Turn any text into natural, lifelike speech with 300+ AI voices in 75 languages. Listen instantly, download MP3 or WAV plus subtitles. Free, no sign-up.","featureList":"300+ AI voices in 75 languages, MP3 and WAV download, SRT and VTT subtitles, speed and pitch control, pause markers, file import"},
-{"@type":"WebSite","name":"Text 2 Speech","url":"https://text-2-speech.com/"},
+{"@type":"Organization","@id":"https://text-2-speech.com/#org","name":"Text 2 Speech","url":"https://text-2-speech.com/","logo":{"@type":"ImageObject","url":"https://text-2-speech.com/logo.png","width":512,"height":512},"description":"Text 2 Speech runs text-2-speech.com, a free online text-to-speech tool."},
+{"@type":"WebApplication","@id":"https://text-2-speech.com/#app","name":"Text 2 Speech","url":"https://text-2-speech.com/","publisher":{"@id":"https://text-2-speech.com/#org"},"isAccessibleForFree":true,"browserRequirements":"Requires JavaScript and a modern browser","applicationCategory":"MultimediaApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Turn any text into natural, lifelike speech with 300+ AI voices in 75 languages. Listen instantly, download MP3 or WAV plus subtitles. Free, no sign-up.","featureList":["300+ neural voices in 75 languages","Up to 5,000 characters per generation","MP3 and WAV download","SRT and VTT subtitles with word-level timing","Speed and pitch control","Pause markers","Text file import","No sign-up"]},
+{"@type":"WebSite","@id":"https://text-2-speech.com/#website","name":"Text 2 Speech","url":"https://text-2-speech.com/","publisher":{"@id":"https://text-2-speech.com/#org"}},
 {"@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"Is Text 2 Speech free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes. Listening, generating and downloading are free and need no account. Personal and learning use is fully covered; if you use generated audio commercially, make sure your use complies with applicable laws and the rights of any text you convert."}},
 {"@type":"Question","name":"Is there a character limit per generation?","acceptedAnswer":{"@type":"Answer","text":"Up to 5,000 characters per generation (roughly five to seven minutes of speech). For longer material such as book chapters, generate it in parts and stitch the files — each render is faster, and re-doing one part is cheaper than re-doing a book."}},
@@ -35,7 +36,7 @@
 ]}
 ]}
 </script>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='3' y='12' width='4' height='8' rx='2' fill='%23ff6b4a'/><rect x='10' y='7' width='4' height='18' rx='2' fill='%23ffb347'/><rect x='17' y='10' width='4' height='12' rx='2' fill='%23ff6b4a'/><rect x='24' y='14' width='4' height='4' rx='2' fill='%23ffb347'/></svg>">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><rect x='3' y='12' width='4' height='8' rx='2' fill='%23ff6b4a'/><rect x='10' y='7' width='4' height='18' rx='2' fill='%23ffb347'/><rect x='17' y='10' width='4' height='12' rx='2' fill='%23ff6b4a'/><rect x='24' y='14' width='4' height='4' rx='2' fill='%23ffb347'/></svg>">
 <style>
   :root{
     --bg:#f6f4ef; --panel:#ffffff; --panel2:#efe9df; --ink:#22252d; --muted:#57534e;
@@ -74,7 +75,7 @@
   .tool{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}
   .tool>*{min-width:0} /* let grid columns shrink below their content's min width (Firefox at 320 px) */
   .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px}
-  .card h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .card h2,.card h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
   .lbl{display:block;font-size:13px;color:var(--muted);margin:14px 0 6px}
   label.lbl:first-of-type{margin-top:2px}
   select,input[type=text],input[type=number],textarea{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:9px 10px;font-size:14px;outline:none}
@@ -151,7 +152,7 @@
   .faqbar button{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:9px;padding:6px 12px;cursor:pointer;font-size:13px}
   footer{margin-top:40px;border-top:1px solid var(--line);background:var(--panel)}
   .foot{max-width:1280px;margin:0 auto;padding:22px 20px;display:flex;flex-wrap:wrap;gap:26px;font-size:14px}
-  .foot h4{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+  .foot h2,.foot h4{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
   .foot a{display:block;color:var(--ink);margin:1px 0;padding:3px 0}
   .copy{width:100%;color:var(--muted);font-size:13px}
   #toast{position:fixed;top:74px;right:16px;z-index:70;background:#b91c1c;color:#fff;padding:12px 16px;border-radius:10px;display:none;max-width:360px;font-size:14px;box-shadow:var(--shadow)}
@@ -205,7 +206,7 @@
   <div class="tool">
     <!-- LEFT: voice settings -->
     <div class="card" id="voicepanel">
-      <h3 data-i18n="voice_settings">Voice settings</h3>
+      <h2 data-i18n="voice_settings">Voice settings</h2>
 
       <label class="lbl" for="langsel" data-i18n="voice_language">Voice Language</label>
       <select id="langsel"></select>
@@ -248,7 +249,7 @@
     <div>
       <div class="card">
         <div class="ta-head">
-          <h3 style="margin:0" id="text_lbl" data-i18n="input_text">Input Text</h3>
+          <h2 style="margin:0" id="text_lbl" data-i18n="input_text">Input Text</h2>
           <span class="counter" id="counter">0 characters (0 lines)</span>
         </div>
         <textarea id="text" aria-labelledby="text_lbl" data-i18n-ph="text_ph" placeholder="Enter text to synthesize..."></textarea>
@@ -264,7 +265,7 @@
       </div>
 
       <div class="card results">
-        <h3 data-i18n="results">Results</h3>
+        <h2 data-i18n="results">Results</h2>
         <div id="resultlist">
           <div class="empty" data-i18n="no_items">No generated items yet</div>
         </div>
@@ -305,16 +306,23 @@
 <footer>
   <div class="foot">
     <div>
-      <h4>Text 2 Speech</h4>
+      <h2>Text 2 Speech</h2>
       <a href="/" data-i18n="nav_home">Home</a>
       <a href="/tutorial.html" data-i18n="nav_tutorial">Tutorial</a>
       <a href="/donate.html" data-i18n="nav_donate">Donate</a>
       <a href="/support.html" data-i18n="nav_support">Support</a>
     </div>
     <div>
-      <h4 data-i18n="legal">Legal</h4>
+      <h2 data-i18n="legal">Legal</h2>
       <a href="/privacy.html" data-i18n="privacy">Privacy Policy</a>
       <a href="/terms.html" data-i18n="terms">Terms of Service</a>
+    </div>
+    <div>
+      <h2>Resources</h2>
+      <a href="/how-it-works.html">How it works</a>
+      <a href="/voices.html">Voices &amp; languages</a>
+      <a href="/guides/subtitles.html">SRT &amp; VTT subtitles guide</a>
+      <a href="/guides/mp3-vs-wav.html">MP3 vs WAV</a>
     </div>
     <p class="copy">© 2026 Text 2 Speech. All rights reserved.</p>
   </div>

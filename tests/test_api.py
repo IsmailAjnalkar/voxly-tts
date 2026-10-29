@@ -136,8 +136,104 @@ class Api(unittest.TestCase):
     def test_sitemap_lists_every_language(self):  # TTS-BUG-023
         r = self.c.get("/sitemap.xml")
         self.assertEqual(r.headers["content-type"].split(";")[0], "application/xml")
-        self.assertEqual(r.text.count("<loc>"), 6 * 26)
-        self.assertNotIn("auth.html", r.text)
+        # 5 indexed pages x (root + 24 other languages) + 4 English-only pages
+        self.assertEqual(r.text.count("<loc>"), 5 * 25 + 4)
+        for absent in ("auth.html", "donate.html", "/en/"):
+            self.assertNotIn(absent, r.text)
+        for present in ("/voices.html", "/how-it-works.html", "/guides/subtitles.html", "/guides/mp3-vs-wav.html"):
+            self.assertIn(present, r.text)
+
+    # ---------- SEO: every indexable URL in every language ----------
+    def _sitemap_pages(self):
+        import re as _re
+        return [u.replace("https://text-2-speech.com", "") for u in _re.findall(r"<loc>([^<]+)</loc>", self.c.get("/sitemap.xml").text)]
+
+    def _head(self, html):
+        import re as _re
+        g = lambda p: (lambda m: m.group(1) if m else None)(_re.search(p, html, _re.S))
+        return {"title": g(r"<title>(.*?)</title>"), "desc": g(r'<meta name="description" content="([^"]*)"'),
+                "canon": g(r'<link rel="canonical" href="([^"]*)"'), "og_url": g(r'<meta property="og:url" content="([^"]*)"'),
+                "robots": g(r'<meta name="robots" content="([^"]*)"'), "h1": len(_re.findall(r"<h1[\s>]", html)),
+                "ld": [json.loads(x) for x in _re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, _re.S)]}
+
+    def test_every_sitemap_url_is_unique_and_self_canonical(self):
+        titles, descs = {}, {}
+        for path in self._sitemap_pages():
+            r = self.c.get(path)
+            self.assertEqual(r.status_code, 200, path)
+            h = self._head(r.text)
+            self.assertEqual(h["canon"], "https://text-2-speech.com" + path, path)
+            self.assertEqual(h["og_url"], h["canon"], path)
+            self.assertEqual(h["h1"], 1, path)
+            # display width: CJK characters count double, as in search result snippets
+            self.assertTrue(h["title"] and 15 <= server._width(h["title"]) <= 90, (path, h["title"]))
+            self.assertTrue(h["desc"] and 70 <= server._width(h["desc"]) <= 170, (path, h["desc"]))
+            self.assertIn("index", h["robots"], path)
+            self.assertNotIn("noindex", h["robots"], path)
+            self.assertTrue(h["ld"], path)  # every page carries structured data
+            titles.setdefault(h["title"], []).append(path)
+            descs.setdefault(h["desc"], []).append(path)
+        self.assertEqual({t: p for t, p in titles.items() if len(p) > 1}, {})
+        self.assertEqual({d: p for d, p in descs.items() if len(p) > 1}, {})
+
+    def test_language_pages_rendered_server_side(self):
+        es = self.c.get("/es/").text
+        self.assertIn("<title>Texto a voz gratuito en línea | Text 2 Speech</title>", es)
+        self.assertIn('<meta property="og:locale" content="es_ES">', es)
+        self.assertIn('<option value="es" selected>', es)  # language select filled server-side
+        self.assertIn(server._HOME_UI["es"]["generate_audio"], es)  # UI strings, not only the FAQ
+        tut = self.c.get("/es/tutorial.html").text
+        sub = server._sub_strings("es")
+        self.assertIn(f"<h1 data-i18n=\"tut_h1\">{sub['tut_h1']}</h1>", tut)
+        self.assertIn('data-ui="es"', tut)
+        self.assertNotIn("i18n-sub.js", tut)  # the 216 KB all-language bundle is gone
+        self.assertIn('id="substrings"', tut)
+        self.assertEqual(self._head(self.c.get("/en/").text)["canon"], "https://text-2-speech.com/")
+        self.assertIn('<html lang="ar" dir="rtl" data-ui="ar"', self.c.get("/ar/privacy.html").text)
+
+    def test_breadcrumbs_and_noindex(self):
+        h = self._head(self.c.get("/fr/tutorial.html").text)
+        crumbs = [x for x in h["ld"] if x.get("@type") == "BreadcrumbList"][0]["itemListElement"]
+        self.assertEqual([c["item"] for c in crumbs], ["https://text-2-speech.com/fr/", "https://text-2-speech.com/fr/tutorial.html"])
+        self.assertIn('class="crumbs"', self.c.get("/fr/tutorial.html").text)
+        for path in ("/donate.html", "/de/donate.html", "/auth.html"):
+            self.assertIn("noindex", self._head(self.c.get(path).text)["robots"], path)
+
+    def test_structured_data(self):
+        home = self._head(self.c.get("/").text)["ld"][0]["@graph"]
+        types = {n["@type"]: n for n in home}
+        self.assertEqual(set(types), {"Organization", "WebApplication", "WebSite", "FAQPage"})
+        self.assertEqual(types["WebApplication"]["publisher"], {"@id": "https://text-2-speech.com/#org"})
+        self.assertEqual(types["Organization"]["logo"]["url"], "https://text-2-speech.com/logo.png")
+        self.assertNotIn("aggregateRating", json.dumps(home))  # no ratings we do not have
+        for path in ("/guides/subtitles.html", "/guides/mp3-vs-wav.html", "/how-it-works.html"):
+            art = [x for x in self._head(self.c.get(path).text)["ld"] if x["@type"] == "TechArticle"][0]
+            for k in ("headline", "datePublished", "dateModified", "author", "publisher"):
+                self.assertIn(k, art, (path, k))
+
+    def test_crawl_basics_icons_and_caching(self):
+        robots = self.c.get("/robots.txt").text
+        self.assertIn("Disallow: /api/", robots)
+        self.assertIn("Sitemap: https://text-2-speech.com/sitemap.xml", robots)
+        for f in ("/favicon.svg", "/favicon-48.png", "/apple-touch-icon.png", "/logo.png"):
+            r = self.c.get(f)
+            self.assertEqual(r.status_code, 200, f)
+            self.assertIn("max-age=604800", r.headers["cache-control"], f)
+        import re as _re
+        src = _re.search(r'src="(/subi18n\.js\?v=[^"]+)"', self.c.get("/tutorial.html").text).group(1)
+        self.assertIn("immutable", self.c.get(src).headers["cache-control"])
+        self.assertEqual(self.c.get("/tutorial.html").headers["cache-control"], "no-cache")
+
+    def test_voices_page_lists_live_catalog(self):
+        try:
+            server._dead_voices.add("en-US-AndrewNeural")
+            html = self.c.get("/voices.html").text
+        finally:
+            server._dead_voices.clear()
+        self.assertIn("<strong>3 voices in 2 languages</strong>", html)
+        self.assertIn("Taqqiq - Cans-CA", html)
+        self.assertNotIn("Andrew - US,", html)  # hidden while unavailable
+        self.assertNotIn("<!--voices:", html)
 
     def test_html_404_for_pages_json_for_api(self):  # TTS-BUG-026
         r = self.c.get("/nope.html")

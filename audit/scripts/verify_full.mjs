@@ -20,7 +20,8 @@ const watch = p => {
 const ready = async p => { if (await p.locator("#voicelist").count()) await p.waitForSelector("#voicelist .vrow", { timeout: 20000 }); };
 
 // ---- axe on every page, both themes, desktop + mobile
-const PAGES = ["/", "/tutorial.html", "/donate.html", "/support.html", "/auth.html", "/privacy.html", "/terms.html", "/nope-404"];
+const PAGES = ["/", "/tutorial.html", "/donate.html", "/support.html", "/auth.html", "/privacy.html", "/terms.html", "/nope-404",
+  "/voices.html", "/how-it-works.html", "/guides/subtitles.html", "/guides/mp3-vs-wav.html"];
 for (const theme of ["dark", "light"]) {
   for (const vp of [{ width: 1280, height: 900 }, { width: 375, height: 800 }]) {
     const ctx = await b.newContext({ viewport: vp });

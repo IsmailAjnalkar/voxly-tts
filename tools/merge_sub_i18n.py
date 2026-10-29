@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Merge web/i18n-sub-parts/<code>.json (25 languages) into web/i18n-sub.js,
-validating: every language present, exactly the English key set, no empty
+"""Validate web/i18n-sub-parts/<code>.json (25 languages), which the server and
+subi18n.js read directly: every language present, exactly the English key set, no empty
 values, and HTML markup preserved in the three HTML strings."""
 import json
 import pathlib
@@ -53,8 +53,4 @@ if errors:
         print(" -", e)
     sys.exit(1)
 
-out = ROOT / "web" / "i18n-sub.js"
-out.write_text("window.SUBI18N = " + json.dumps(merged, ensure_ascii=False) + ";\n",
-               encoding="utf-8")
-print(f"merged {len(merged)} languages x {len(en_keys)} keys -> {out} "
-      f"({out.stat().st_size // 1024} KB)")
+print(f"valid: {len(merged)} languages x {len(en_keys)} keys (pages are translated server-side from these files)")

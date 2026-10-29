@@ -1,0 +1,202 @@
+[
+ {
+  "form": "mobile",
+  "path": "/",
+  "performance": 100,
+  "accessibility": 98,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 1318,
+  "cls": 0.043,
+  "tbt_ms": 0,
+  "fcp_ms": 1318,
+  "bytes_kb": 49,
+  "failing": [
+   "first-contentful-paint(0.98)",
+   "cumulative-layout-shift(0.99)",
+   "heading-order(0)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/es/",
+  "performance": 100,
+  "accessibility": 98,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 1412,
+  "cls": 0,
+  "tbt_ms": 11,
+  "fcp_ms": 1262,
+  "bytes_kb": 49,
+  "failing": [
+   "first-contentful-paint(0.98)",
+   "mainthread-work-breakdown(0.5)",
+   "bootup-time(0.5)",
+   "heading-order(0)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/tutorial.html",
+  "performance": 95,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 910,
+  "cls": 0.13,
+  "tbt_ms": 8,
+  "fcp_ms": 910,
+  "bytes_kb": 221,
+  "failing": [
+   "cumulative-layout-shift(0.81)",
+   "layout-shifts(0)",
+   "uses-long-cache-ttl(0.5)",
+   "uses-text-compression(0.5)",
+   "cache-insight(0.5)",
+   "cls-culprits-insight(0)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/support.html",
+  "performance": 95,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 901,
+  "cls": 0.13,
+  "tbt_ms": 29,
+  "fcp_ms": 901,
+  "bytes_kb": 221,
+  "failing": [
+   "max-potential-fid(0.98)",
+   "cumulative-layout-shift(0.81)",
+   "layout-shifts(0)",
+   "uses-long-cache-ttl(0.5)",
+   "uses-text-compression(0.5)",
+   "cache-insight(0.5)",
+   "cls-culprits-insight(0)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/privacy.html",
+  "performance": 95,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 944,
+  "cls": 0.13,
+  "tbt_ms": 7,
+  "fcp_ms": 944,
+  "bytes_kb": 221,
+  "failing": [
+   "cumulative-layout-shift(0.81)",
+   "layout-shifts(0)",
+   "uses-long-cache-ttl(0.5)",
+   "uses-text-compression(0.5)",
+   "cache-insight(0.5)",
+   "cls-culprits-insight(0)",
+   "forced-reflow-insight(0)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/",
+  "performance": 100,
+  "accessibility": 98,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 376,
+  "cls": 0.028,
+  "tbt_ms": 0,
+  "fcp_ms": 367,
+  "bytes_kb": 52,
+  "failing": [
+   "heading-order(0)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/es/",
+  "performance": 100,
+  "accessibility": 98,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 568,
+  "cls": 0.028,
+  "tbt_ms": 0,
+  "fcp_ms": 568,
+  "bytes_kb": 49,
+  "failing": [
+   "first-contentful-paint(0.99)",
+   "heading-order(0)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/tutorial.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 332,
+  "cls": 0.014,
+  "tbt_ms": 0,
+  "fcp_ms": 332,
+  "bytes_kb": 221,
+  "failing": [
+   "uses-long-cache-ttl(0.5)",
+   "uses-text-compression(0.5)",
+   "cache-insight(0.5)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/support.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 252,
+  "cls": 0.001,
+  "tbt_ms": 0,
+  "fcp_ms": 252,
+  "bytes_kb": 221,
+  "failing": [
+   "uses-long-cache-ttl(0.5)",
+   "uses-text-compression(0.5)",
+   "cache-insight(0.5)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/privacy.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 330,
+  "cls": 0.003,
+  "tbt_ms": 0,
+  "fcp_ms": 330,
+  "bytes_kb": 221,
+  "failing": [
+   "uses-long-cache-ttl(0.5)",
+   "uses-text-compression(0.5)",
+   "cache-insight(0.5)",
+   "network-dependency-tree-insight(0)"
+  ]
+ }
+]

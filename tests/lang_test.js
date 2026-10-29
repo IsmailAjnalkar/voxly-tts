@@ -7,6 +7,7 @@ function ck(name, cond, extra) {
   if (cond) { pass++; }
   else { fail++; failures.push(name + (extra ? " :: " + extra : "")); }
 }
+const parts = async c => (await fetch(`${BASE}/i18n-sub-parts/${c}.json`)).json();
 async function loadDom(url) {
   const res = await fetch(url);
   const html = await res.text();
@@ -65,12 +66,12 @@ async function loadDom(url) {
        erows[0] ? erows[0].textContent.slice(0, 30) : "none");
     dom.window.close();
   }
-  // 3) German tutorial: full translation applied from SUBI18N
+  // 3) German tutorial: rendered in German by the server (strings from i18n-sub-parts)
   {
     const dom = await loadDom(BASE + "/de/tutorial.html");
     const d = dom.window.document, w = dom.window;
-    ck("de tut: SUBI18N loaded", !!w.SUBI18N && !!w.SUBI18N.de);
-    const de = (w.SUBI18N || {}).de || {};
+    ck("de tut: server-rendered language", d.documentElement.getAttribute("data-ui") === "de");
+    const de = await parts("de");
     ck("de tut: title translated", d.title === de.doc_tutorial, d.title);
     ck("de tut: guide1 heading", d.querySelector('[data-i18n="tut_g1h"]').textContent === de.tut_g1h);
     ck("de tut: guide1 heading is German anchor", /Erste Schritte/.test(d.querySelector('[data-i18n="tut_g1h"]').textContent));
@@ -87,7 +88,7 @@ async function loadDom(url) {
   {
     const dom = await loadDom(BASE + "/fr/support.html");
     const d = dom.window.document, w = dom.window;
-    const fr = (w.SUBI18N || {}).fr || {};
+    const fr = await parts("fr");
     ck("fr sup: bug option French", d.querySelector('[data-i18n="sup_o3"]').textContent === fr.sup_o3 && fr.sup_o3 !== "Bug report", fr.sup_o3);
     ck("fr sup: placeholder French", d.querySelector("[data-i18n-ph]").getAttribute("placeholder") === fr.sup_msg_ph);
     ck("fr sup: result line is announced (role=status)", !!d.getElementById("supstatus") && d.getElementById("supstatus").getAttribute("role") === "status");
@@ -98,7 +99,7 @@ async function loadDom(url) {
   {
     const dom = await loadDom(BASE + "/ar/privacy.html");
     const d = dom.window.document, w = dom.window;
-    const ar = (w.SUBI18N || {}).ar || {};
+    const ar = await parts("ar");
     ck("ar priv: dir=rtl", d.documentElement.dir === "rtl", d.documentElement.dir);
     ck("ar priv: h1 Arabic", d.querySelector('[data-i18n="priv_h1"]').textContent === ar.priv_h1 && /[\u0600-\u06FF]/.test(ar.priv_h1));
     ck("ar priv: contact link kept", !!d.querySelector('[data-i18n-html="priv_s4p"] a'));

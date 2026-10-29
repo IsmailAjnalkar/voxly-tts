@@ -1,0 +1,353 @@
+[
+ {
+  "form": "mobile",
+  "path": "/",
+  "performance": 99,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 1923,
+  "cls": 0.039,
+  "tbt_ms": 0,
+  "fcp_ms": 1386,
+  "bytes_kb": 180,
+  "failing": [
+   "first-contentful-paint(0.97)",
+   "largest-contentful-paint(0.98)",
+   "uses-text-compression(0)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/es/",
+  "performance": 99,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 1856,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 1328,
+  "bytes_kb": 181,
+  "failing": [
+   "first-contentful-paint(0.98)",
+   "largest-contentful-paint(0.98)",
+   "mainthread-work-breakdown(0.5)",
+   "bootup-time(0.5)",
+   "uses-text-compression(0)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/tutorial.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 908,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 755,
+  "bytes_kb": 28,
+  "failing": [
+   "render-blocking-resources(0.5)",
+   "uses-text-compression(0.5)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/support.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 908,
+  "cls": 0.035,
+  "tbt_ms": 0,
+  "fcp_ms": 755,
+  "bytes_kb": 29,
+  "failing": [
+   "render-blocking-resources(0.5)",
+   "uses-text-compression(0.5)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/privacy.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 909,
+  "cls": 0.011,
+  "tbt_ms": 0,
+  "fcp_ms": 756,
+  "bytes_kb": 27,
+  "failing": [
+   "render-blocking-resources(0.5)",
+   "uses-text-compression(0.5)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/voices.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 1059,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 906,
+  "bytes_kb": 34,
+  "failing": [
+   "render-blocking-resources(0)",
+   "uses-text-compression(0)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/how-it-works.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 907,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 755,
+  "bytes_kb": 27,
+  "failing": [
+   "render-blocking-resources(0)",
+   "uses-text-compression(0.5)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/guides/subtitles.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 908,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 767,
+  "bytes_kb": 27,
+  "failing": [
+   "render-blocking-resources(0.5)",
+   "uses-text-compression(0.5)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "mobile",
+  "path": "/guides/mp3-vs-wav.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 907,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 755,
+  "bytes_kb": 26,
+  "failing": [
+   "render-blocking-resources(0)",
+   "uses-text-compression(0.5)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 458,
+  "cls": 0.024,
+  "tbt_ms": 0,
+  "fcp_ms": 356,
+  "bytes_kb": 186,
+  "failing": [
+   "uses-text-compression(0)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/es/",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 459,
+  "cls": 0.024,
+  "tbt_ms": 0,
+  "fcp_ms": 358,
+  "bytes_kb": 181,
+  "failing": [
+   "uses-text-compression(0)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/tutorial.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 248,
+  "cls": 0.002,
+  "tbt_ms": 0,
+  "fcp_ms": 205,
+  "bytes_kb": 28,
+  "failing": [
+   "uses-text-compression(0.5)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/support.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 248,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 205,
+  "bytes_kb": 29,
+  "failing": [
+   "uses-text-compression(0.5)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/privacy.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 248,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 206,
+  "bytes_kb": 27,
+  "failing": [
+   "uses-text-compression(0.5)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/voices.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 290,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 246,
+  "bytes_kb": 34,
+  "failing": [
+   "uses-text-compression(0)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/how-it-works.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 248,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 205,
+  "bytes_kb": 27,
+  "failing": [
+   "uses-text-compression(0.5)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/guides/subtitles.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 248,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 206,
+  "bytes_kb": 27,
+  "failing": [
+   "uses-text-compression(0.5)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ },
+ {
+  "form": "desktop",
+  "path": "/guides/mp3-vs-wav.html",
+  "performance": 100,
+  "accessibility": 100,
+  "bestPractices": 100,
+  "seo": 100,
+  "lcp_ms": 247,
+  "cls": 0,
+  "tbt_ms": 0,
+  "fcp_ms": 205,
+  "bytes_kb": 26,
+  "failing": [
+   "uses-text-compression(0.5)",
+   "document-latency-insight(0.5)",
+   "network-dependency-tree-insight(0)",
+   "render-blocking-insight(0.5)"
+  ]
+ }
+]
