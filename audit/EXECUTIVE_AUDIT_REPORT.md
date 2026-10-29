@@ -118,6 +118,25 @@ NOT APPLICABLE: history/dashboard/billing/admin/credits (free, anonymous product
 | 10 | [FIX_PRIORITY_ROADMAP.md](FIX_PRIORITY_ROADMAP.md) |
 | — | Evidence: [evidence/](evidence/) (raw JSON results, run logs, 23 screenshots, SRT samples) · scripts: [scripts/](scripts/) · tests: `tests/test_api.py`, `.github/workflows/ci.yml` |
 
+## Remediation log (branch `fix/day1-abuse-availability`, not deployed)
+
+| Bug | Change | Verified by |
+|---|---|---|
+| 001 | `MAX_CHARS = 5000` in a Pydantic model + UI counter "n / 5000" that disables Generate; nginx `limit_req` 20 r/min/IP, burst 10, 429; `client_max_body_size 64k` | `test_text_length_limit`; local real-provider 5,001 chars → 422 in 0.2 s (was 45 s then 502) |
+| 002, 009 | Total pause ≤ 60 s, ≤ 50 segments, at least one spoken segment | `test_break_marker_limits`, `test_break_only_text_is_rejected`; 663-char bomb → 400 in 0.01 s (was 30 min of audio) |
+| 004 | ffmpeg/ffprobe moved off the event loop (`asyncio.to_thread`); 2 uvicorn workers | `test_ffmpeg_does_not_block_event_loop`: 5.77 s on old code, < 0.8 s on new |
+| 006 | Busy flag on Generate | Browser: typing mid-job keeps it disabled; exactly 1 request |
+| 007 | `NoAudioReceived` → 422 "Choose a Voice Language that matches…"; UI shows 4xx detail without blaming the network | `test_language_mismatch_is_actionable_422`; real provider: Hindi on Aria → 422 |
+| 014 | Request schema; one readable 422 message | `test_malformed_json_is_4xx`, `test_non_numeric_speed_is_4xx`, `test_prosody_out_of_range_is_422` |
+| 020 | HSTS, CSP, nosniff, DENY, Referrer-Policy, Permissions-Policy; `/docs`, `/redoc`, `/openapi.json` off; generic 5xx detail (logged server-side); JSON-only body; nginx `server_tokens off` | `test_security_headers_and_no_docs`, `test_provider_error_detail_not_leaked`, `test_cross_site_text_plain_post_rejected`; browser: no CSP violations, playback and downloads work |
+| 021 | certifi 2026.10.19 | pip-audit: no known vulnerabilities |
+| 024 | Counter counts code points, matching the server | Browser: "Hi 😀⏎line2" = 10 |
+| 003 (partial) | Limit enforced and documented in FAQ, JSON-LD, How-it-works and llms.txt | Still open: chunked synthesis. 5,000 chars can still approach the 45 s timeout on a slow provider day |
+
+Suite after fixes: `python -m unittest tests/test_api.py` → 20 tests, OK (3 expected failures: BUG-005, 012, 019). `tests/lang_test.js` → 26/26. `audit/scripts/verify_day1.mjs` → 10/10.
+
+**Deploy notes:** the live nginx config differs from `deploy/nginx-voxy.conf` (it terminates TLS). Merge the `limit_req_zone`, `limit_req`, `server_tokens` and `client_max_body_size` lines into the live server block by hand, then run `nginx -t`. Update `voxly.service` (`--workers 2`) and `pip install -r requirements.txt` before restarting.
+
 ## Audit conduct
 - Production received about 45 bounded API calls per probe run (the probe ran 3 times because of a script encoding bug: about 100 calls total) plus about 6 browser generations. There was no load testing, no exploit payloads and no data modification beyond the auditor's own session files.
 - No application code was changed. Additions are tests, CI, scripts and reports on local branch `audit/2026-10-28`. Nothing was pushed or deployed.

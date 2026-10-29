@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=voxly
 WorkingDirectory=/opt/voxly
-ExecStart=/opt/voxly/.venv/bin/uvicorn server:app --host 127.0.0.1 --port 8000
+ExecStart=/opt/voxly/.venv/bin/uvicorn server:app --host 127.0.0.1 --port 8000 --workers 2
 Restart=always
 RestartSec=3
 Environment=PYTHONUNBUFFERED=1

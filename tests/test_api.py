@@ -3,14 +3,17 @@ Run: .venv/Scripts/python -m unittest tests/test_api.py -v   (needs ffmpeg + htt
 
 Tests marked @expectedFailure pin a known defect from audit/DEFECT_REGISTER.csv.
 When the defect is fixed the test reports "unexpected success": remove the marker."""
+import asyncio
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import httpx  # noqa: E402
 import server  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 
@@ -56,7 +59,7 @@ class Api(unittest.TestCase):
         self.assertEqual(self.tts(text="").status_code, 400)
         self.assertEqual(self.tts(text="   ").status_code, 400)
         self.assertEqual(self.tts(text="hi", voice="xx-XX-Nope").status_code, 400)
-        self.assertEqual(self.tts(text="hi", format="ogg").status_code, 400)
+        self.assertEqual(self.tts(text="hi", format="ogg").status_code, 422)
         self.assertEqual(self.c.post("/api/tts", json={"text": "hi", "voice": "en-US-AriaNeural"}).status_code, 400)
 
     def test_generate_download_isolate_delete(self):
@@ -88,18 +91,81 @@ class Api(unittest.TestCase):
     def test_parse_segments_caps_single_break(self):
         self.assertEqual(server.parse_segments("[break:99s]"), [{"type": "silence", "ms": 30000}])
 
-    # ---------- known defects (see audit/DEFECT_REGISTER.csv) ----------
-    @unittest.expectedFailure  # TTS-BUG-001: no server-side text length limit
-    def test_rejects_oversized_text(self):
-        self.assertIn(self.tts(text="a" * 200_000).status_code, (400, 413))
+    # ---------- fixed defects (regression guards) ----------
+    def test_text_length_limit(self):  # TTS-BUG-001
+        n = server.MAX_CHARS
+        self.assertEqual(self.tts(text="a" * n).status_code, 200)
+        self.assertEqual(self.tts(text="😀" * n).status_code, 200)  # code points, like the UI counter
+        r = self.tts(text="a" * (n + 1))
+        self.assertEqual(r.status_code, 422)
+        self.assertIn("text:", r.json()["detail"])  # one readable string for the UI toast
 
-    @unittest.expectedFailure  # TTS-BUG-002: break markers amplify into unbounded silence
-    def test_rejects_excessive_total_silence(self):
-        self.assertIn(self.tts(text="[break:30s]" * 100 + " hi").status_code, (400, 413))
+    def test_break_marker_limits(self):  # TTS-BUG-002
+        self.assertEqual(self.tts(text="[break:30s]" * 2 + " hi").status_code, 200)  # exactly 60 s
+        self.assertEqual(self.tts(text="[break:30s]" * 2 + "[break:1ms] hi").status_code, 400)
+        self.assertEqual(self.tts(text="a [break:1ms] " * 26).status_code, 400)  # 51 segments
 
-    @unittest.expectedFailure  # TTS-BUG-009: break-only input yields a silent file
-    def test_break_only_text_is_rejected(self):
+    def test_break_only_text_is_rejected(self):  # TTS-BUG-009
         self.assertEqual(self.tts(text="[break:1s][break:2s]").status_code, 400)
+
+    def test_prosody_out_of_range_is_422(self):  # TTS-BUG-014 / BUG-018 server side
+        self.assertEqual(self.tts(text="hi", speed=1000).status_code, 422)
+        self.assertEqual(self.tts(text="hi", pitch=-101).status_code, 422)
+        self.assertEqual(self.tts(text="hi", speed=-100, pitch=100).status_code, 200)
+
+    def test_cross_site_text_plain_post_rejected(self):  # TTS-BUG-020
+        r = self.c.post("/api/tts", content=b'{"text":"hi","voice":"en-US-AriaNeural"}',
+                        headers={**H, "Content-Type": "text/plain"})
+        self.assertEqual(r.status_code, 422)
+
+    def test_security_headers_and_no_docs(self):  # TTS-BUG-020
+        h = self.c.get("/api/health").headers
+        for k in ("strict-transport-security", "content-security-policy", "x-content-type-options",
+                  "x-frame-options", "referrer-policy"):
+            self.assertIn(k, h)
+        for p in ("/docs", "/redoc", "/openapi.json"):
+            self.assertEqual(self.c.get(p).status_code, 404, p)
+
+    def test_provider_error_detail_not_leaked(self):  # TTS-BUG-020
+        with mock.patch.object(server, "synth_segment", mock.AsyncMock(side_effect=RuntimeError("secret-internal"))):
+            with self.assertLogs("voxly", "ERROR"):
+                r = self.tts(text="hi")
+        self.assertEqual(r.status_code, 502)
+        self.assertNotIn("secret-internal", r.text)
+
+    def test_language_mismatch_is_actionable_422(self):  # TTS-BUG-007 (server side)
+        err = server.edge_tts.exceptions.NoAudioReceived("No audio was received.")
+        with mock.patch.object(server, "synth_segment", mock.AsyncMock(side_effect=err)):
+            r = self.tts(text="सुप्रभात")
+        self.assertEqual(r.status_code, 422)
+        self.assertIn("Voice Language", r.json()["detail"])
+
+    def test_ffmpeg_does_not_block_event_loop(self):  # TTS-BUG-004
+        real_run = subprocess.run
+
+        def slow_run(*a, **k):
+            time.sleep(1.0)
+            return real_run(*a, **k)
+
+        async def scenario():
+            transport = httpx.ASGITransport(app=server.app)
+            async with httpx.AsyncClient(transport=transport, base_url="http://t") as c:
+                with mock.patch.object(server.subprocess, "run", slow_run):
+                    # Timer starts before the job: a blocking job holds the loop
+                    # for its whole duration (~4 s of ffmpeg), so the health
+                    # check can't even be sent until the job is done.
+                    t = time.perf_counter()
+                    job = asyncio.create_task(c.post("/api/tts", headers=H, json={
+                        "text": "a [break:100ms] b", "voice": "en-US-AriaNeural"}))
+                    await asyncio.sleep(0.3)
+                    await c.get("/api/health")
+                    waited = time.perf_counter() - t
+                    self.assertEqual((await job).status_code, 200)
+            return waited
+
+        self.assertLess(asyncio.run(scenario()), 0.8)
+
+    # ---------- known defects (see audit/DEFECT_REGISTER.csv) ----------
 
     @unittest.expectedFailure  # TTS-BUG-005: subtitles never use engine word timings
     def test_requests_word_boundaries(self):
@@ -111,14 +177,13 @@ class Api(unittest.TestCase):
             server.asyncio.run(ORIGINAL_SYNTH("hi", "en-US-AriaNeural", "+0%", "+0Hz"))
         self.assertEqual(comm.call_args.kwargs.get("boundary"), "WordBoundary")
 
-    @unittest.expectedFailure  # TTS-BUG-014: malformed JSON returns 500
-    def test_malformed_json_is_4xx(self):
+    def test_malformed_json_is_4xx(self):  # TTS-BUG-014 (fixed)
         r = self.c.post("/api/tts", content=b"{not json", headers={**H, "Content-Type": "application/json"})
-        self.assertLess(r.status_code, 500)
+        self.assertEqual(r.status_code, 422)
+        self.assertEqual(self.c.post("/api/tts", json=[1, 2, 3], headers=H).status_code, 422)
 
-    @unittest.expectedFailure  # TTS-BUG-014: non-numeric speed returns 500
-    def test_non_numeric_speed_is_4xx(self):
-        self.assertLess(self.tts(text="hi", speed="fast").status_code, 500)
+    def test_non_numeric_speed_is_4xx(self):  # TTS-BUG-014 (fixed)
+        self.assertEqual(self.tts(text="hi", speed="fast").status_code, 422)
 
     @unittest.expectedFailure  # TTS-BUG-019: GET /api/file creates a directory per arbitrary session id
     def test_file_get_does_not_create_session_dir(self):

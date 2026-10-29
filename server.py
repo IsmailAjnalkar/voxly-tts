@@ -2,11 +2,12 @@
 Voxly — free text-to-speech web app (server).
 Engine: Microsoft Edge neural voices via edge-tts (322 voices, 75+ languages).
 Features: voice catalog API, synthesis with [break:Xms]/[break:Xs] markers,
-speed/pitch prosody, MP3/WAV output, word-timing SRT/VTT subtitles,
+speed/pitch prosody, MP3/WAV output, SRT/VTT subtitles,
 session-scoped result storage (files live only for the browser session).
 """
 import asyncio
 import json
+import logging
 import os
 import re
 import shutil
@@ -15,6 +16,7 @@ import subprocess
 import time
 import uuid
 from pathlib import Path
+from typing import Literal
 
 # --- Network compatibility -------------------------------------------------
 # Some environments (corporate/sandbox egress proxies) MITM TLS with a CA that
@@ -33,26 +35,55 @@ if Path(_SYSTEM_CA).exists():
 PROXY = os.environ.get("https_proxy") or os.environ.get("HTTPS_PROXY") or None
 
 import edge_tts
-from fastapi import FastAPI, Header, HTTPException, Request
+from fastapi import FastAPI, Header, HTTPException
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field
 
 BASE = Path(__file__).resolve().parent
 DATA = BASE / "data"
 DATA.mkdir(exist_ok=True)
 SESSION_TTL = 2 * 3600  # generated files are session-only
+# Abuse limits for the anonymous /api/tts endpoint. MAX_CHARS is mirrored in
+# web/index.html (MAX_CHARS) and stated in the FAQ and llms.txt.
+MAX_CHARS = 5000
+MAX_SILENCE_MS = 60_000   # total of all [break:...] markers in one request
+MAX_SEGMENTS = 50         # speak + silence pieces after splitting on markers
 
-app = FastAPI(title="Voxly TTS")
+log = logging.getLogger("voxly")
+app = FastAPI(title="Voxly TTS", docs_url=None, redoc_url=None, openapi_url=None)
+
+_SECURITY_HEADERS = {
+    "Strict-Transport-Security": "max-age=31536000",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+    # Pages use inline <script>/<style>; everything else is same-origin.
+    "Content-Security-Policy": (
+        "default-src 'self'; script-src 'self' 'unsafe-inline'; "
+        "style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; "
+        "connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"),
+}
 
 
 @app.middleware("http")
-async def _no_cache_html(request, call_next):
+async def _headers(request, call_next):
+    resp = await call_next(request)
+    resp.headers.update(_SECURITY_HEADERS)
     # HTML pages must revalidate on every load so a deploy reaches visitors
     # immediately (a stale cached page kept an old, broken script alive).
-    resp = await call_next(request)
     if "text/html" in resp.headers.get("content-type", ""):
         resp.headers["Cache-Control"] = "no-cache"
     return resp
+
+
+@app.exception_handler(RequestValidationError)
+async def _invalid_request(request, exc):
+    # One readable string, so the UI can show it as-is (FastAPI's default is a list).
+    msg = "; ".join(f"{e['loc'][-1]}: {e['msg']}" for e in exc.errors())
+    return JSONResponse({"detail": msg}, status_code=422)
 _voices_cache: dict = {"data": None, "ts": 0}
 
 
@@ -166,15 +197,21 @@ def build_subtitles(words: list[tuple[float, float, str]], srt: bool) -> str:
     return ("WEBVTT\n\n" if not srt else "") + "\n".join(lines)
 
 
-def _silence_mp3(path: Path, ms: int) -> None:
-    subprocess.run(
-        ["ffmpeg", "-y", "-f", "lavfi", "-i", "anullsrc=r=24000:cl=mono",
-         "-t", str(ms / 1000), "-codec:a", "libmp3lame", "-b:a", "48k", str(path)],
-        check=True, capture_output=True)
+async def _ffmpeg(*args: str) -> None:
+    # In a worker thread: a blocking subprocess.run on the event loop stalled
+    # every other request (health checks took ~6 s during one long job).
+    await asyncio.to_thread(subprocess.run, ["ffmpeg", "-y", *args],
+                            check=True, capture_output=True)
 
 
-def _probe_duration(path: Path) -> float:
-    r = subprocess.run(
+async def _silence_mp3(path: Path, ms: int) -> None:
+    await _ffmpeg("-f", "lavfi", "-i", "anullsrc=r=24000:cl=mono",
+                  "-t", str(ms / 1000), "-codec:a", "libmp3lame", "-b:a", "48k", str(path))
+
+
+async def _probe_duration(path: Path) -> float:
+    r = await asyncio.to_thread(
+        subprocess.run,
         ["ffprobe", "-v", "error", "-show_entries", "format=duration",
          "-of", "csv=p=0", str(path)], capture_output=True, text=True)
     try:
@@ -194,40 +231,47 @@ async def synth_segment(text: str, voice: str, rate: str, pitch: str) -> tuple[b
     return audio, words
 
 
+class TTSRequest(BaseModel):
+    text: str = Field("", max_length=MAX_CHARS)
+    voice: str = ""
+    speed: int = Field(0, ge=-100, le=100)   # % -> edge-tts rate
+    pitch: int = Field(0, ge=-100, le=100)   # % -> Hz, 1:1
+    format: Literal["mp3", "wav"] = "mp3"
+
+
 @app.post("/api/tts")
-async def api_tts(req: Request, x_session_id: str = Header(default="")):
-    body = await req.json()
-    text = (body.get("text") or "").strip()
-    voice = body.get("voice") or ""
-    fmt = (body.get("format") or "mp3").lower()
-    if fmt not in ("mp3", "wav"):
-        raise HTTPException(400, "Format must be mp3 or wav")
+async def api_tts(body: TTSRequest, x_session_id: str = Header(default="")):
+    text, voice, fmt = body.text.strip(), body.voice, body.format
     if not text:
         raise HTTPException(400, "Text is empty")
-    voices = await get_voices()
+    segments = parse_segments(text)
+    if not any(s["type"] == "speak" for s in segments):
+        raise HTTPException(400, "Nothing to synthesize")
+    if len(segments) > MAX_SEGMENTS:
+        raise HTTPException(400, f"Too many [break] markers (max {MAX_SEGMENTS // 2})")
+    if sum(s.get("ms", 0) for s in segments) > MAX_SILENCE_MS:
+        raise HTTPException(400, f"Total pause length exceeds {MAX_SILENCE_MS // 1000} s")
+    try:
+        voices = await get_voices()
+    except Exception:
+        log.exception("voice catalog unavailable")
+        raise HTTPException(502, "Voice catalog unavailable, please retry")
     if voice not in {v["id"] for v in voices}:
         raise HTTPException(400, "Unknown voice")
-    # Prosody mapping: UI % -> edge-tts rate %; pitch % -> Hz (1% = 1Hz, +/-100)
-    speed = int(body.get("speed") or 0)
-    pitch_pct = int(body.get("pitch") or 0)
-    rate = f"{speed:+d}%"
-    pitch = f"{max(-100, min(100, pitch_pct)):+d}Hz"
+    rate, pitch = f"{body.speed:+d}%", f"{body.pitch:+d}Hz"
 
     _cleanup_old_sessions()
     sdir = _session_dir(x_session_id)
     item_id = uuid.uuid4().hex[:12]
     work = sdir / f"tmp-{item_id}"
     work.mkdir(exist_ok=True)
-    segments = parse_segments(text)
-    if not segments:
-        raise HTTPException(400, "Nothing to synthesize")
 
     part_files, all_words, offset = [], [], 0.0
     try:
         for i, seg in enumerate(segments):
             part = work / f"part{i}.mp3"
             if seg["type"] == "silence":
-                _silence_mp3(part, seg["ms"])
+                await _silence_mp3(part, seg["ms"])
                 offset += seg["ms"] / 1000
             else:
                 audio, words = await asyncio.wait_for(
@@ -235,7 +279,7 @@ async def api_tts(req: Request, x_session_id: str = Header(default="")):
                 if not audio:
                     raise HTTPException(502, "Synthesis returned no audio")
                 part.write_bytes(audio)
-                dur = _probe_duration(part)
+                dur = await _probe_duration(part)
                 if not words:
                     # Speech service sent no word boundaries: estimate timings
                     # proportionally from the real segment duration so the
@@ -252,29 +296,33 @@ async def api_tts(req: Request, x_session_id: str = Header(default="")):
                     all_words.append((offset + s, offset + e, w))
                 offset += dur
             part_files.append(part)
-    except HTTPException:
-        shutil.rmtree(work, ignore_errors=True)
-        raise
-    except Exception as e:
-        shutil.rmtree(work, ignore_errors=True)
-        raise HTTPException(502, f"Synthesis failed: {type(e).__name__}: {e}")
 
-    # Concat -> final mp3
-    listfile = work / "list.txt"
-    listfile.write_text("".join(f"file '{p.name}'\n" for p in part_files))
-    final_mp3 = sdir / f"{item_id}.mp3"
-    subprocess.run(["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(listfile),
-                    "-codec:a", "libmp3lame", "-b:a", "48k", str(final_mp3)],
-                   check=True, capture_output=True)
-    audio_name = f"{item_id}.mp3"
-    if fmt == "wav":
-        wav = sdir / f"{item_id}.wav"
-        subprocess.run(["ffmpeg", "-y", "-i", str(final_mp3), str(wav)],
-                       check=True, capture_output=True)
-        audio_name = f"{item_id}.wav"
+        # Concat -> final mp3
+        listfile = work / "list.txt"
+        listfile.write_text("".join(f"file '{p.name}'\n" for p in part_files))
+        final_mp3 = sdir / f"{item_id}.mp3"
+        await _ffmpeg("-f", "concat", "-safe", "0", "-i", str(listfile),
+                      "-codec:a", "libmp3lame", "-b:a", "48k", str(final_mp3))
+        audio_name = f"{item_id}.mp3"
+        if fmt == "wav":
+            await _ffmpeg("-i", str(final_mp3), str(sdir / f"{item_id}.wav"))
+            audio_name = f"{item_id}.wav"
+    except HTTPException:
+        raise
+    except edge_tts.exceptions.NoAudioReceived:
+        # What the service does when the text's script doesn't fit the voice
+        # (e.g. Hindi text on an English voice).
+        raise HTTPException(422, "This voice can't read this text. Choose a Voice Language "
+                                 "that matches the language of your text.")
+    except Exception:
+        # Details go to the log, not to anonymous clients.
+        log.exception("synthesis failed (voice=%s, chars=%d)", voice, len(text))
+        raise HTTPException(502, "Synthesis failed, please retry")
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
     (sdir / f"{item_id}.srt").write_text(build_subtitles(all_words, srt=True), encoding="utf-8")
     (sdir / f"{item_id}.vtt").write_text(build_subtitles(all_words, srt=False), encoding="utf-8")
-    duration = _probe_duration(sdir / audio_name)
+    duration = await _probe_duration(sdir / audio_name)
     snippet = re.sub(r"\s+", " ", BREAK_RE.sub(" ", text))[:120]
     meta = {"id": item_id, "voice": voice, "format": fmt, "duration": round(duration, 2),
             "snippet": snippet, "created": int(time.time()),
@@ -282,7 +330,6 @@ async def api_tts(req: Request, x_session_id: str = Header(default="")):
             "audioName": audio_name,
             "srt": f"/api/file/{item_id}.srt", "vtt": f"/api/file/{item_id}.vtt"}
     (sdir / f"{item_id}.json").write_text(json.dumps(meta), encoding="utf-8")
-    shutil.rmtree(work, ignore_errors=True)
     return meta
 
 
