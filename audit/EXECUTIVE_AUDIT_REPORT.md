@@ -118,7 +118,7 @@ NOT APPLICABLE: history/dashboard/billing/admin/credits (free, anonymous product
 | 10 | [FIX_PRIORITY_ROADMAP.md](FIX_PRIORITY_ROADMAP.md) |
 | — | Evidence: [evidence/](evidence/) (raw JSON results, run logs, 23 screenshots, SRT samples) · scripts: [scripts/](scripts/) · tests: `tests/test_api.py`, `.github/workflows/ci.yml` |
 
-## Remediation log (branch `fix/day1-abuse-availability`, not deployed)
+## Remediation log (deployed to production 2026-10-29, `master@ac9bc6b`)
 
 | Bug | Change | Verified by |
 |---|---|---|
@@ -135,7 +135,11 @@ NOT APPLICABLE: history/dashboard/billing/admin/credits (free, anonymous product
 
 Suite after fixes: `python -m unittest tests/test_api.py` → 20 tests, OK (3 expected failures: BUG-005, 012, 019). `tests/lang_test.js` → 26/26. `audit/scripts/verify_day1.mjs` → 10/10.
 
-**Deploy notes:** the live nginx config differs from `deploy/nginx-voxy.conf` (it terminates TLS). Merge the `limit_req_zone`, `limit_req`, `server_tokens` and `client_max_body_size` lines into the live server block by hand, then run `nginx -t`. Update `voxly.service` (`--workers 2`) and `pip install -r requirements.txt` before restarting.
+**Production verification (2026-10-29, after deploy):** browser check `verify_day1.mjs` 10/10 on https://text-2-speech.com; 5,001 chars → 422; 60-marker bomb → 400; Hindi on Aria → 422 with guidance; malformed JSON → 422; normal generation 200 in 0.99 s; `/docs` `/redoc` `/openapi.json` → 404; all security headers present, `Server: nginx` (no version); 20 rapid `/api/tts` requests → 10 × 400 then 429s (pages unaffected); 2 uvicorn workers; no service errors; chatbotreply.com (same nginx) still 200. Backups on the VPS: `/root/voxly-backup-2026-10-29-0045.tgz`, `/root/nginx-voxly.bak-2026-10-29-0045`, `/root/voxly.service.bak-2026-10-29-0045`.
+
+**Release decision after deploy:** both security P1s (BUG-001, BUG-002) and BUG-004 are closed in production. BUG-003 (chunked synthesis for long text) remains the only open P1, so the decision stays **NO-GO** until it lands, then **CONDITIONAL GO**.
+
+**Deploy notes (as executed):** the live nginx config differs from `deploy/nginx-voxy.conf` (it terminates TLS). Merge the `limit_req_zone`, `limit_req`, `server_tokens` and `client_max_body_size` lines into the live server block by hand, then run `nginx -t`. Update `voxly.service` (`--workers 2`) and `pip install -r requirements.txt` before restarting.
 
 ## Audit conduct
 - Production received about 45 bounded API calls per probe run (the probe ran 3 times because of a script encoding bug: about 100 calls total) plus about 6 browser generations. There was no load testing, no exploit payloads and no data modification beyond the auditor's own session files.
