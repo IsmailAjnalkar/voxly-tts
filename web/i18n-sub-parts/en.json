@@ -19,14 +19,7 @@
  "don_sub": "Text 2 Speech is free for everyone. If it saves you time, a small contribution keeps it that way.",
  "don_where_h": "Where donations go",
  "don_where_p": "Server costs · Feature development · Service maintenance",
- "don_amount": "Amount",
- "don_paypal": "PayPal (USD)",
- "don_wechat": "WeChat Pay (CNY)",
- "don_alipay": "Alipay",
- "don_crypto": "Cryptocurrency",
- "don_crypto_sub": "USDT · ETH · BTC and more",
  "don_btn": "Donate Now",
- "don_alert": "Donation checkout opens with the public launch. Thank you for offering!",
  "sup_h1": "Support",
  "sup_sub": "Most answers live in the FAQ on the home page. Still stuck? Send us the details.",
  "sup_quick_h": "Quick fixes",
@@ -71,5 +64,6 @@
  "terms_s3p": "Personal, educational and creative use is welcome. Commercial use of generated audio is your responsibility to clear against the rights in your source text and any applicable voice-licensing rules in your jurisdiction.",
  "terms_s4h": "Changes",
  "terms_s4p": "Features and these terms may evolve; material changes will be noted on this page with a new date.",
- "foot_guides": "Guides", "foot_help": "Help", "foot_how": "How it works", "foot_product": "Product", "foot_rights": "All rights reserved.", "foot_subs": "SRT & VTT subtitles", "foot_tag": "Free text to speech with 300+ natural voices in 75 languages. No sign-up.", "foot_voices": "Voices & languages", "legal": "Legal"
+ "foot_guides": "Guides", "foot_help": "Help", "foot_how": "How it works", "foot_product": "Product", "foot_rights": "All rights reserved.", "foot_subs": "SRT & VTT subtitles", "foot_tag": "Free text to speech with 300+ natural voices in 75 languages. No sign-up.", "foot_voices": "Voices & languages", "legal": "Legal",
+ "don_stripe_sub": "Credit or debit card", "don_bmc_sub": "Support with a coffee"
 }

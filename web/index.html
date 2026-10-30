@@ -73,6 +73,11 @@
   .wrap{max-width:1280px;margin:0 auto;padding:22px 20px 10px}
   .hero h1{font-size:30px;margin:4px 0 4px}
   .hero p{color:var(--muted);margin:0 0 18px}
+  .hero{display:flex;justify-content:space-between;align-items:flex-start;gap:6px 20px;flex-wrap:wrap}
+  .donate{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 18px}
+  .donate span{color:var(--muted);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em}
+  .dbtn{background:var(--accent);color:var(--on-accent);border-radius:10px;padding:9px 14px;font-weight:700;font-size:14px;white-space:nowrap}
+  .dbtn:hover{text-decoration:none;filter:brightness(1.07)}
   .tool{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}
   .tool>*{min-width:0} /* let grid columns shrink below their content's min width (Firefox at 320 px) */
   .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px}
@@ -196,8 +201,15 @@
 
 <div class="wrap">
   <div class="hero">
-    <h1 data-i18n="h1">Free Text to Speech Online</h1>
-    <p data-i18n="hero_sub">Pick a voice, type or import your text, and generate natural speech you can play or download — no sign-up needed.</p>
+    <div>
+      <h1 data-i18n="h1">Free Text to Speech Online</h1>
+      <p data-i18n="hero_sub">Pick a voice, type or import your text, and generate natural speech you can play or download — no sign-up needed.</p>
+    </div>
+    <div class="donate" role="group" aria-labelledby="donate-h">
+      <span id="donate-h" data-i18n="nav_donate">Donate</span>
+      <a class="dbtn" href="https://donate.stripe.com/EXAMPLE-replace-me" target="_blank" rel="noopener">Stripe</a>
+      <a class="dbtn" href="https://buymeacoffee.com/yourname" target="_blank" rel="noopener">☕ Buy Me a Coffee</a>
+    </div>
   </div>
 
   <div class="tool">
