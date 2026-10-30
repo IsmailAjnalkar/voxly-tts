@@ -33,6 +33,8 @@ VOICES = [
 ]
 H = {"X-Session-Id": "unittestsession"}
 ORIGINAL_SYNTH = server.synth_segment  # captured before setUpClass mocks it
+_STATE = Path(tempfile.mkdtemp())  # page-view counts and admin config of the test run
+server.STATS_DB, server.ADMIN_FILE = _STATE / "views.sqlite3", _STATE / "admin.json"
 
 
 class Api(unittest.TestCase):
@@ -494,6 +496,83 @@ class Api(unittest.TestCase):
     def test_voice_display_names_unique(self):
         names = [v["name"] for v in self.c.get("/api/voices").json()["voices"]]
         self.assertEqual(len(names), len(set(names)), names)
+
+
+class Admin(unittest.TestCase):
+    BROWSER = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0) Chrome/130.0"}
+
+    def setUp(self):
+        server.STATS_DB.unlink(missing_ok=True)
+        server.ADMIN_FILE.unlink(missing_ok=True)
+        self.c = TestClient(server.app, base_url="https://testserver")
+
+    def views(self):
+        import sqlite3
+        from contextlib import closing
+        if not server.STATS_DB.exists():
+            return {}
+        with closing(sqlite3.connect(server.STATS_DB)) as con:
+            return dict(con.execute("SELECT path, SUM(n) FROM views GROUP BY path"))
+
+    def set_password(self, pw="correct horse battery"):
+        r = subprocess.run([sys.executable, "tools/set_admin_password.py", str(server.ADMIN_FILE)], input=pw + "\n",
+                           capture_output=True, text=True, cwd=Path(__file__).resolve().parents[1])
+        self.assertEqual(r.returncode, 0, r.stderr)
+
+    def test_counts_page_views_of_people_only(self):
+        for _ in range(2):
+            self.c.get("/tutorial.html", headers=self.BROWSER)
+        self.c.get("/es/privacy.html", headers=self.BROWSER)
+        self.c.get("/tutorial.html", headers={"User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1)"})
+        self.c.get("/tutorial.html", headers={"User-Agent": ""})
+        self.c.get("/tutorial.html", headers={**self.BROWSER, "Sec-Purpose": "prefetch"})
+        self.c.get("/nope.html", headers=self.BROWSER)          # 404
+        self.c.get("/api/health", headers=self.BROWSER)         # not a page
+        self.c.get("/og-image.png", headers=self.BROWSER)       # not a page
+        self.assertEqual(self.views(), {"/tutorial.html": 2, "/es/privacy.html": 1})
+
+    def test_admin_is_off_until_a_password_is_set(self):
+        self.assertEqual(self.c.get("/admin").status_code, 404)
+        self.assertEqual(self.c.post("/admin/login", data={"password": "x"}).status_code, 404)
+
+    def test_sign_in_dashboard_and_sign_out(self):
+        self.set_password()
+        self.c.get("/tutorial.html", headers=self.BROWSER)
+        r = self.c.get("/admin")
+        self.assertIn('name="password"', r.text)
+        self.assertNotIn("/tutorial.html", r.text)               # no stats before sign-in
+        self.assertIn("noindex", r.headers["x-robots-tag"])
+        r = self.c.post("/admin/login", data={"password": "wrong password!"}, follow_redirects=False)
+        self.assertEqual(r.status_code, 401)
+        self.assertNotIn("t2s_admin", r.headers.get("set-cookie", ""))
+        r = self.c.post("/admin/login", data={"password": "correct horse battery"}, follow_redirects=False)
+        self.assertEqual(r.status_code, 303)
+        cookie = r.headers["set-cookie"].lower()
+        for flag in ("httponly", "secure", "samesite=strict"):
+            self.assertIn(flag, cookie)
+        r = self.c.get("/admin")
+        self.assertIn("Page views", r.text)
+        self.assertIn('href="/tutorial.html"', r.text)
+        self.c.get("/tutorial.html", headers=self.BROWSER)      # the admin's own visit
+        self.assertEqual(self.views(), {"/tutorial.html": 1})
+        self.c.post("/admin/logout")
+        self.assertIn('name="password"', self.c.get("/admin").text)
+
+    def test_forged_or_expired_cookie_is_rejected(self):
+        self.set_password()
+        conf = json.loads(server.ADMIN_FILE.read_text())
+        future = int(time.time()) + 3600
+        for tok in [f"{future}.{'0' * 64}", server._admin_token("other secret", future),
+                    server._admin_token(conf["secret"], int(time.time()) - 1), "garbage", ""]:
+            self.assertIn('name="password"', self.c.get("/admin", headers={"Cookie": f"t2s_admin={tok}"}).text, tok)
+        good = server._admin_token(conf["secret"], future)
+        self.assertIn("Page views", self.c.get("/admin", headers={"Cookie": f"t2s_admin={good}"}).text)
+
+    def test_short_password_refused(self):
+        r = subprocess.run([sys.executable, "tools/set_admin_password.py", str(server.ADMIN_FILE)], input="short\n",
+                           capture_output=True, text=True, cwd=Path(__file__).resolve().parents[1])
+        self.assertNotEqual(r.returncode, 0)
+        self.assertFalse(server.ADMIN_FILE.exists())
 
 
 if __name__ == "__main__":

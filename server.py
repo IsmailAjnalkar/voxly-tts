@@ -6,17 +6,22 @@ speed/pitch prosody, MP3/WAV output, SRT/VTT subtitles,
 session-scoped result storage (files live only for the browser session).
 """
 import asyncio
+import hashlib
+import hmac
 import html as html_lib
 import json
 import logging
 import os
 import re
 import shutil
+import sqlite3
 import ssl
 import subprocess
 import time
+import urllib.parse
 import uuid
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, closing
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Literal
 
@@ -37,9 +42,9 @@ if Path(_SYSTEM_CA).exists():
 PROXY = os.environ.get("https_proxy") or os.environ.get("HTTPS_PROXY") or None
 
 import edge_tts
-from fastapi import FastAPI, Header, HTTPException
+from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -106,6 +111,11 @@ async def _headers(request, call_next):
             resp.headers["Cache-Control"] = "public, max-age=604800"
         else:
             resp.headers["Cache-Control"] = "public, max-age=3600"
+    if (request.method == "GET" and resp.status_code == 200 and "text/html" in resp.headers.get("content-type", "")
+            and not path.startswith("/admin") and "sec-purpose" not in request.headers  # skip prefetches
+            and not _BOT_UA.search(request.headers.get("user-agent") or "bot")
+            and not (ADMIN_COOKIE in request.cookies and _is_admin(request))):
+        await asyncio.to_thread(_count_view, path)
     return resp
 
 
@@ -577,6 +587,182 @@ async def api_support(body: SupportRequest):
         f.write(line + "\n")
     log.warning("support message received (topic=%s)", body.topic)  # shows up in the journal
     return {"ok": True}
+
+
+# --- Page views and admin ---------------------------------------------------
+# The server counts the HTML pages it serves: UTC date + path and nothing about the
+# visitor (no IP, cookie or user agent is stored). Bots and the signed-in admin are
+# not counted. /admin shows the counts; it exists only once admin.json has been
+# written with tools/set_admin_password.py.
+STATS_DB = BASE / "stats" / "views.sqlite3"
+ADMIN_FILE = BASE / "admin.json"
+ADMIN_COOKIE = "t2s_admin"
+ADMIN_SESSION = 7 * 86400
+_BOT_UA = re.compile(r"bot|crawl|spider|slurp|preview|headless|lighthouse|facebookexternalhit|curl|wget|"
+                     r"python|httpx|node|go-http|java|monitor|uptime", re.I)
+
+
+def _db() -> sqlite3.Connection:
+    STATS_DB.parent.mkdir(exist_ok=True)
+    con = sqlite3.connect(STATS_DB, timeout=5)
+    con.execute("CREATE TABLE IF NOT EXISTS views(day TEXT, path TEXT, n INTEGER NOT NULL, PRIMARY KEY(day, path))")
+    return con
+
+
+def _count_view(path: str) -> None:
+    try:
+        with closing(_db()) as con, con:
+            con.execute("INSERT INTO views VALUES(date('now'), ?, 1) "
+                        "ON CONFLICT(day, path) DO UPDATE SET n = n + 1", (path[:200],))
+    except sqlite3.Error as e:  # counting must never break a page
+        log.warning("page view not counted: %s", e)
+
+
+def _admin_conf() -> dict | None:
+    try:
+        return json.loads(ADMIN_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def hash_password(pw: str, salt: str | None = None, iters: int = 300_000) -> str:
+    salt = salt or os.urandom(16).hex()
+    digest = hashlib.pbkdf2_hmac("sha256", pw.encode(), bytes.fromhex(salt), iters).hex()
+    return f"pbkdf2_sha256${iters}${salt}${digest}"
+
+
+def _check_password(pw: str, stored: str) -> bool:
+    _, iters, salt, _digest = stored.split("$")
+    return hmac.compare_digest(hash_password(pw, salt, int(iters)), stored)
+
+
+def _admin_token(secret: str, exp: int) -> str:
+    return f"{exp}.{hmac.new(secret.encode(), str(exp).encode(), hashlib.sha256).hexdigest()}"
+
+
+def _is_admin(request: Request) -> bool:
+    conf, tok = _admin_conf(), request.cookies.get(ADMIN_COOKIE, "")
+    exp = tok.split(".", 1)[0]
+    return bool(conf and exp.isdigit() and int(exp) > time.time()
+                and hmac.compare_digest(tok, _admin_token(conf["secret"], int(exp))))
+
+
+_ADMIN_CSS = ("body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:#0d1117;color:#eef1f6}"
+              "main{max-width:1000px;margin:0 auto;padding:28px 20px 60px}h1{margin:0 0 4px;font-size:26px}"
+              "h2{font-size:15px;text-transform:uppercase;letter-spacing:.07em;color:#94a3b8;margin:30px 0 10px}"
+              ".sub{color:#94a3b8;margin:0 0 18px;font-size:14px}.top{display:flex;justify-content:space-between;align-items:start;gap:12px}"
+              ".cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}"
+              ".card{background:#161c26;border:1px solid #263042;border-radius:12px;padding:14px 16px}"
+              ".card b{display:block;font-size:28px}.card span{color:#94a3b8;font-size:13px}"
+              ".tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px;background:#161c26;border:1px solid #263042}"
+              "th,td{padding:7px 12px;border-bottom:1px solid #263042;text-align:left}.n{text-align:right;font-variant-numeric:tabular-nums}"
+              "th{color:#94a3b8;font-weight:600}.bar{height:10px;background:#ff6b4a;border-radius:5px;min-width:2px}"
+              "a{color:#ff6b4a}input{width:100%;padding:11px;border-radius:10px;border:1px solid #263042;background:#1e2635;color:#eef1f6;"
+              "font-size:15px;margin:6px 0 14px;box-sizing:border-box}"
+              "button{background:#ff6b4a;color:#1a0e08;border:0;border-radius:10px;padding:10px 18px;font-weight:700;cursor:pointer;font-size:15px}"
+              "button.ghost{background:#1e2635;color:#eef1f6;border:1px solid #263042}.err{color:#fb7185}"
+              ".login{max-width:360px;margin:12vh auto 0;background:#161c26;border:1px solid #263042;border-radius:14px;padding:24px}")
+_ADMIN_HEADERS = {"X-Robots-Tag": "noindex, nofollow", "Cache-Control": "no-store"}
+
+
+def _admin_page(title: str, body: str, status: int = 200) -> HTMLResponse:
+    return HTMLResponse(
+        '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+        f'<meta name="robots" content="noindex, nofollow"><title>{title} | Text 2 Speech</title>'
+        f'<link rel="icon" href="/favicon.svg" type="image/svg+xml"><style>{_ADMIN_CSS}</style></head><body><main>{body}</main></body></html>',
+        status_code=status, headers=_ADMIN_HEADERS)
+
+
+def _admin_login(error: str = "", status: int = 200) -> HTMLResponse:
+    err = f'<p class="err" role="alert">{error}</p>' if error else ""
+    return _admin_page("Admin sign in", '<form class="login" method="post" action="/admin/login"><h1>Admin</h1>'
+                       f'<p class="sub">Text 2 Speech page views</p>{err}<label for="pw">Password</label>'
+                       '<input id="pw" type="password" name="password" autocomplete="current-password" required autofocus>'
+                       '<button type="submit">Sign in</button></form>', status)
+
+
+def _admin_stats() -> dict:
+    with closing(_db()) as con:
+        rows = con.execute("SELECT day, path, n FROM views").fetchall()  # ponytail: full scan; aggregate in SQL past ~1M rows
+    today = datetime.now(timezone.utc).date()
+    start = {"today": today, "7 days": today - timedelta(days=6), "30 days": today - timedelta(days=29)}
+    daily = {(today - timedelta(days=i)).isoformat(): 0 for i in range(30)}
+    totals = {"Today": 0, "Yesterday": 0, "Last 7 days": 0, "Last 30 days": 0, "All time": 0}
+    pages, langs = {}, {}
+    lang_segs = {_PATH_OF_UI.get(c, c) for c in _UI_CODES}
+    for day, path, n in rows:
+        d = datetime.fromisoformat(day).date()
+        row = pages.setdefault(path, {"today": 0, "7 days": 0, "30 days": 0, "all": 0})
+        row["all"] += n
+        for k, since in start.items():
+            row[k] += n if d >= since else 0
+        totals["All time"] += n
+        totals["Today"] += n if d == today else 0
+        totals["Yesterday"] += n if d == today - timedelta(days=1) else 0
+        totals["Last 7 days"] += n if d >= start["7 days"] else 0
+        totals["Last 30 days"] += n if d >= start["30 days"] else 0
+        if day in daily:
+            daily[day] += n
+        if d >= start["30 days"]:
+            seg = path.split("/")[1] if path.count("/") > 1 else ""
+            lang = seg if seg in lang_segs else "en"
+            langs[lang] = langs.get(lang, 0) + n
+    return {"totals": totals, "daily": daily, "langs": langs,
+            "pages": sorted(pages.items(), key=lambda kv: (-kv[1]["30 days"], -kv[1]["all"], kv[0]))}
+
+
+def _admin_dashboard(st: dict) -> str:
+    e = html_lib.escape
+    cards = "".join(f'<div class="card"><b>{v:,}</b><span>{k}</span></div>' for k, v in st["totals"].items())
+    peak = max(st["daily"].values()) or 1
+    daily = "".join(f'<tr><td>{d}</td><td style="width:60%">{f'<div class="bar" style="width:{n * 100 / peak:.1f}%"></div>' if n else ''}</td>'
+                    f'<td class="n">{n:,}</td></tr>' for d, n in st["daily"].items())
+    pages = "".join(f'<tr><td><a href="{e(p)}" target="_blank" rel="noopener">{e(p)}</a></td><td class="n">{r["today"]:,}</td>'
+                    f'<td class="n">{r["7 days"]:,}</td><td class="n">{r["30 days"]:,}</td><td class="n">{r["all"]:,}</td></tr>'
+                    for p, r in st["pages"]) or '<tr><td colspan="5">No page views yet.</td></tr>'
+    langs = "".join(f'<tr><td>{e(c)}</td><td class="n">{n:,}</td></tr>'
+                    for c, n in sorted(st["langs"].items(), key=lambda kv: -kv[1])) or '<tr><td colspan="2">No page views yet.</td></tr>'
+    return ('<div class="top"><div><h1>Page views</h1><p class="sub">Pages served to visitors, counted on the server (UTC days). '
+            'Bots and your own visits are not counted; nothing about visitors is stored.</p></div>'
+            '<form method="post" action="/admin/logout"><button class="ghost" type="submit">Sign out</button></form></div>'
+            f'<div class="cards">{cards}</div>'
+            '<h2>Pages</h2><div class="tw"><table><thead><tr><th>Page</th><th class="n">Today</th><th class="n">7 days</th>'
+            f'<th class="n">30 days</th><th class="n">All time</th></tr></thead><tbody>{pages}</tbody></table></div>'
+            f'<h2>Last 30 days</h2><div class="tw"><table><tbody>{daily}</tbody></table></div>'
+            f'<h2>Languages (last 30 days)</h2><div class="tw"><table><tbody>{langs}</tbody></table></div>')
+
+
+@app.get("/admin", include_in_schema=False)
+async def admin(request: Request):
+    if not _admin_conf():
+        raise HTTPException(404)
+    if not _is_admin(request):
+        return _admin_login()
+    return _admin_page("Page views", _admin_dashboard(await asyncio.to_thread(_admin_stats)))
+
+
+@app.post("/admin/login", include_in_schema=False)
+async def admin_login(request: Request):
+    conf = _admin_conf()
+    if not conf:
+        raise HTTPException(404)
+    form = urllib.parse.parse_qs((await request.body())[:4000].decode("utf-8", "replace"))
+    pw = form.get("password", [""])[0]
+    if not pw or not await asyncio.to_thread(_check_password, pw, conf["password_hash"]):
+        log.warning("admin sign-in failed")
+        return _admin_login("Wrong password.", 401)
+    exp = int(time.time()) + ADMIN_SESSION
+    resp = RedirectResponse("/admin", status_code=303, headers=_ADMIN_HEADERS)
+    resp.set_cookie(ADMIN_COOKIE, _admin_token(conf["secret"], exp), max_age=ADMIN_SESSION,
+                    httponly=True, secure=True, samesite="strict", path="/")
+    return resp
+
+
+@app.post("/admin/logout", include_in_schema=False)
+async def admin_logout():
+    resp = RedirectResponse("/admin", status_code=303, headers=_ADMIN_HEADERS)
+    resp.delete_cookie(ADMIN_COOKIE, path="/", secure=True, httponly=True, samesite="strict")
+    return resp
 
 
 # --- Pages ------------------------------------------------------------------

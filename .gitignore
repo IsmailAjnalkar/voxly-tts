@@ -4,3 +4,5 @@ data/
 *.pyc
 node_modules
 support/
+admin.json
+stats/
