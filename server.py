@@ -1,5 +1,5 @@
 """
-Voxly — free text-to-speech web app (server).
+Text 2 Speech — free text-to-speech web app (server).
 Engine: Microsoft Edge neural voices via edge-tts (300+ voices, 75 languages).
 Features: voice catalog API, synthesis with [break:Xms]/[break:Xs] markers,
 speed/pitch prosody, MP3/WAV output, SRT/VTT subtitles,
@@ -59,7 +59,7 @@ CHUNK_CHARS = 1500
 SYNTH_CONCURRENCY = 4     # provider calls in flight per request
 SYNTH_TIMEOUT = 45        # seconds per provider call (one retry on failure)
 
-log = logging.getLogger("voxly")
+log = logging.getLogger("text2speech")
 
 
 @asynccontextmanager
@@ -72,7 +72,7 @@ async def _lifespan(app):
         t.cancel()
 
 
-app = FastAPI(title="Voxly TTS", docs_url=None, redoc_url=None, openapi_url=None,
+app = FastAPI(title="Text 2 Speech", docs_url=None, redoc_url=None, openapi_url=None,
               lifespan=_lifespan)
 
 _SECURITY_HEADERS = {
@@ -545,7 +545,7 @@ async def api_delete(item_id: str, x_session_id: str = Header(default="")):
 
 @app.get("/api/health")
 async def health():
-    return {"ok": True, "app": "voxly"}
+    return {"ok": True, "app": "text-2-speech"}
 
 
 # --- Support inbox ----------------------------------------------------------

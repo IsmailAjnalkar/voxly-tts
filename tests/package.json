@@ -1,5 +1,5 @@
 {
-  "name": "voxly-tests",
+  "name": "text-2-speech-tests",
   "private": true,
   "description": "UI-language tests; needs the app running at $BASE (default http://localhost:8077)",
   "scripts": {

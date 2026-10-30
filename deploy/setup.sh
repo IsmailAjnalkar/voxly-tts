@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Voxly VPS setup (Ubuntu/Debian). Run as root on the VPS from the project dir.
+# Text 2 Speech VPS setup (Ubuntu/Debian). Run as root on the VPS from the project dir.
 set -euo pipefail
 apt-get update
 apt-get install -y python3 python3-venv ffmpeg nginx
@@ -15,4 +15,4 @@ cp deploy/nginx-voxy.conf /etc/nginx/sites-available/voxly
 ln -sf /etc/nginx/sites-available/voxly /etc/nginx/sites-enabled/voxly
 rm -f /etc/nginx/sites-enabled/default
 nginx -t && systemctl reload nginx
-echo "Voxly up: http://<server-ip>/  (app on 127.0.0.1:8000 behind nginx)"
+echo "Text 2 Speech up: http://<server-ip>/  (app on 127.0.0.1:8000 behind nginx)"

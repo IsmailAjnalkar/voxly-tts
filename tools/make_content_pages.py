@@ -30,7 +30,7 @@ def page(path, title, desc, crumbs, body, article=True):
                    "author": {"@type": "Organization", "name": "Text 2 Speech", "url": SITE + "/"},
                    "publisher": {"@type": "Organization", "name": "Text 2 Speech", "url": SITE + "/",
                                  "logo": {"@type": "ImageObject", "url": SITE + "/logo.png"}},
-                   "image": SITE + "/og-image.png", "mainEntityOfPage": url})
+                   "image": SITE + "/og-image.png?v=2", "mainEntityOfPage": url})
     lds = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld)
     nav = ' <span aria-hidden="true">›</span> '.join(f'<a href="{u.replace(SITE, "") or "/"}">{html.escape(n)}</a>' for n, u in crumbs[:-1])
     nav += f' <span aria-hidden="true">›</span> <span aria-current="page">{html.escape(crumbs[-1][0])}</span>'
@@ -39,7 +39,7 @@ def page(path, title, desc, crumbs, body, article=True):
            f'<meta name="description" content="{A(desc)}"><link rel="canonical" href="{url}"><meta name="robots" content="index, follow">'
            f'<meta property="og:type" content="{"article" if article else "website"}"><meta property="og:site_name" content="Text 2 Speech"><meta property="og:locale" content="en_US">'
            f'<meta property="og:title" content="{A(title)}"><meta property="og:description" content="{A(desc)}"><meta property="og:url" content="{url}">'
-           f'<meta property="og:image" content="{SITE}/og-image.png"><meta name="twitter:card" content="summary_large_image">'
+           f'<meta property="og:image" content="{SITE}/og-image.png?v=2"><meta name="twitter:card" content="summary_large_image">'
            f"{icons}{style}{lds}</head><body>{header}<main>"
            f'<nav class="crumbs" aria-label="Breadcrumb">{nav}</nav>{body}'
            f'<p class="updated">Last updated: <time datetime="{UPDATED}">29 October 2026</time></p></main>'

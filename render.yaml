@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: voxly-tts
+    name: text-2-speech
     runtime: docker
     plan: free
     buildCommand: ""

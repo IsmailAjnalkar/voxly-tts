@@ -1,4 +1,4 @@
-# Voxly — Free Text to Speech Online
+# Text 2 Speech — Free Text to Speech Online
 
 A full-featured text-to-speech web app: 300+ neural voices in 75 languages,
 voice/gender/search picker, speed & pitch control, MP3/WAV generation with

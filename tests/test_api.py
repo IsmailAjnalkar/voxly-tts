@@ -340,7 +340,7 @@ class Api(unittest.TestCase):
 
     def test_provider_error_detail_not_leaked(self):  # TTS-BUG-020
         with mock.patch.object(server, "synth_segment", mock.AsyncMock(side_effect=RuntimeError("secret-internal"))):
-            with self.assertLogs("voxly", "ERROR"):
+            with self.assertLogs("text2speech", "ERROR"):
                 r = self.tts(text="hi")
         self.assertEqual(r.status_code, 502)
         self.assertNotIn("secret-internal", r.text)
@@ -426,11 +426,11 @@ class Api(unittest.TestCase):
 
     def test_provider_call_retried_once(self):  # TTS-BUG-003
         synth = mock.AsyncMock(side_effect=[RuntimeError("blip"), (self.tone, [])])
-        with mock.patch.object(server, "synth_segment", synth), self.assertLogs("voxly", "WARNING"):
+        with mock.patch.object(server, "synth_segment", synth), self.assertLogs("text2speech", "WARNING"):
             self.assertEqual(self.tts(text="hi").status_code, 200)
         self.assertEqual(synth.call_count, 2)
         synth = mock.AsyncMock(side_effect=RuntimeError("down"))
-        with mock.patch.object(server, "synth_segment", synth), self.assertLogs("voxly", "WARNING"):
+        with mock.patch.object(server, "synth_segment", synth), self.assertLogs("text2speech", "WARNING"):
             self.assertEqual(self.tts(text="hi").status_code, 502)
         self.assertEqual(synth.call_count, 2)
         err = server.edge_tts.exceptions.NoAudioReceived("no audio")
