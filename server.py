@@ -656,7 +656,7 @@ _ADMIN_CSS = ("body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;backgro
               ".card b{display:block;font-size:28px}.card span{color:#94a3b8;font-size:13px}"
               ".tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px;background:#161c26;border:1px solid #263042}"
               "th,td{padding:7px 12px;border-bottom:1px solid #263042;text-align:left}.n{text-align:right;font-variant-numeric:tabular-nums}"
-              "th{color:#94a3b8;font-weight:600}.bar{height:10px;background:#ff6b4a;border-radius:5px;min-width:2px}"
+              "th{color:#94a3b8;font-weight:600}tfoot th{color:#eef1f6;border-top:2px solid #263042}.bar{height:10px;background:#ff6b4a;border-radius:5px;min-width:2px}"
               "a{color:#ff6b4a}input{width:100%;padding:11px;border-radius:10px;border:1px solid #263042;background:#1e2635;color:#eef1f6;"
               "font-size:15px;margin:6px 0 14px;box-sizing:border-box}"
               "button{background:#ff6b4a;color:#1a0e08;border:0;border-radius:10px;padding:10px 18px;font-weight:700;cursor:pointer;font-size:15px}"
@@ -715,7 +715,13 @@ def _admin_dashboard(st: dict) -> str:
     e = html_lib.escape
     cards = "".join(f'<div class="card"><b>{v:,}</b><span>{k}</span></div>' for k, v in st["totals"].items())
     peak = max(st["daily"].values()) or 1
-    daily = "".join(f'<tr><td>{d}</td><td style="width:60%">{f'<div class="bar" style="width:{n * 100 / peak:.1f}%"></div>' if n else ''}</td>'
+    bar = lambda n: f'<div class="bar" style="width:{n * 100 / peak:.1f}%"></div>' if n else ""
+    t = {k: f"{v:,}" for k, v in st["totals"].items()}
+    total = lambda *cells: '<tfoot><tr><th>Total</th>' + "".join(f'<th class="n">{c}</th>' for c in cells) + '</tr></tfoot>'
+    pages_total = total(t["Today"], t["Last 7 days"], t["Last 30 days"], t["All time"])
+    month_total = total("", t["Last 30 days"])
+    langs_total = total(t["Last 30 days"])
+    daily = "".join(f'<tr><td>{d}</td><td style="width:60%">{bar(n)}</td>'
                     f'<td class="n">{n:,}</td></tr>' for d, n in st["daily"].items())
     pages = "".join(f'<tr><td><a href="{e(p)}" target="_blank" rel="noopener">{e(p)}</a></td><td class="n">{r["today"]:,}</td>'
                     f'<td class="n">{r["7 days"]:,}</td><td class="n">{r["30 days"]:,}</td><td class="n">{r["all"]:,}</td></tr>'
@@ -727,9 +733,10 @@ def _admin_dashboard(st: dict) -> str:
             '<form method="post" action="/admin/logout"><button class="ghost" type="submit">Sign out</button></form></div>'
             f'<div class="cards">{cards}</div>'
             '<h2>Pages</h2><div class="tw"><table><thead><tr><th>Page</th><th class="n">Today</th><th class="n">7 days</th>'
-            f'<th class="n">30 days</th><th class="n">All time</th></tr></thead><tbody>{pages}</tbody></table></div>'
-            f'<h2>Last 30 days</h2><div class="tw"><table><tbody>{daily}</tbody></table></div>'
-            f'<h2>Languages (last 30 days)</h2><div class="tw"><table><tbody>{langs}</tbody></table></div>')
+            f'<th class="n">30 days</th><th class="n">All time</th></tr></thead><tbody>{pages}</tbody>'
+            f'{pages_total}</table></div>'
+            f'<h2>Last 30 days</h2><div class="tw"><table><tbody>{daily}</tbody>{month_total}</table></div>'
+            f'<h2>Languages (last 30 days)</h2><div class="tw"><table><tbody>{langs}</tbody>{langs_total}</table></div>')
 
 
 @app.get("/admin", include_in_schema=False)

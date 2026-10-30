@@ -553,6 +553,7 @@ class Admin(unittest.TestCase):
         r = self.c.get("/admin")
         self.assertIn("Page views", r.text)
         self.assertIn('href="/tutorial.html"', r.text)
+        self.assertIn('<tfoot><tr><th>Total</th><th class="n">1</th><th class="n">1</th><th class="n">1</th><th class="n">1</th>', r.text)
         self.c.get("/tutorial.html", headers=self.BROWSER)      # the admin's own visit
         self.assertEqual(self.views(), {"/tutorial.html": 1})
         self.c.post("/admin/logout")
