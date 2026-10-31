@@ -913,10 +913,10 @@ def _home_content(html: str, code: str | None) -> str:
     step = c["steps"][0]
     html = html.replace("<!--home:step-->", f"<h3>{_e(step['h'])}</h3><p>{_e(step['b'])}</p>", 1)
     html = html.replace("<!--home:usecases-->", "".join(
-        f'<div class="ucard"><div class="emo">{_e(u["e"])}</div><h3>{_e(u["h"])}</h3><p>{_e(u["p"])}</p></div>'
+        f'<div class="ucard"><div class="emo" aria-hidden="true">{_e(u["e"])}</div><h3>{_e(u["h"])}</h3><p>{_e(u["p"])}</p></div>'
         for u in c["usecases"]), 1)
     html = html.replace("<!--home:faq-->", "".join(
-        f'<div class="faqitem"><button class="q" type="button">{_e(f["q"])}<span>▾</span></button>'
+        f'<div class="faqitem"><button class="q" type="button" aria-expanded="false">{_e(f["q"])}<span aria-hidden="true">▾</span></button>'
         f'<div class="a">{_e(f["a"])}</div></div>' for f in c["faq"]), 1)
     data = json.dumps(c, ensure_ascii=False).replace("</", "<\\/")
     html = html.replace("<!--home:data-->",

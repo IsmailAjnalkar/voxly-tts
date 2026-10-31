@@ -3,7 +3,7 @@
 > Text 2 Speech (text-2-speech.com) is a free online text-to-speech tool. It turns text into speech with 300+ neural voices in 75 languages, works in any modern browser with no sign-up, and lets you download the result as MP3 or WAV together with SRT and VTT subtitles.
 
 Key facts:
-- Price: free. No account, sign-up or payment details. No advertising.
+- Price: free. No account, sign-up or payment details. No advertising. Optional donations by card (Stripe) or Buy Me a Coffee: https://text-2-speech.com/donate.html
 - Voices: Microsoft's online neural voices; 300+ voices across 75 languages and regional variants, female and male, including multilingual voices. The list is checked every six hours and voices that stop producing audio are hidden until they work again.
 - Limits: up to 5,000 characters per generation; up to 25 pause markers, at most 30 s each and 60 s in total; speed −100% to +100%; pitch −100 Hz to +100 Hz; about 20 requests per minute per IP address; one voice per generation.
 - Input: plain text in any supported language; .txt, .md and .text files can be imported. No PDF, Word or web-page reading.

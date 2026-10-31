@@ -106,7 +106,7 @@ page("about.html", "About Text 2 Speech: Free Online Text to Speech",
 <p>The site and its content are © 2026 QINTAR LLC, as stated in the footer of every page. Questions for the team go through the <a href="/support.html">support form</a>.</p>
 
 <h2 id="funding">How it is funded</h2>
-<p>Text 2 Speech is free to use: there is no paid plan, no sign-up and no advertising on the site. Optional donations are planned to help with server costs; the donation links are not active yet.</p>
+<p>Text 2 Speech is free to use: there is no paid plan, no sign-up and no advertising on the site. Running costs are covered by optional donations: anyone who wants to support the site can give any amount by card through <a href="https://buy.stripe.com/aFa6oIcYQ4QE00O22Q1Nu08" rel="noopener">Stripe</a> or through <a href="https://buymeacoffee.com/text2speech" rel="noopener">Buy Me a Coffee</a>, both linked from the <a href="/donate.html">Donate page</a>. Donating changes nothing in the tool: every feature stays free for everyone.</p>
 
 <h2 id="privacy">Your text and privacy</h2>
 <ul>

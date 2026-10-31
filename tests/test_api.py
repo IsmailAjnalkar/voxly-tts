@@ -290,7 +290,7 @@ class Api(unittest.TestCase):
             head = html[:html.index("</head>")]
             self.assertNotRegex(head, r"<(rect|svg|div|p)[\s>]", path)
             foot = _re.search(r"<footer>.*?</footer>", html, _re.S).group(0)
-            self.assertEqual(len(_re.findall(r"<a ", foot)), 11, path)
+            self.assertEqual(len(_re.findall(r"<a ", foot)), 16, path)
         self.assertIn("© 2026 QINTAR LLC · <span data-i18n=\"foot_rights\">Todos los derechos reservados.", self.c.get("/es/tutorial.html").text)
 
     def test_language_pages_rendered_server_side(self):

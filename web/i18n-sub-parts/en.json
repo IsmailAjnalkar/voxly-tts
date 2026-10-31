@@ -13,7 +13,7 @@
  "tut_g1h": "Getting started: your first generated voice",
  "tut_g1p": "Start with the language selector — it decides which voices you see. Pick the language your text is written in, then try two or three voices with the Preview button; voices differ a lot in warmth and pace. Type a short paragraph first, generate it, and listen. Once the voice feels right, turn on Speed or Pitch and nudge them in small steps: +10% speed suits energetic content, a slightly lower pitch often sounds more authoritative. For anything longer than a page, generate section by section and keep the same voice and settings so the parts blend.",
  "tut_g2h": "How to use the break feature",
- "tut_g2p": "Break markers insert exact silence into generated audio. Type <b>[break:200ms]</b> for a short beat, <b>[break:1s]</b> or <b>[break:2s]</b> for longer pauses — dramatic reveals, list items and scene changes all land better with air around them. Pressing <b>Ctrl+B</b> drops a [break:500ms] marker at your cursor. Markers never appear in the audio or the subtitles; you hear only the pause. A good rule of thumb: 300–600ms between sentences that change topic, 1–2 seconds between scenes. Note that Preview mode simply skips the markers, so judge final timing on the generated file.",
+ "tut_g2p": "Break markers insert exact silence into generated audio. Type <b>[break:200ms]</b> for a short beat, <b>[break:1s]</b> or <b>[break:2s]</b> for longer pauses — dramatic reveals, list items and scene changes all land better with air around them. Pressing <b>Ctrl+B</b> drops a [break:500ms] marker at your cursor. Markers never appear in the audio or the subtitles; you hear only the pause. A good rule of thumb: 300–600ms between sentences that change topic, 1–2 seconds between scenes. Note that Preview only approximates the pauses: each marker becomes a short generic pause, not the exact length, so judge final timing on the generated file.",
  "tut_g3h": "A tour of the voice collection",
  "tut_g3p": "Text 2 Speech's catalog holds 300+ neural voices across 75 languages, and each language offers several personalities — newsreader-flat, warm and conversational, bright and youthful. Names carry their region (Aria - US, Natasha - AU), and a few voices are multilingual, handling mixed-language text gracefully. Gender filtering and name search keep the list manageable. When in doubt, generate the same paragraph with three candidate voices and pick with your ears, not the names: the right voice depends on the material, not the label.",
  "don_h1": "Donate",
@@ -50,7 +50,7 @@
  "priv_s1h": "Text you convert",
  "priv_s1p": "Text you submit is sent to Microsoft's online speech service, which turns it into audio. The audio and subtitle files are stored on our server under a random session identifier and deleted automatically about two hours after your last generation. They are never published or indexed.",
  "priv_s2h": "Cookies and browser storage",
- "priv_s2p": "We do not use cookies, analytics or advertising trackers. Your theme, interface language and the results list of the current tab are kept only in your own browser's storage.",
+ "priv_s2p": "We do not set cookies for visitors and use no third-party analytics or advertising trackers. To see which pages are read, the server counts views per page and day, storing only the date and the page address. Like most websites, the web server also keeps standard access logs (IP address, time, page requested and browser type) for about 14 days for security and troubleshooting, then deletes them automatically. Your theme, interface language and the results list of the current tab are kept only in your own browser's storage.",
  "priv_s3h": "What we never do",
  "priv_s3p": "We do not sell personal data, we do not build advertising profiles, and we do not keep your generated audio after it expires.",
  "priv_s4h": "Contact",
@@ -66,5 +66,6 @@
  "terms_s4h": "Changes",
  "terms_s4p": "Features and these terms may evolve; material changes will be noted on this page with a new date.",
  "foot_guides": "Guides", "foot_help": "Help", "foot_how": "How it works", "foot_product": "Product", "foot_rights": "All rights reserved.", "foot_subs": "SRT & VTT subtitles", "foot_tag": "Free text to speech with 300+ natural voices in 75 languages. No sign-up.", "foot_voices": "Voices & languages", "legal": "Legal",
- "don_stripe_sub": "Credit or debit card", "don_bmc_sub": "Support with a coffee"
+ "don_stripe_sub": "Credit or debit card", "don_bmc_sub": "Support with a coffee",
+ "foot_about": "About", "foot_helpc": "Help centre", "foot_mp3": "Text to MP3", "foot_vo": "AI voiceover", "foot_voice": "Choose a voice", "more_h": "Learn more", "sup_more": "More troubleshooting steps, limits and formats are in the help centre (in English)."
 }
