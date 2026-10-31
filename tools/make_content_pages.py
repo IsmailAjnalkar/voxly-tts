@@ -19,6 +19,9 @@ style = re.search(r"<style>.*?</style>", tpl, re.S).group(0).replace(
     "code{background:var(--panel2);border-radius:5px;padding:1px 5px}.tablewrap{overflow-x:auto}"
     "nav.toc{display:block;margin:16px 0 8px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 18px}"
     "nav.toc p{margin:0}nav.toc ol{margin:4px 0;padding-left:22px}nav.toc a{white-space:normal}"
+    "figure{margin:18px 0}figure img{display:block;max-width:100%;height:auto;border:1px solid var(--line);border-radius:10px}"
+    "figcaption{color:var(--muted);font-size:14px;line-height:1.5;margin-top:6px}"
+    ".cta a{display:inline-block;background:var(--accent);color:var(--on-accent);border-radius:10px;padding:10px 18px;font-weight:700;text-decoration:none}"
     "</style>")
 boot = re.search(r"<script>if\(localStorage.*?</script>", tpl).group(0)
 icons = re.search(r'<link rel="icon" href="/favicon.svg".*?<link rel="apple-touch-icon"[^>]*>', tpl).group(0)
@@ -35,7 +38,8 @@ def human(d):
     return f"{date.fromisoformat(d).day} {date.fromisoformat(d):%B %Y}"
 
 
-def page(path, title, desc, crumbs, body, kind="TechArticle", published=UPDATED):
+def page(path, title, desc, crumbs, body, kind="TechArticle", published=UPDATED, image=None):
+    """image: a screenshot in web/img/ that illustrates the article (its TechArticle image)."""
     url = f"{SITE}/{path}"
     headline = title.split(" | ")[0]
     ld = [{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -43,7 +47,8 @@ def page(path, title, desc, crumbs, body, kind="TechArticle", published=UPDATED)
     if kind == "TechArticle":
         ld.append({"@context": "https://schema.org", "@type": "TechArticle", "headline": headline,
                    "description": desc, "url": url, "inLanguage": "en", "datePublished": published, "dateModified": UPDATED,
-                   "author": ORG, "publisher": ORG, "image": SITE + "/og-image.png?v=2", "mainEntityOfPage": url})
+                   "author": ORG, "publisher": ORG, "image": f"{SITE}/img/{image}" if image else SITE + "/og-image.png?v=2",
+                   "mainEntityOfPage": url})
     elif kind == "AboutPage":
         # Only what the site itself states: the brand, the free web app and the footer's copyright line.
         ld.append({"@context": "https://schema.org", "@type": "AboutPage", "name": headline, "description": desc,
@@ -83,6 +88,13 @@ def toc(*items):
     return f'<nav class="toc" aria-labelledby="toc-h"><p id="toc-h"><strong>On this page</strong></p><ol>{lis}</ol></nav>'
 
 
+def fig(name, w, h, alt, caption):
+    """A real screenshot from web/img/ (captured from the app with Playwright, see CONTENT_CHANGES_NOV.md)."""
+    return (f'<figure><img src="/img/{name}" width="{w}" height="{h}" alt="{A(alt)}" loading="lazy" decoding="async">'
+            f"<figcaption>{caption}</figcaption></figure>")
+
+
+CTA = '<p class="cta"><a href="/">Open the free text to speech tool</a></p>'
 HOME = ("Home", SITE + "/")
 HELP = ("Help", SITE + "/help.html")
 
@@ -233,6 +245,9 @@ page("help.html", "Text 2 Speech Help: Limits, Formats, Troubleshooting",
 <li><a href="/guides/choose-voice.html">How to choose a text to speech voice and accent</a></li>
 <li><a href="/guides/subtitles.html">How to create SRT and VTT subtitles from text</a></li>
 <li><a href="/guides/mp3-vs-wav.html">MP3 vs WAV for text to speech</a></li>
+<li><a href="/text-to-speech-download.html">Text to speech download: save speech as MP3 or WAV</a></li>
+<li><a href="/text-to-voice.html">Text to voice: language, accent, speed, pitch and pauses</a></li>
+<li><a href="/ai-voice-generator.html">Free AI voice generator from text: what it can and cannot do</a></li>
 <li><a href="/how-it-works.html">How Text 2 Speech works</a> and the <a href="/tutorial.html">tutorial</a></li>
 </ul>
 
@@ -282,7 +297,9 @@ page("guides/text-to-mp3.html", "How to Convert Text to MP3 for Free | Text 2 Sp
      [HOME, HELP, ("Text to MP3", SITE + "/guides/text-to-mp3.html")], """
 <h1>How to convert text to MP3 for free</h1>
 <p class="lead"><strong>Short answer:</strong> paste your text into <a href="/">Text 2 Speech</a>, choose a voice, leave the output format on MP3 and press <em>Generate Audio</em>, then click <strong>⬇ MP3</strong> in the result. It is free with no sign-up, each conversion takes up to 5,000 characters, and you get a 48 kbps mono MP3 plus subtitles.</p>
-""" + toc(("steps", "Steps"), ("mp3-file", "What the MP3 file contains"), ("long-text", "Text longer than 5,000 characters"),
+""" + toc(("steps", "Steps"), ("mp3-file", "What the MP3 file contains"), ("worked-example", "Worked example: a 930-character passage"),
+          ("estimate", "Estimate length and size before you convert"), ("prepare", "Prepare the text for a clean MP3"),
+          ("long-text", "Text longer than 5,000 characters"), ("troubleshooting", "Troubleshooting"),
           ("limitations", "Limitations"), ("related", "Related guides")) + """
 <h2 id="steps">Steps</h2>
 <ol>
@@ -294,6 +311,9 @@ page("guides/text-to-mp3.html", "How to Convert Text to MP3 for Free | Text 2 Sp
 <li>Press <em>Generate Audio</em>. The result appears under <em>Results</em> with a player.</li>
 <li>Click <strong>⬇ MP3</strong> to save the file. <strong>⬇ SRT</strong> and <strong>⬇ VTT</strong> save the matching subtitles.</li>
 </ol>
+""" + fig("text-to-mp3-result.webp", 818, 286,
+          "Results panel of Text 2 Speech with a finished 8-second MP3 by the voice Ryan (GB): an audio player, the buttons ⬇ MP3, ⬇ SRT and ⬇ VTT, and a Delete button",
+          "A finished result. Play it in the page first, then save it with <strong>⬇ MP3</strong>; the SRT and VTT buttons save its subtitles.") + """
 
 <h2 id="mp3-file">What the MP3 file contains</h2>
 <p>The download is a standard MP3 that plays on practically any phone, computer or browser.</p>
@@ -307,7 +327,39 @@ page("guides/text-to-mp3.html", "How to Convert Text to MP3 for Free | Text 2 Sp
 <tr><th scope="row">File name</th><td>Random, for example <code>ddfd8759b889.mp3</code>; rename it after downloading</td></tr>
 <tr><th scope="row">Kept online</th><td>About two hours after your last generation</td></tr>
 </tbody></table></div>
-<p>WAV is also available, but it is about eight times larger and sounds the same; <a href="/guides/mp3-vs-wav.html">MP3 vs WAV</a> explains when it is worth it.</p>
+<p>WAV is also available, but it is about eight times larger and sounds the same; <a href="/guides/mp3-vs-wav.html">MP3 vs WAV</a> explains when it is worth it. Everything about saving the files, from subtitle downloads to file names and the download folder, is collected on the <a href="/text-to-speech-download.html">text to speech download</a> page.</p>
+
+<h2 id="worked-example">Worked example: a 930-character passage</h2>
+<p>To show what a typical conversion produces, an English passage of 930 characters (eight sentences, a notice about a library reading programme) was converted with the voice Aria (US) on 31 October 2026, in three versions:</p>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">Version</th><th scope="col">Audio length</th><th scope="col">File size</th></tr></thead>
+<tbody>
+<tr><th scope="row">MP3, normal speed</th><td>56.6 s</td><td>340,365 bytes (≈ 332 KB)</td></tr>
+<tr><th scope="row">WAV, normal speed</th><td>56.6 s</td><td>2,718,798 bytes (≈ 2.6 MB)</td></tr>
+<tr><th scope="row">MP3, speed −20%</th><td>70.8 s</td><td>425,181 bytes (≈ 415 KB)</td></tr>
+</tbody></table></div>
+<p>Three things follow from it. The size of an MP3 depends on how long the audio is, not on how many characters went in, so slowing the voice down makes the file bigger. The WAV holds exactly the same 56.6 seconds in eight times the space. And the subtitle files of that generation split the eight sentences into 20 captions, because a caption also closes after ten words.</p>
+
+<h2 id="estimate">Estimate length and size before you convert</h2>
+<p>At normal speed, English came out at roughly 15 to 16 characters per second of speech in these tests (930 characters in 56.6 seconds, 5,000 in 5 minutes 28 seconds), and the 48 kbps MP3 takes 6 KB for every second of audio. Multiplying the two gives a quick estimate for any text:</p>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">Text</th><th scope="col">Speech at normal speed</th><th scope="col">MP3 size</th></tr></thead>
+<tbody>
+<tr><th scope="row">1,000 characters</th><td>About 1 minute</td><td>About 0.4 MB</td></tr>
+<tr><th scope="row">5,000 characters (one generation)</th><td>About 5½ minutes</td><td>About 2 MB</td></tr>
+<tr><th scope="row">20,000 characters (four parts)</th><td>About 22 minutes</td><td>About 8 MB</td></tr>
+<tr><th scope="row">50,000 characters (ten parts)</th><td>About 55 minutes</td><td>About 20 MB</td></tr>
+</tbody></table></div>
+<p>These are English figures for one voice. Other voices speak faster or slower (six English voices are compared in the <a href="/guides/choose-voice.html#pace">voice guide</a>), and other languages differ again, so treat the table as a starting point: each result shows the real length of its file.</p>
+
+<h2 id="prepare">Prepare the text for a clean MP3</h2>
+<ul>
+<li><strong>Check pasted text for stray lines.</strong> Text copied from a web page or a document often brings menu items, captions or page numbers with it, and the voice reads whatever is in the box.</li>
+<li><strong>Clean up imported Markdown.</strong> <em>Import File</em> loads a <code>.md</code> file as-is, so symbols such as <code>#</code>, <code>*</code> and link brackets stay in the text. Remove them before generating so the voice only gets the words.</li>
+<li><strong>End headings with a full stop.</strong> A line break alone does not end a caption: a heading without punctuation is joined to the next sentence in the subtitle files.</li>
+<li><strong>Spell out what must be heard exactly.</strong> If a voice reads a date, a time or an abbreviation differently from what you intended, write it the way it should sound, for example <q>half past ten</q> instead of <q>10:30</q>.</li>
+<li><strong>Watch the counter.</strong> It shows how many of the 5,000 characters you have used; pause markers and spaces count too.</li>
+</ul>
 
 <h2 id="long-text">Text longer than 5,000 characters</h2>
 <p>To turn a longer document, such as a book chapter, into MP3, convert it in parts and join them afterwards:</p>
@@ -317,6 +369,20 @@ page("guides/text-to-mp3.html", "How to Convert Text to MP3 for Free | Text 2 Sp
 <li>Download and rename each file in order (<code>part-01.mp3</code>, <code>part-02.mp3</code>…) before the two-hour expiry.</li>
 <li>Join the files in an audio editor, or simply play them as a playlist.</li>
 </ol>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="generate-disabled">Generate Audio stays greyed out</h3>
+<p>The button is disabled while the text box is empty, while another generation is still running, and whenever the text is over 5,000 characters (the counter turns red then). Shorten the text or split it as described above.</p>
+<h3 id="wav-button">The result has a ⬇ WAV button, not ⬇ MP3</h3>
+<p>The format is fixed when you press <em>Generate Audio</em>, and that result was made while <em>WAV</em> was selected. Click <em>MP3</em> under <em>Output Format</em> and generate again; the WAV result stays in the list until you delete it.</p>
+<h3 id="link-gone">The result or its download buttons have disappeared</h3>
+<p>Results are tied to the browser tab, and the server deletes the files about two hours after your last generation. Generate the text again and save the MP3 right away; the <a href="/help.html#files-expired">help centre</a> explains the rules.</p>
+<h3 id="no-result">An error appears instead of a result</h3>
+<p>The two most common messages are a rate-limit warning (wait a minute, your text stays in the box) and <q>The speech service returned no audio for this text</q>, which usually means the voice does not match the language of the text. Both are covered in the <a href="/help.html#troubleshooting">help centre</a>.</p>
+<h3 id="tempo-off">The MP3 sounds faster or slower than the sample</h3>
+<p>Look at the <em>Speed</em> checkbox: a value set for an earlier conversion still applies while the box is ticked. Untick it, or set it back to 0, and generate again. Pitch works the same way.</p>
+<h3 id="name-wrong">A name or a foreign word is mispronounced</h3>
+<p>Write the word the way it sounds in the language of the voice, for example with an added hyphen or a phonetic spelling, and test just that sentence before converting the whole text. A short test generation takes a few seconds and saves regenerating thousands of characters.</p>
 
 <h2 id="limitations">Limitations</h2>
 <ul>
@@ -328,11 +394,12 @@ page("guides/text-to-mp3.html", "How to Convert Text to MP3 for Free | Text 2 Sp
 
 <h2 id="related">Related guides</h2>
 <ul>
+<li><a href="/text-to-speech-download.html">Text to speech download: MP3, WAV and subtitle files</a></li>
 <li><a href="/guides/choose-voice.html">How to choose a text to speech voice and accent</a></li>
 <li><a href="/guides/ai-voiceover.html">How to make a free AI voiceover from text</a></li>
 <li><a href="/guides/subtitles.html">How to create SRT and VTT subtitles from text</a></li>
 </ul>
-""")
+""", image="text-to-mp3-result.webp")
 
 # ---------------------------------------------------------------- guide: AI voiceover
 page("guides/ai-voiceover.html", "How to Make a Free AI Voiceover from Text | Text 2 Speech",
@@ -341,8 +408,9 @@ page("guides/ai-voiceover.html", "How to Make a Free AI Voiceover from Text | Te
 <h1>How to make a free AI voiceover from text</h1>
 <p class="lead"><strong>Short answer:</strong> write the script, paste it into <a href="/">Text 2 Speech</a>, choose a neural voice, add <code>[break:…]</code> markers where the narration should pause, and press <em>Generate Audio</em>. You get the voiceover as an MP3 or WAV file plus SRT and VTT subtitles timed to it, ready to place on a video timeline.</p>
 """ + toc(("script", "Prepare the script"), ("pauses", "Pace it with pauses"), ("steps", "Generate the voiceover"),
-          ("speed", "Adjust speed and pitch"), ("video", "Add it to a video"), ("limitations", "Limitations"),
-          ("related", "Related guides")) + """
+          ("worked-example", "Worked example: a three-scene explainer"), ("speed", "Adjust speed and pitch"),
+          ("fit", "Fit a voiceover to a fixed length"), ("video", "Add it to a video"), ("troubleshooting", "Troubleshooting"),
+          ("limitations", "Limitations"), ("related", "Related guides")) + """
 <h2 id="script">Prepare the script</h2>
 <ul>
 <li><strong>One part per scene.</strong> Keep each part under 5,000 characters; a separate file per scene is easier to re-do and to place on a timeline.</li>
@@ -361,6 +429,9 @@ page("guides/ai-voiceover.html", "How to Make a Free AI Voiceover from Text | Te
 <tr><th scope="row"><code>[break:2s]</code></th><td>2 seconds</td></tr>
 </tbody></table></div>
 <p>The gap you hear is slightly longer than the marker, because the speech on either side keeps its own short natural edges: in a test, adding <code>[break:2s]</code> between two one-word sentences made the clip 2.9 seconds longer. A generation can hold 25 markers, each up to 30 seconds and 60 seconds in total.</p>
+""" + fig("voiceover-break-markers.webp", 818, 432,
+          "The Input Text box of Text 2 Speech holding a short course script with the pause markers [break:1s], [break:500ms] and [break:2s] between sentences; the counter reads 213 / 5000 characters",
+          "Pause markers typed straight into the script. They count toward the 5,000 characters but are never spoken.") + """
 
 <h2 id="steps">Generate the voiceover</h2>
 <ol>
@@ -372,8 +443,37 @@ page("guides/ai-voiceover.html", "How to Make a Free AI Voiceover from Text | Te
 <li>Repeat for each scene with the same voice, speed and pitch.</li>
 </ol>
 
+<h2 id="worked-example">Worked example: a three-scene explainer</h2>
+<p>This short explainer about watering houseplants was generated scene by scene with the voice Aria (US) at normal speed on 31 October 2026. The script, exactly as typed:</p>
+<pre aria-label="Example script">Scene 1: Most houseplants die from too much water, not too little.[break:1s] In the next minute, you will learn a simple test that tells you exactly when to water.
+
+Scene 2: Push one finger into the soil, up to the second knuckle.[break:500ms] If the soil feels dry at your fingertip, water slowly until it runs out of the drainage holes.[break:500ms] If it still feels damp, wait two or three days and test again.
+
+Scene 3: That is the whole method.[break:1s] Test first, water second, and check again next week.</pre>
+<p>Each scene was pasted on its own, without the <q>Scene</q> label. To see what the markers add, every scene was also generated once with the markers removed:</p>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">Scene</th><th scope="col">Characters</th><th scope="col">Markers</th><th scope="col">Audio length</th><th scope="col">Without markers</th><th scope="col">Captions</th></tr></thead>
+<tbody>
+<tr><th scope="row">1 · Hook</th><td>154</td><td>1 × 1 s</td><td>10.8 s</td><td>9.7 s</td><td>3</td></tr>
+<tr><th scope="row">2 · Method</th><td>240</td><td>2 × 500 ms</td><td>15.9 s</td><td>14.6 s</td><td>6</td></tr>
+<tr><th scope="row">3 · Close</th><td>88</td><td>1 × 1 s</td><td>7.6 s</td><td>6.5 s</td><td>2</td></tr>
+</tbody></table></div>
+<p>The three files add up to 34.3 seconds. Each one-second marker lengthened its scene by about 1.1 seconds, and the two half-second markers together by 1.2 seconds, so plan for slightly more silence than you type. Scene 2 produced six captions from three sentences because long sentences are split after ten words. Saved as <code>scene-01.mp3</code>/<code>scene-01.srt</code> and so on, the files drop onto a timeline in order. To write a script for a target length, use the characters-per-second planner on the <a href="/ai-voice-generator.html#planner">AI voice generator</a> page.</p>
+
 <h2 id="speed">Adjust speed and pitch</h2>
 <p>Speed changes how fast the voice talks, from −100% to +100%, without changing the words. In a test, +50% made a sentence play in two-thirds of the time (5.1 s to 3.5 s) and −50% made it twice as long (10.2 s). Pitch moves the voice up or down by up to 100 Hz. The slider moves in steps of 5; type any whole value into the number box next to it.</p>
+
+<h2 id="fit">Fit a voiceover to a fixed length</h2>
+<p>Speed works in proportion: the new length is roughly the normal length divided by (1 + speed ÷ 100). Measured examples:</p>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">Speed</th><th scope="col">Length compared with normal</th><th scope="col">Measured</th></tr></thead>
+<tbody>
+<tr><th scope="row">−50%</th><td>× 2.0</td><td>A sentence went from 5.1 s to 10.2 s</td></tr>
+<tr><th scope="row">−20%</th><td>× 1.25</td><td>A passage went from 56.6 s to 70.8 s</td></tr>
+<tr><th scope="row">+10%</th><td>× 0.91</td><td>Scene 2 above went from 15.9 s to 14.5 s</td></tr>
+<tr><th scope="row">+50%</th><td>× 0.67</td><td>A sentence went from 5.1 s to 3.5 s</td></tr>
+</tbody></table></div>
+<p>When a scene has to fill an exact slot, such as a 15-second clip, work in this order: generate at normal speed and read the length in the result; close a small gap with speed in steps of 5 or 10; close a large gap by cutting or adding a sentence, which sounds more natural than a big speed change; and fine-tune with pause markers, whose length is exact. Voices also differ in pace, by about a fifth between the fastest and slowest English voices in the <a href="/guides/choose-voice.html#pace">voice guide's measurement</a>, so choose the voice before you time anything.</p>
 
 <h2 id="video">Add it to a video</h2>
 <ol>
@@ -382,6 +482,24 @@ page("guides/ai-voiceover.html", "How to Make a Free AI Voiceover from Text | Te
 <li>For a video on your own web page, use the VTT file in a <code>&lt;track&gt;</code> element.</li>
 </ol>
 <p>The <a href="/guides/subtitles.html">subtitles guide</a> shows real SRT and VTT output and how the captions are split.</p>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="marker-spoken">A pause marker was read aloud</h3>
+<p>Only markers in the form <code>[break:</code> number <code>ms]</code> or <code>[break:</code> number <code>s]</code> become silence; anything else is ordinary text and is spoken. Upper case and spaces inside the brackets are fine.</p>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">Typed</th><th scope="col">Result</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>[break:750ms]</code>, <code>[break:1.5s]</code>, <code>[BREAK: 2 s]</code></th><td>Silence</td></tr>
+<tr><th scope="row"><code>[pause:1s]</code>, <code>(break:1s)</code></th><td>Read as text: wrong word or brackets</td></tr>
+<tr><th scope="row"><code>[break:1sec]</code>, <code>[break:1m]</code></th><td>Read as text: only <code>ms</code> and <code>s</code> are units</td></tr>
+<tr><th scope="row"><code>[break:1,5s]</code></th><td>Read as text: use a full stop for decimals</td></tr>
+</tbody></table></div>
+<h3 id="scene-sounds-different">One scene sounds different from the others</h3>
+<p>Check that every scene used the same voice, speed and pitch: the settings stay as you left them, but a ticked or unticked <em>Speed</em> box is easy to miss. Each result shows its voice name, so compare the labels in the results list.</p>
+<h3 id="captions-early">Captions appear before the voice starts</h3>
+<p>The subtitle times start at the beginning of the audio file. If you trimmed silence from the start of the clip in your editor, or moved the audio without the captions, shift the caption track by the same amount.</p>
+<h3 id="error-too-many">"Too many [break] markers" or "Total pause length exceeds 60 s"</h3>
+<p>A generation allows 25 markers and 60 seconds of pauses altogether. Split the scene in two, or leave longer silences to the video editor.</p>
 
 <h2 id="limitations">Limitations</h2>
 <ul>
@@ -393,12 +511,13 @@ page("guides/ai-voiceover.html", "How to Make a Free AI Voiceover from Text | Te
 
 <h2 id="related">Related guides</h2>
 <ul>
+<li><a href="/ai-voice-generator.html">Free AI voice generator from text: what it can and cannot do</a></li>
 <li><a href="/guides/choose-voice.html">How to choose a text to speech voice and accent</a></li>
 <li><a href="/guides/subtitles.html">How to create SRT and VTT subtitles from text</a></li>
 <li><a href="/guides/mp3-vs-wav.html">MP3 vs WAV for text to speech</a></li>
 <li><a href="/help.html">Help centre</a></li>
 </ul>
-""")
+""", image="voiceover-break-markers.webp")
 
 # ---------------------------------------------------------------- guide: choose a voice
 page("guides/choose-voice.html", "Choose a Text to Speech Voice and Accent | Text 2 Speech",
@@ -406,8 +525,10 @@ page("guides/choose-voice.html", "Choose a Text to Speech Voice and Accent | Tex
      [HOME, HELP, ("Choose a voice", SITE + "/guides/choose-voice.html")], """
 <h1>How to choose a text to speech voice and accent</h1>
 <p class="lead"><strong>Short answer:</strong> set <em>Voice Language</em> to the language of your text first, then choose among its voices: the country code after each name (US, GB, IN, AU…) is the accent. Compare two or three with their <em>Preview</em> buttons. For text that mixes languages, try a voice marked <em>(Multilingual)</em>.</p>
-""" + toc(("language", "Match the language of your text"), ("accents", "Find an accent"), ("multilingual", "Multilingual voices"),
-          ("compare", "Compare voices quickly"), ("limitations", "Limitations"), ("related", "Related pages")) + """
+""" + toc(("language", "Match the language of your text"), ("accents", "Find an accent"), ("per-language", "How many voices each language has"),
+          ("multilingual", "Multilingual voices"), ("compare", "Compare voices quickly"), ("pace", "Measured: voices speak at different speeds"),
+          ("by-use", "Choose by purpose"), ("troubleshooting", "Troubleshooting"), ("limitations", "Limitations"),
+          ("related", "Related pages")) + """
 <h2 id="language">Match the language of your text</h2>
 <p>A voice reads best in its own language, so the <em>Voice Language</em> list decides which voices you see. When text and voice do not match, the voice may still produce audio (a US English voice read a German sentence in a test) but it is not a voice for that language, or it returns no audio at all when it cannot read the script, as happened with Hindi text and an English voice. All 75 languages and their voices are on the <a href="/voices.html">voices and languages page</a>.</p>
 
@@ -424,7 +545,26 @@ page("guides/choose-voice.html", "Choose a Text to Speech Voice and Accent | Tex
 <tr><th scope="row">Canadian</th><td>CA</td><td>Clara, Liam</td></tr>
 <tr><th scope="row">Also available</th><td>NZ, ZA, SG, PH, HK, NG, KE, TZ</td><td>Two voices each, one female and one male</td></tr>
 </tbody></table></div>
-<p>Other languages have regional variants too: Spanish has 22 (for example Spain, Mexico and the US), Arabic 16, French 4 (France, Canada, Belgium, Switzerland) and Portuguese 2 (Brazil and Portugal). Hindi, Tamil, Telugu and Urdu voices are listed under their own languages.</p>
+""" + fig("choose-voice-british.webp", 1176, 539,
+          "Voice settings in Text 2 Speech: Voice Language set to English, the Female filter on and United Kingdom typed into Voice Search, listing Libby, Maisie and Sonia (GB) with Sonia selected",
+          "Typing <q>United Kingdom</q> with the <em>Female</em> filter on narrows the 47 English voices to three British ones.") + """
+
+<h2 id="per-language">How many voices each language has</h2>
+<p>The choice depends a lot on the language. On 31 October 2026, 60 of the 75 languages had exactly two voices, one female and one male; a few had many more:</p>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">Language</th><th scope="col">Voices</th><th scope="col">Regional variants</th></tr></thead>
+<tbody>
+<tr><th scope="row">English</th><td>47</td><td>14, listed in the table above</td></tr>
+<tr><th scope="row">Spanish</th><td>45</td><td>22, including Spain, Mexico, Argentina, Colombia and the US</td></tr>
+<tr><th scope="row">Arabic</th><td>32</td><td>16, from Morocco to Oman</td></tr>
+<tr><th scope="row">Chinese</th><td>14</td><td>Mainland China, Hong Kong and Taiwan, plus one Liaoning and one Shaanxi dialect voice</td></tr>
+<tr><th scope="row">French</th><td>13</td><td>France, Canada, Belgium, Switzerland</td></tr>
+<tr><th scope="row">German</th><td>10</td><td>Germany, Austria, Switzerland</td></tr>
+<tr><th scope="row">Tamil</th><td>8</td><td>India, Sri Lanka, Malaysia, Singapore</td></tr>
+<tr><th scope="row">Dutch</th><td>5</td><td>Netherlands, Belgium</td></tr>
+<tr><th scope="row">Portuguese</th><td>5</td><td>Brazil, Portugal</td></tr>
+</tbody></table></div>
+<p>Hindi, Japanese and most other languages are in the two-voice group, where choosing takes a minute: listen to both. Hindi, Tamil, Telugu and Urdu each have their own entry in the language list rather than appearing under English.</p>
 
 <h2 id="multilingual">Multilingual voices</h2>
 <p>Multilingual voices are voices that Microsoft names <q>Multilingual</q>: they are intended to read more than one language with the same voice, which suits text that mixes languages. Twelve were in the catalog on 31 October 2026, each listed under its home language:</p>
@@ -445,6 +585,42 @@ page("guides/choose-voice.html", "Choose a Text to Speech Voice and Accent | Tex
 </ol>
 <p>The <em>Preview Audio</em> button under the text box is not a voice sample: it uses your device's own voice. See the <a href="/help.html#no-sound-preview">help centre</a> for details.</p>
 
+<h2 id="pace">Measured: voices speak at different speeds</h2>
+<p>Voices differ in pace as well as in sound. The sentence <q>Thank you for calling. Your appointment is confirmed for Tuesday at ten in the morning.</q> was generated with six English voices at normal speed on 31 October 2026:</p>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">Voice</th><th scope="col">Accent</th><th scope="col">Length</th></tr></thead>
+<tbody>
+<tr><th scope="row">Sonia</th><td>British (GB)</td><td>5.62 s</td></tr>
+<tr><th scope="row">Ryan</th><td>British (GB)</td><td>5.98 s</td></tr>
+<tr><th scope="row">Guy</th><td>American (US)</td><td>6.00 s</td></tr>
+<tr><th scope="row">Aria</th><td>American (US)</td><td>6.05 s</td></tr>
+<tr><th scope="row">Natasha</th><td>Australian (AU)</td><td>6.58 s</td></tr>
+<tr><th scope="row">Neerja</th><td>Indian (IN)</td><td>6.79 s</td></tr>
+</tbody></table></div>
+<p>The slowest voice needed 21% more time than the fastest for the same words. Over a five-minute narration a gap like that would come to about a minute, so when audio has to fit a fixed length, settle on the voice first and adjust the speed afterwards. Pitch, by contrast, does not change the timing: Aria measured 6.05 s at −50 Hz, 0 and +50 Hz. How speed and pitch shape a voice is explained on the <a href="/text-to-voice.html#speed-pitch">text to voice</a> page.</p>
+
+<h2 id="by-use">Choose by purpose</h2>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">Purpose</th><th scope="col">What to listen for</th><th scope="col">How to test</th></tr></thead>
+<tbody>
+<tr><th scope="row">Video voiceover</th><td>Clear words at the speed you plan to use</td><td>Generate the first scene with your two or three favourites</td></tr>
+<tr><th scope="row">Lessons and training</th><td>The accent your learners expect; comfort at a slightly slower speed</td><td>Try the same paragraph at −10% and −20%</td></tr>
+<tr><th scope="row">Phone or announcement prompts</th><td>Names, numbers and times read the way you intend</td><td>Generate the trickiest line first</td></tr>
+<tr><th scope="row">Long reading, such as chapters</th><td>Whether the voice stays pleasant after several minutes</td><td>Listen to a full minute, not just the sample</td></tr>
+<tr><th scope="row">Mixed-language text</th><td>Correct pronunciation in both languages</td><td>A multilingual voice with a real paragraph</td></tr>
+<tr><th scope="row">Language practice</th><td>The regional variant you are learning</td><td>Compare, for example, GB with US, or Spain with Mexico</td></tr>
+</tbody></table></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="no-match">"No voices match your search"</h3>
+<p>The language, the <em>Gender</em> filter and the search text all apply at once. Clear <em>Voice Search</em> and set <em>Gender</em> to <em>All</em>. Search looks at the voice name, the country code, the full country name and the language, so with English selected <q>Ireland</q> finds Connor and Emily, while a style word such as <q>calm</q> finds nothing.</p>
+<h3 id="voice-missing">A voice I used before is missing</h3>
+<p>Every voice is tested every six hours, and one that fails eight checks in a row is hidden until it works again. Choose a similar voice for now; keep a note of the voice you used for a project so you can match it later.</p>
+<h3 id="sample-silent">The ▶ sample does not play</h3>
+<p>Each sample is a request to the speech service and counts toward the limit of about 20 requests per minute. After a burst of samples, wait a minute. Also check that the tab is not muted.</p>
+<h3 id="wrong-accent">The voice has an odd accent with my text</h3>
+<p>The text is probably in a different language from the voice. Switch <em>Voice Language</em> to the language of the text, or use a multilingual voice for text that mixes languages.</p>
+
 <h2 id="limitations">Limitations</h2>
 <ul>
 <li>You cannot create, clone or upload a voice; only catalog voices are available.</li>
@@ -455,10 +631,11 @@ page("guides/choose-voice.html", "Choose a Text to Speech Voice and Accent | Tex
 <h2 id="related">Related pages</h2>
 <ul>
 <li><a href="/voices.html">All voices and languages</a></li>
+<li><a href="/text-to-voice.html">Text to voice: language, accent, speed, pitch and pauses</a></li>
 <li><a href="/guides/ai-voiceover.html">How to make a free AI voiceover from text</a></li>
 <li><a href="/guides/text-to-mp3.html">How to convert text to MP3 for free</a></li>
 </ul>
-""")
+""", image="choose-voice-british.webp")
 
 # ---------------------------------------------------------------- guide: subtitles
 page("guides/subtitles.html", "Create SRT and VTT Subtitles from Text | Text 2 Speech",
@@ -570,6 +747,262 @@ page("guides/mp3-vs-wav.html", "MP3 vs WAV for Text to Speech | Text 2 Speech",
 <p>Step-by-step conversion is in <a href="/guides/text-to-mp3.html">how to convert text to MP3</a>; all formats and limits are in the <a href="/help.html#formats">help centre</a>.</p>
 """, published="2026-10-29")
 
+# ---------------------------------------------------------------- landing: text to speech download
+page("text-to-speech-download.html", "Text to Speech Download: Save Speech as MP3 or WAV",
+     "Download text to speech as MP3 or WAV with SRT and VTT subtitles, free: how to save the files, what they are called and how to split text over 5,000 characters.",
+     [HOME, ("Text to speech download", SITE + "/text-to-speech-download.html")], """
+<h1>Text to speech download: save speech as MP3 or WAV</h1>
+<p class="lead"><strong>Short answer:</strong> paste your text into <a href="/">Text 2 Speech</a>, pick a voice and an output format, press <em>Generate Audio</em>, then click <strong>⬇ MP3</strong> (or <strong>⬇ WAV</strong>) in the result to save the speech as a file. <strong>⬇ SRT</strong> and <strong>⬇ VTT</strong> save subtitles that match it. Downloading is free with no sign-up; each generation takes up to 5,000 characters, and the files stay online for about two hours.</p>
+""" + CTA + toc(("steps", "How to download speech as an audio file"), ("format", "MP3 or WAV: which download to choose"),
+                ("subtitles", "Download the subtitles as well"), ("names", "File names and where the files go"),
+                ("long-texts", "Downloading long texts"), ("retention", "How long downloads stay available"),
+                ("problems", "Download problems"), ("limitations", "Limitations"), ("related", "Related pages")) + """
+<h2 id="steps">How to download speech as an audio file</h2>
+<ol>
+<li>Open the <a href="/">converter</a>, set <em>Voice Language</em> to the language of your text and click a voice.</li>
+<li>Under <em>Output Format</em>, choose <strong>MP3</strong> (the default) or <strong>WAV</strong>. Do this before generating: a finished result keeps the format it was made in.</li>
+<li>Paste or type your text, up to 5,000 characters, or import a plain-text file.</li>
+<li>Press <em>Generate Audio</em> and wait for the result to appear under <em>Results</em>.</li>
+<li>Play it once in the page to check names, numbers and pauses.</li>
+<li>Click the audio button to save the speech, and <strong>⬇ SRT</strong> or <strong>⬇ VTT</strong> if you need captions.</li>
+<li>Rename the files straight away, so you know later which text each one belongs to.</li>
+</ol>
+""" + fig("download-wav-and-subtitles.webp", 1176, 404,
+          "Text 2 Speech with Output Format set to WAV and two results: an 18-second WAV by Aria (US) and an 8-second MP3 by Ryan (GB), each with buttons to download the audio, SRT and VTT",
+          "Every result has its own download buttons, and the audio button is labelled with the format that result was generated in.") + """
+
+<h2 id="format">MP3 or WAV: which download to choose</h2>
+<p>Pick MP3 unless a program you use insists on WAV. Both hold the same sound, because the WAV is decoded from the generated MP3; the WAV is simply about eight times larger. Measured on the same 56.6-second clip:</p>
+<div class="tablewrap"><table>
+<thead><tr><td></td><th scope="col">MP3</th><th scope="col">WAV</th></tr></thead>
+<tbody>
+<tr><th scope="row">Size of the 56.6 s clip</th><td>≈ 332 KB</td><td>≈ 2.6 MB</td></tr>
+<tr><th scope="row">Encoding</th><td>48 kbps, 24 kHz, mono</td><td>16-bit PCM, 24 kHz, mono</td></tr>
+<tr><th scope="row">Best for</th><td>Sharing, web pages, e-learning platforms, phones</td><td>Audio and video editors, workflows that require PCM</td></tr>
+</tbody></table></div>
+<p>The reasoning behind that advice, with byte-exact measurements, is in <a href="/guides/mp3-vs-wav.html">MP3 vs WAV for text to speech</a>.</p>
+
+<h2 id="subtitles">Download the subtitles as well</h2>
+<p>Each generation also produces two subtitle files, built from the moment each word is spoken: SRT for video editors and media players, VTT for video on web pages. There is nothing extra to switch on. A subtitle file only fits the audio of its own result, since another generation of the same text can be timed slightly differently, so keep each audio file together with its subtitles. Real examples of both formats are in the <a href="/guides/subtitles.html">subtitles guide</a>.</p>
+
+<h2 id="names">File names and where the files go</h2>
+<p>Your browser saves the files wherever it saves other downloads, usually the <em>Downloads</em> folder, unless it is set to ask you each time. The names are not taken from your text:</p>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">File</th><th scope="col">Name when saved</th><th scope="col">Suggested rename</th></tr></thead>
+<tbody>
+<tr><th scope="row">Audio</th><td>12 random letters and digits, for example <code>c5983b36f65c.wav</code></td><td><code>lesson-01.wav</code></td></tr>
+<tr><th scope="row">SRT subtitles</th><td><code>subtitles.srt</code></td><td><code>lesson-01.srt</code></td></tr>
+<tr><th scope="row">VTT subtitles</th><td><code>subtitles.vtt</code></td><td><code>lesson-01.vtt</code></td></tr>
+</tbody></table></div>
+<p>Because every result's subtitles share the same two names, a second download into the same folder is usually renamed by the browser, for example to <code>subtitles (1).srt</code>. Renaming each set as soon as it lands keeps the audio and its captions paired.</p>
+
+<h2 id="long-texts">Downloading long texts</h2>
+<p>There is a limit: one generation takes at most 5,000 characters, counting spaces and pause markers, and <em>Generate Audio</em> stays disabled above it. In English that is about five and a half minutes of speech (5,000 characters became 5 minutes 28 seconds in a test), so longer pieces are downloaded as several files:</p>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">Length of the text</th><th scope="col">Files to generate</th><th scope="col">Approximate audio in English</th></tr></thead>
+<tbody>
+<tr><th scope="row">Up to 5,000 characters</th><td>1</td><td>Up to about 5½ minutes</td></tr>
+<tr><th scope="row">12,000 characters</th><td>3</td><td>About 13 minutes</td></tr>
+<tr><th scope="row">30,000 characters</th><td>6</td><td>About 33 minutes</td></tr>
+<tr><th scope="row">55,000 characters</th><td>11</td><td>About 1 hour</td></tr>
+</tbody></table></div>
+<p>Split at paragraph or chapter breaks, keep the voice, speed, pitch and format identical for every part, and number the downloads in order. The step-by-step method for joining the parts is in <a href="/guides/text-to-mp3.html#long-text">how to convert text to MP3</a>.</p>
+
+<h2 id="retention">How long downloads stay available</h2>
+<p>The files only live on the Text 2 Speech server for a short time: they are deleted about two hours after the last generation in your browser session. The results list belongs to the tab it was made in, so a different tab or window starts empty, and <em>Delete</em> removes a result and its files at once. There is no account or download history, which makes the copy on your own device the one that lasts.</p>
+
+<h2 id="problems">Download problems</h2>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">Problem</th><th scope="col">Cause and fix</th></tr></thead>
+<tbody>
+<tr><th scope="row">The download buttons are gone</th><td>The files expired or the tab was closed. Generate the text again and download at once.</td></tr>
+<tr><th scope="row">Generate Audio cannot be pressed</th><td>The text box is empty or over 5,000 characters. Add text, or shorten and split it.</td></tr>
+<tr><th scope="row">The audio button says WAV, not MP3</th><td>WAV was selected when that result was made. Choose MP3 and generate again.</td></tr>
+<tr><th scope="row">The WAV file is very large</th><td>That is expected: about 2.9 MB per minute. Download MP3 for sharing.</td></tr>
+<tr><th scope="row">Subtitles drift away from the audio</th><td>They come from a different generation. Take both files from the same result.</td></tr>
+</tbody></table></div>
+
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li>5,000 characters per generation, so long documents are saved as several files.</li>
+<li>Audio comes as MP3 or WAV only; for another format, convert the download with an audio tool.</li>
+<li>Files are not kept long-term and there is no history of past downloads.</li>
+<li>The tool cannot open PDFs, Word files or web pages; copy their text into the box instead.</li>
+<li>Your text is sent to Microsoft's online speech service to create the audio.</li>
+</ul>
+
+<h2 id="related">Related pages</h2>
+<ul>
+<li><a href="/guides/text-to-mp3.html">How to convert text to MP3 for free</a></li>
+<li><a href="/guides/mp3-vs-wav.html">MP3 vs WAV for text to speech</a></li>
+<li><a href="/guides/subtitles.html">How to create SRT and VTT subtitles from text</a></li>
+<li><a href="/help.html#formats">File formats in the help centre</a></li>
+</ul>
+""", image="download-wav-and-subtitles.webp")
+
+# ---------------------------------------------------------------- landing: text to voice
+page("text-to-voice.html", "Text to Voice: Turn Writing into a Natural Voice",
+     "Turn text into a natural voice for free: pick the language, accent and voice, then shape it with speed, pitch and exact pauses. Measured examples and limits.",
+     [HOME, ("Text to voice", SITE + "/text-to-voice.html")], """
+<h1>Text to voice: turn writing into a natural voice</h1>
+<p class="lead"><strong>Short answer:</strong> text to voice means typing or pasting writing and getting it back as speech. In <a href="/">Text 2 Speech</a> you set the language of your text, choose one of its voices (each tied to a regional accent), optionally adjust speed, pitch and pauses, and press <em>Generate Audio</em>. It is free, needs no account, and takes up to 5,000 characters per generation.</p>
+""" + CTA + toc(("decisions", "What decides how the voice sounds"), ("steps", "Turn text into a voice, step by step"),
+                ("language", "Language and accent"), ("voice", "Picking one voice out of several"), ("speed-pitch", "Speed and pitch"),
+                ("pauses", "Pauses and pacing"), ("listen", "Listen before you generate"), ("limitations", "Limitations"),
+                ("related", "Related pages")) + """
+<h2 id="decisions">What decides how the voice sounds</h2>
+<p>Six settings shape the result. Only the first two need a decision; the rest default to normal speed, normal pitch and no extra pauses.</p>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">Setting</th><th scope="col">Where to find it</th><th scope="col">What it changes</th></tr></thead>
+<tbody>
+<tr><th scope="row">Language</th><td><em>Voice Language</em> list</td><td>Which voices are offered; it should match the language of the text</td></tr>
+<tr><th scope="row">Voice and accent</th><td>The voice list, a name plus a country code such as <q>Ryan - GB</q></td><td>Timbre, gender and regional accent</td></tr>
+<tr><th scope="row">Gender filter</th><td><em>All</em>, <em>Male</em>, <em>Female</em></td><td>Only which voices are listed</td></tr>
+<tr><th scope="row">Speed</th><td><em>Speed</em> checkbox and slider, −100% to +100%</td><td>How fast the words come, and so the length</td></tr>
+<tr><th scope="row">Pitch</th><td><em>Pitch</em> checkbox and slider, −100 to +100 Hz</td><td>How high or low the voice sits; the timing stays the same</td></tr>
+<tr><th scope="row">Pauses</th><td><code>[break:…]</code> markers or <kbd>Ctrl</kbd>+<kbd>B</kbd> in the text</td><td>Exact silences between words or sentences</td></tr>
+</tbody></table></div>
+
+<h2 id="steps">Turn text into a voice, step by step</h2>
+<ol>
+<li>Open the <a href="/">converter</a> and set <em>Voice Language</em> to the language your text is written in.</li>
+<li>Click a voice. To shorten the list, use <em>Gender</em> or type a country into <em>Voice Search</em>; press ▶ beside a voice to hear its sample.</li>
+<li>Type or paste the text, or import a <code>.txt</code>, <code>.md</code> or <code>.text</code> file.</li>
+<li>Tick <em>Speed</em> or <em>Pitch</em> to change them, and type an exact value into the number box if the slider's steps of 5 are too coarse.</li>
+<li>Add pauses where a reader would stop for breath or effect.</li>
+<li>Press <em>Generate Audio</em>, listen to the result, and download it as MP3 or WAV.</li>
+</ol>
+""" + fig("text-to-voice-speed-pitch.webp", 1176, 603,
+          "Text 2 Speech with the voice Ryan (GB) selected, Speed ticked at −10% and Pitch ticked at 5 Hz, and a finished 8-second MP3 in the results that begins: Chapter one. The old lighthouse stood at the edge of the bay",
+          "A British English voice slowed by 10% and raised by 5 Hz. Speed and pitch apply to the whole generation.") + """
+
+<h2 id="language">Language and accent</h2>
+<p>Text 2 Speech offers 322 voices in 75 languages and 142 regional variants (catalog of 31 October 2026). The variant is the accent: English alone comes in 14, from American and British to Indian, Nigerian and Kenyan English, and Spanish in 22. The country code after each voice name tells you which one you are hearing.</p>
+<p>Match the language before anything else. A voice is made for its own language, and text in another language may come out mispronounced or produce no audio at all. Accents, multilingual voices and a quick way to compare candidates are covered in <a href="/guides/choose-voice.html">how to choose a voice and accent</a>, and every voice is listed on the <a href="/voices.html">voices and languages page</a>.</p>
+
+<h2 id="voice">Picking one voice out of several</h2>
+<p>Voices in the same language differ more than you might expect, in sound and in pace: six English voices took between 5.6 and 6.8 seconds to say the same sentence in a measured test. Two habits narrow the choice quickly. First, press ▶ beside each candidate: every voice reads the same sample sentence, so the comparison is fair. Then generate the opening paragraph of your own text with the two or three you liked best; each result is labelled with its voice, so they are easy to play back to back.</p>
+
+<h2 id="speed-pitch">Speed and pitch</h2>
+<p>Both controls are off until you tick their checkboxes, and both apply to the whole generation.</p>
+<ul>
+<li><strong>Speed</strong> (−100% to +100%) changes the tempo and therefore the length of the audio. In a test, −20% stretched a 56.6-second passage to 70.8 seconds. To hit an exact length, use the speed table in the <a href="/guides/ai-voiceover.html#fit">AI voiceover guide</a>.</li>
+<li><strong>Pitch</strong> (−100 to +100 Hz) moves the voice higher or lower without changing its timing: one sentence measured 6.05 seconds at −50 Hz, at 0 and at +50 Hz.</li>
+</ul>
+<p>Small changes sound the most natural. A large pitch shift can make a voice sound processed, so for a clearly different character, choose another voice instead of pushing the pitch slider to its end.</p>
+
+<h2 id="pauses">Pauses and pacing</h2>
+<p>Commas and full stops already make the voice pause briefly. For an exact silence, type a marker such as <code>[break:800ms]</code> or <code>[break:2s]</code> where it should go, or press <kbd>Ctrl</kbd>+<kbd>B</kbd> (<kbd>⌘</kbd>+<kbd>B</kbd> on a Mac) to insert half a second at the cursor. Markers are not spoken and do not appear in the subtitles. One generation can hold 25 of them, none longer than 30 seconds and no more than 60 seconds in total.</p>
+
+<h2 id="listen">Listen before you generate</h2>
+<p>Three buttons play something, and they do different things:</p>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">Button</th><th scope="col">What you hear</th><th scope="col">Use it for</th></tr></thead>
+<tbody>
+<tr><th scope="row">▶ beside a voice</th><td>A short sample sentence in that neural voice</td><td>Choosing a voice</td></tr>
+<tr><th scope="row"><em>Preview Audio</em></th><td>The first 1,200 characters of your text, read by a voice built into your browser or device; pauses are only approximated</td><td>Catching typos and clumsy phrasing</td></tr>
+<tr><th scope="row"><em>Generate Audio</em></th><td>Your text in the chosen neural voice, with speed, pitch and exact pauses</td><td>The real result to download</td></tr>
+</tbody></table></div>
+
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li>5,000 characters per generation; longer writing is converted in parts with the same settings.</li>
+<li>One voice per generation, so a conversation needs a separate generation for each speaker.</li>
+<li>No custom or cloned voices and no emotion or speaking-style settings: speed, pitch and pauses are the only controls.</li>
+<li>Your text is sent to Microsoft's online speech service to be voiced, so do not paste anything you may not share.</li>
+<li>Results belong to the browser tab and are deleted about two hours after your last generation; download what you want to keep.</li>
+</ul>
+
+<h2 id="related">Related pages</h2>
+<ul>
+<li><a href="/guides/choose-voice.html">How to choose a text to speech voice and accent</a></li>
+<li><a href="/ai-voice-generator.html">Free AI voice generator from text</a></li>
+<li><a href="/voices.html">All voices and languages</a></li>
+<li><a href="/text-to-speech-download.html">Text to speech download: MP3, WAV and subtitles</a></li>
+</ul>
+""", image="text-to-voice-speed-pitch.webp")
+
+# ---------------------------------------------------------------- landing: AI voice generator
+page("ai-voice-generator.html", "Free AI Voice Generator from Text | Text 2 Speech",
+     "A free AI voice generator for text: 300+ Microsoft neural voices in 75 languages, MP3 or WAV with subtitles, no sign-up. What it can and cannot do, plainly.",
+     [HOME, ("AI voice generator", SITE + "/ai-voice-generator.html")], """
+<h1>Free AI voice generator from text</h1>
+<p class="lead"><strong>Short answer:</strong> <a href="/">Text 2 Speech</a> is a free AI voice generator that turns typed or pasted text into speech with Microsoft's neural voices: 300+ voices in 75 languages, downloadable as MP3 or WAV with SRT and VTT subtitles, without an account. It reads your text in ready-made voices; it does not clone voices or act out emotions.</p>
+""" + CTA + toc(("meaning", "What “AI voice” means here"), ("steps", "Generate an AI voice in four steps"),
+                ("can-cannot", "What it can and cannot do"), ("uses", "Where an AI voice fits"),
+                ("planner", "How much text for how many seconds"), ("rights", "Your text, your responsibility"),
+                ("limitations", "Limitations"), ("related", "Related pages")) + """
+<h2 id="meaning">What “AI voice” means here</h2>
+<p>The voices are neural text-to-speech voices from Microsoft's online speech service. A neural voice comes from a model trained on recorded human speech: it predicts how a text should sound, including stress and intonation, and synthesizes the audio, rather than stitching together recorded snippets. That is why it sounds much closer to a person reading than older computer voices.</p>
+<p>Text 2 Speech is the free web page around that service. It splits your text into pieces, sends them with the voice, speed and pitch you chose, joins the returned audio and your pauses into one file, and builds subtitles from the timing of each spoken word. Each step is described on the <a href="/how-it-works.html">how it works page</a>.</p>
+""" + fig("ai-voice-generator-overview.webp", 1176, 921,
+          "The Text 2 Speech generator: voice settings on the left with language, gender, voice search, speed, pitch and output format; the input text with pause markers on the right; and two finished results with players and download buttons",
+          "The whole generator on one page: voice settings, the text box and the results with their downloads.") + """
+
+<h2 id="steps">Generate an AI voice in four steps</h2>
+<ol>
+<li>Choose the language of your text in <em>Voice Language</em>, then click a voice; ▶ plays a sample of it.</li>
+<li>Type, paste or import up to 5,000 characters.</li>
+<li>Pick MP3 or WAV and, if you like, set speed, pitch and <code>[break:…]</code> pauses.</li>
+<li>Press <em>Generate Audio</em>. A text of the full 5,000 characters was ready in about 12 seconds in a test. Download the audio and, for captions, the SRT or VTT file.</li>
+</ol>
+
+<h2 id="can-cannot">What it can and cannot do</h2>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">It can</th><th scope="col">It cannot</th></tr></thead>
+<tbody>
+<tr><td>Read text aloud with 322 voices across 75 languages and 142 regional accents</td><td>Copy, clone or imitate a particular person's voice, including your own</td></tr>
+<tr><td>Change speed (−100% to +100%) and pitch (−100 to +100 Hz)</td><td>Set an emotion or a speaking style such as cheerful, whispering or angry</td></tr>
+<tr><td>Insert exact pauses with <code>[break:…]</code> markers</td><td>Interpret SSML tags</td></tr>
+<tr><td>Take up to 5,000 characters per generation</td><td>Take unlimited text in one go; longer texts are done in parts</td></tr>
+<tr><td>Deliver MP3 or WAV plus SRT and VTT subtitles</td><td>Mix several voices in one file</td></tr>
+<tr><td>Work in a modern browser with no account</td><td>Run offline, as an installed app, or through an API</td></tr>
+<tr><td>Import <code>.txt</code>, <code>.md</code> and <code>.text</code> files</td><td>Open PDFs, Word files or web pages</td></tr>
+</tbody></table></div>
+
+<h2 id="uses">Where an AI voice fits</h2>
+<ul>
+<li><strong>Video voiceovers.</strong> Narration for explainers, tutorials, product demos and social clips, with captions from the same generation. The <a href="/guides/ai-voiceover.html">AI voiceover guide</a> walks through a measured three-scene example.</li>
+<li><strong>E-learning and training.</strong> Lesson narration that is easy to update when the material changes: edit the sentence and generate again instead of booking a new recording.</li>
+<li><strong>Accessibility.</strong> An audio version of an article, notice or handout for people who prefer listening, plus subtitle files for viewers who cannot hear the audio. It does not replace a screen reader, which reads whole interfaces as you move through them.</li>
+<li><strong>Language practice.</strong> Hearing a sentence in the language and accent you are learning, slowed down if needed.</li>
+<li><strong>Drafts and prototypes.</strong> Placeholder narration and phone-menu or announcement prompts, to test the wording before a final recording.</li>
+</ul>
+<p>To shape how the voice sounds (accent, speed, pitch and pauses), see <a href="/text-to-voice.html">text to voice</a>.</p>
+
+<h2 id="planner">How much text for how many seconds</h2>
+<p>In English tests at normal speed, the voice Aria (US) spoke about 15 to 16 characters per second, counting spaces and punctuation. That is enough to size a script before you write it:</p>
+<div class="tablewrap"><table>
+<thead><tr><th scope="col">Target length</th><th scope="col">Characters of script</th><th scope="col">Roughly</th></tr></thead>
+<tbody>
+<tr><th scope="row">15 seconds</th><td>225–240</td><td>Two or three sentences</td></tr>
+<tr><th scope="row">30 seconds</th><td>450–480</td><td>A short paragraph</td></tr>
+<tr><th scope="row">1 minute</th><td>900–960</td><td>Two paragraphs</td></tr>
+<tr><th scope="row">5 minutes</th><td>4,500–4,800</td><td>Almost a full generation</td></tr>
+</tbody></table></div>
+<p>Treat the table as a first estimate. Voices differ in pace by up to about a fifth, slower speeds stretch the audio, and pause markers add their own time, so generate the first scene and check its length in the results list before writing the rest.</p>
+
+<h2 id="rights">Your text, your responsibility</h2>
+<p>Everything you convert is sent to Microsoft's online speech service, and the generated files are deleted from the Text 2 Speech server about two hours after your last generation. You are responsible for having the right to use the text and for how you use the audio: the <a href="/terms.html">terms of service</a> apply, and Text 2 Speech gives no guarantee that a particular commercial use is allowed. Some platforms also ask creators to label synthetic or AI-generated voices, so check the rules of the place where you publish.</p>
+
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li>One generation is limited to 5,000 characters and 25 pause markers.</li>
+<li>About 20 requests per minute are allowed from one IP address, and the ▶ voice samples count toward that.</li>
+<li>Voices depend on the speech service: one that stops answering is hidden from the list until it works again.</li>
+<li>Results belong to the browser tab and expire; there is no account, history or saved project.</li>
+<li>An internet connection is required, because the audio is made by an online service.</li>
+</ul>
+
+<h2 id="related">Related pages</h2>
+<ul>
+<li><a href="/guides/ai-voiceover.html">How to make a free AI voiceover from text</a></li>
+<li><a href="/text-to-voice.html">Text to voice: language, accent, speed, pitch and pauses</a></li>
+<li><a href="/how-it-works.html">How Text 2 Speech works</a></li>
+<li><a href="/voices.html">All voices and languages</a></li>
+</ul>
+""", image="ai-voice-generator-overview.webp")
+
 # ---------------------------------------------------------------- voices (rows filled in by server.py at request time)
 page("voices.html", "300+ Text to Speech Voices in 75 Languages | Text 2 Speech",
      "Every voice available in Text 2 Speech, grouped by language: 300+ neural voices in 75 languages and regional variants, with female and male voices for each.",
@@ -588,7 +1021,7 @@ page("voices.html", "300+ Text to Speech Voices in 75 Languages | Text 2 Speech"
 class Scan(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
-        self.heads, self.ids, self.links, self.lds, self.paras = [], [], [], [], []
+        self.heads, self.ids, self.links, self.lds, self.paras, self.imgs = [], [], [], [], [], []
         self._ld = self._p = None
         self.title = self.desc = ""
         self._t = False
@@ -601,6 +1034,8 @@ class Scan(HTMLParser):
             self.heads.append(int(tag[1]))
         if tag == "a" and "href" in a:
             self.links.append(a["href"])
+        if tag == "img":
+            self.imgs.append(a)
         if tag == "script" and a.get("type") == "application/ld+json":
             self._ld = ""
         if tag in ("p", "li", "td") and self._p is None:
@@ -640,8 +1075,18 @@ problems, seen = [], {}
 others = {str(p.relative_to("web")).replace("\\", "/"): p.read_text(encoding="utf-8")
           for p in pathlib.Path("web").rglob("*.html")}
 home = json.loads(pathlib.Path("web/i18n-home/en.json").read_text(encoding="utf-8"))
-for t in [f["a"] for f in home["faq"]] + [x["b"] for x in home["steps"]] + [u["p"] for u in home["usecases"]]:
-    seen.setdefault(re.sub(r"\s+", " ", t).strip(), []).append("home (i18n-home/en.json)")
+
+
+def strings(x):  # every text in the home strings, whatever key it lives under
+    if isinstance(x, str):
+        yield re.sub(r"\s+", " ", x).strip()
+    for v in (x.values() if isinstance(x, dict) else x if isinstance(x, list) else []):
+        yield from strings(v)
+
+
+for t in set(strings(home)):
+    if len(t) >= 80:
+        seen.setdefault(t, []).append("home (i18n-home/en.json)")
 for path, text in {**others, **pages}.items():  # other pages count for duplicates only
     s = scan(text)
     for para in s.paras:
@@ -659,6 +1104,12 @@ for path, text in {**others, **pages}.items():  # other pages count for duplicat
         problems.append(f"{path}: description is {len(s.desc)} chars")
     if len(s.title) > 60:
         problems.append(f"{path}: title is {len(s.title)} chars")
+    for img in s.imgs:  # screenshots: present, small, sized, described, lazy
+        f = pathlib.Path("web") / img.get("src", "").lstrip("/")
+        if not f.is_file() or f.stat().st_size > 80_000:
+            problems.append(f"{path}: image {img.get('src')} missing or over 80 KB")
+        if not (img.get("width") and img.get("height") and len(img.get("alt", "")) > 20 and img.get("loading") == "lazy"):
+            problems.append(f"{path}: image {img.get('src')} needs width, height, alt and loading=lazy")
     for href in s.links:
         if href.startswith("#"):
             if href[1:] not in s.ids:

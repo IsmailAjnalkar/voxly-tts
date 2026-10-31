@@ -25,11 +25,14 @@ Key facts:
 
 ## Guides
 
-- [How to convert text to MP3 for free](https://text-2-speech.com/guides/text-to-mp3.html): step-by-step conversion, what the MP3 file contains, and how to handle text over 5,000 characters.
-- [How to make a free AI voiceover from text](https://text-2-speech.com/guides/ai-voiceover.html): script preparation, pacing with pause markers (with measured timings), speed and pitch, and adding the subtitles to a video.
-- [How to choose a text to speech voice and accent](https://text-2-speech.com/guides/choose-voice.html): matching the text language, English accents by region, the twelve multilingual voices, and comparing voices.
+- [How to convert text to MP3 for free](https://text-2-speech.com/guides/text-to-mp3.html): step-by-step conversion, what the MP3 file contains, a measured worked example (930 characters = 56.6 s, 332 KB MP3), length and size estimates, text preparation, text over 5,000 characters, and troubleshooting.
+- [How to make a free AI voiceover from text](https://text-2-speech.com/guides/ai-voiceover.html): script preparation, pacing with pause markers (with measured timings), a measured three-scene example, fitting audio to a fixed length with speed, adding the subtitles to a video, and pause-marker troubleshooting.
+- [How to choose a text to speech voice and accent](https://text-2-speech.com/guides/choose-voice.html): matching the text language, English accents by region, voices per language, the twelve multilingual voices, measured speaking pace of six English voices, choosing by purpose, and troubleshooting.
 - [Create SRT and VTT subtitles from text](https://text-2-speech.com/guides/subtitles.html): step-by-step guide with real example files and how captions are split.
 - [MP3 vs WAV for text to speech](https://text-2-speech.com/guides/mp3-vs-wav.html): measured file sizes and when to use each.
+- [Text to speech download: save speech as MP3 or WAV](https://text-2-speech.com/text-to-speech-download.html): how to download the audio and SRT/VTT subtitles, file names, where files go, splitting text over the 5,000-character limit, and how long files stay available.
+- [Text to voice: turn writing into a natural voice](https://text-2-speech.com/text-to-voice.html): choosing language, accent and voice, speed and pitch (pitch does not change timing), pauses, and the difference between the sample, Preview Audio and Generate Audio.
+- [Free AI voice generator from text](https://text-2-speech.com/ai-voice-generator.html): what "AI voice" means here (Microsoft neural text to speech), what it can and cannot do (no cloning, emotions, SSML or API), typical uses, and a characters-per-second script planner.
 
 ## Pages
 
