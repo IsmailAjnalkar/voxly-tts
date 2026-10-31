@@ -14,7 +14,7 @@ Key facts:
 - Not available: accounts, a developer API, offline use, voice cloning, SSML or speaking styles.
 - Interface: available in 25 languages at /<language>/ (for example /es/, /de/, /zh-CN/). Guides and help pages are in English.
 - Commercial use: the user is responsible for the rights in the text and for applicable law.
-- Owner: © 2026 QINTAR LLC. Contact: the form at /support.html.
+- Operator: QINTAR LLC (© 2026 QINTAR LLC). Contact: the form at /support.html.
 
 ## Documentation
 

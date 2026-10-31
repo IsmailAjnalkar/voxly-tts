@@ -936,6 +936,7 @@ def _home_content(html: str, code: str | None) -> str:
             node.setdefault("copyrightHolder", {"@type": "Organization", "name": "QINTAR LLC"})
             node.setdefault("copyrightYear", 2026)
         if node.get("@type") == "Organization":
+            node.setdefault("legalName", "QINTAR LLC")  # confirmed by the owner (2026-10-31): the company that runs the site
             # The support form is the only contact channel. No availableLanguage: the
             # form is translated, but which languages get answered is the owner's call.
             node.setdefault("contactPoint", {"@type": "ContactPoint", "contactType": "customer support",

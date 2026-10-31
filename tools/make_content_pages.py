@@ -26,7 +26,7 @@ header = re.search(r"<header>.*?</header>", tpl, re.S).group(0)
 footer = re.search(r"<footer>.*?</footer>", tpl, re.S).group(0)
 main_tag = re.search(r"<main[^>]*>", tpl).group(0)  # keeps id="main" for the skip link
 A = lambda t: html.escape(t, quote=True)
-ORG = {"@type": "Organization", "@id": SITE + "/#org", "name": "Text 2 Speech", "url": SITE + "/",
+ORG = {"@type": "Organization", "@id": SITE + "/#org", "name": "Text 2 Speech", "legalName": "QINTAR LLC", "url": SITE + "/",
        "logo": {"@type": "ImageObject", "url": SITE + "/logo.png"}}
 pages = {}  # path -> html, for the checks
 
@@ -103,7 +103,7 @@ page("about.html", "About Text 2 Speech: Free Online Text to Speech",
 <p>Your text goes from the page to the Text 2 Speech server, which sends it to Microsoft's online speech service in pieces, joins the returned audio into one file and builds the subtitles from the word timings the service reports. The <a href="/how-it-works.html">how it works page</a> describes each step.</p>
 
 <h2 id="who">Who runs Text 2 Speech</h2>
-<p>The site and its content are © 2026 QINTAR LLC, as stated in the footer of every page. Questions for the team go through the <a href="/support.html">support form</a>.</p>
+<p>Text 2 Speech is operated by QINTAR LLC, the company that owns the site and its content (© 2026 QINTAR LLC). Questions for the team go through the <a href="/support.html">support form</a>.</p>
 
 <h2 id="funding">How it is funded</h2>
 <p>Text 2 Speech is free to use: there is no paid plan, no sign-up and no advertising on the site. Running costs are covered by optional donations: anyone who wants to support the site can give any amount by card through <a href="https://buy.stripe.com/aFa6oIcYQ4QE00O22Q1Nu08" rel="noopener">Stripe</a> or through <a href="https://buymeacoffee.com/text2speech" rel="noopener">Buy Me a Coffee</a>, both linked from the <a href="/donate.html">Donate page</a>. Donating changes nothing in the tool: every feature stays free for everyone.</p>
