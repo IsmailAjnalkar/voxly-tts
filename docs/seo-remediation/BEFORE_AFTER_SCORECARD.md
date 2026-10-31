@@ -30,8 +30,8 @@ Branch `seo/sage-remediation`, 2026-10-31. Every value below was measured; nothi
 | Sitemap `lastmod` | none | all URLs | `test_sitemap_xml_and_lastmod` |
 | SEO issues (`seo_checks.py`, 184 URLs crawled) | n/a (new check) | **0**, max click depth 2, 0 orphans, 0 broken links | CI step "SEO checks" |
 | Duplicate URLs | `/index.html`, `/es` (no slash), raw `*.html/`, `/not-found.html` 200 | 301 or 404 | `test_one_url_per_page` |
-| Lighthouse production, median of 3 (A / BP / SEO) | 100 / 100 / 100 on 12 page-device pairs | **after deploy** | `evidence/lighthouse-prod-baseline.json` |
-| Lighthouse production Performance, mobile `/` | 98 (LCP 1.41 s, CLS 0.029, TBT 0) | **after deploy** | same |
+| Lighthouse production, median of 3 (A / BP / SEO) | 100 / 100 / 100 on 12 page-device pairs | **100 / 100 / 100 on 16 page-device pairs** (8 pages incl. about + help) | `evidence/lighthouse-prod-after.json` `evidence/lighthouse-prod-baseline.json` |
+| Lighthouse production Performance, mobile `/` | 98 (LCP 1.41 s, CLS 0.029, TBT 0) | **98 (LCP 1.51 s, CLS 0, TBT 7 ms)**; all other pages 99–100 mobile, 100 desktop; CLS 0 on every page | same |
 | Lighthouse local (uncompressed), after, 1 run | — | A11y/BP/SEO 100 on `/`, `/es/`, `/help.html`, `/about.html`, a guide (mobile + desktop); Performance 97–100; home CLS **0** (voice list height reserved) | lead's local run |
 | Core Web Vitals (field, CrUX) | not available (PSI quota 429; CrUX needs a key) | after deploy, O25 | `CORE_WEB_VITALS_REPORT.md` |
 
@@ -57,3 +57,12 @@ E2E on Firefox (31/31) and WebKit (30/31: WebKit's native `<audio>` ignores Spac
 - Production Lighthouse "after", Rich Results Test and validator on the new pages: after deploy (D2, `DEPLOYMENT_CHECKLIST.md`).
 - Toast error messages are English in every UI language (pre-existing).
 - Agent interactivity stays low by design until WebMCP is stable (W1).
+
+## Production after deploy (2026-10-31, `master@3821081`)
+
+- Deployed with `deploy/release.sh` (backup + health-check rollback); health 200.
+- Routes: 5 new pages 200; `/index.html`, `/es`, `/favicon.ico` 301; unknown pages 404; `/admin` 200 (noindex).
+- Sitemap 134 URLs, 134 with `lastmod`. Organization `legalName` QINTAR LLC on the home page; skip link present; robots.txt unchanged (policy A).
+- `seo_crawl.py` on production: **0 issues**. axe on production: **36/36 clean** (18 pages × 1280/390 px).
+- E2E on production (`NO_GENERATE=1`, no speech generation on the live site): **26 passed, 5 skipped by design**.
+- Lighthouse production, median of 3, 8 pages × mobile/desktop: Accessibility, Best Practices, SEO **100** everywhere; Performance mobile 98–100, desktop 100; CLS **0** on every page (home was 0.029).
