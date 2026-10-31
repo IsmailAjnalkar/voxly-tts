@@ -3,12 +3,17 @@ Usage: python seo_crawl.py BASE OUT.json   (BASE e.g. https://text-2-speech.com)
 import collections, html, json, re, sys, urllib.request
 sys.stdout.reconfigure(encoding="utf-8")
 BASE, OUT = sys.argv[1].rstrip("/"), sys.argv[2]
+BASE = BASE.replace("//localhost", "//127.0.0.1")  # Windows tries ::1 first: ~1 s per request
+REDIRECTED = {}
 
 
 def get(url):
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (seo-audit)"})
+    # "bot" in the user agent: the server does not count the crawl as page views
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (compatible; seo-audit-bot)"})
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
+            if r.url != url:
+                REDIRECTED[url] = r.url
             return r.status, r.read().decode("utf-8", "replace"), dict(r.headers)
     except urllib.error.HTTPError as e:
         return e.code, "", dict(e.headers)
@@ -21,6 +26,7 @@ def one(pattern, text, flags=re.S | re.I):
 
 _, sm, _ = get(BASE + "/sitemap.xml")
 urls = re.findall(r"<loc>([^<]+)</loc>", sm)
+no_lastmod = sm.count("<url>") - sm.count("<lastmod>")
 urls = [u.replace("https://text-2-speech.com", BASE) for u in urls]
 for extra in ("/auth.html", "/donate.html", "/en/", "/index.html"):
     if BASE + extra not in urls:
@@ -57,7 +63,10 @@ dup_title = {t: n for t, n in collections.Counter(r["title"] for r in canon_rows
 dup_desc = {t: n for t, n in collections.Counter(r["description"] for r in canon_rows if r["description"]).items() if n > 1}
 issues = []
 W = lambda t: sum(2 if ord(ch) >= 0x2E80 else 1 for ch in t)  # display width: CJK counts double
+if no_lastmod: issues.append(("/sitemap.xml", f"{no_lastmod} URLs without lastmod"))
 for r in rows:
+    if BASE + r["url"] in REDIRECTED and r["url"] not in ("/index.html", "/en/"):
+        issues.append((r["url"], f"redirects to {REDIRECTED[BASE + r['url']].replace(BASE, '')}"))
     if r["status"] != 200: issues.append((r["url"], f"status {r['status']}"))
     if not r["title"]: issues.append((r["url"], "no title"))
     elif not 15 <= W(r["title"]) <= 70: issues.append((r["url"], f"title width {W(r['title'])}"))
@@ -72,7 +81,8 @@ for r in rows:
     if not r["jsonld_valid"]: issues.append((r["url"], "invalid JSON-LD"))
     if r["og_url"] and r["canonical"] and r["og_url"] != r["canonical"]: issues.append((r["url"], "og:url != canonical"))
     if not r["icon_file"]: issues.append((r["url"], "favicon is not a crawlable file"))
-    if r["words_html"] < 250 and not r["url"].endswith(("privacy.html", "terms.html")): issues.append((r["url"], f"thin HTML ({r['words_html']} words without JS)"))
+    if r["words_html"] < 250 and not r["url"].endswith(("privacy.html", "terms.html", "support.html")):  # legal and contact pages are short by design
+        issues.append((r["url"], f"thin HTML ({r['words_html']} words without JS)"))
 json.dump({"pages": rows, "issues": issues}, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print(f"{len(rows)} URLs crawled, {len(issues)} issues")
 for kind, n in collections.Counter(i[1].split(" (")[0] if "thin" in i[1] else re.sub(r"\d+", "N", i[1]) for i in issues).most_common():

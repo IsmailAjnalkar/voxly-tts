@@ -1,0 +1,105 @@
+{
+ "/": {
+  "checks": {
+   "h1": true,
+   "text input": true,
+   "generate button": true,
+   "FAQ answers": true,
+   "how-it-works step": true,
+   "footer links": true
+  },
+  "faq_items": 6,
+  "voice_rows": 0,
+  "visible_text_sample": " Text 2 Speech — Free Text to Speech Online | Natural AI Voices Text 2 Speech Turn written words into speech that sounds human Home Tutorial Donate Support English 简体中文 繁體中文 العربية Cestina Dansk Deutsch Espanol فارسی Francais हिन्दी Magyar"
+ },
+ "/es/": {
+  "checks": {
+   "h1 translated": true,
+   "FAQ answers": true,
+   "lang=es": true
+  },
+  "faq_items": 6,
+  "voice_rows": 0,
+  "visible_text_sample": " Texto a voz gratuito en línea | Text 2 Speech Text 2 Speech Convierte palabras escritas en voz que suena humana Inicio Tutorial Donar Soporte English 简体中文 繁體中文 العربية Cestina Dansk Deutsch Espanol فارسی Francais हिन्दी Magyar Bahasa Indon"
+ },
+ "/ja/": {
+  "checks": {
+   "lang=ja": true,
+   "FAQ answers": true
+  },
+  "faq_items": 6,
+  "voice_rows": 0,
+  "visible_text_sample": " 無料オンライン音声合成 | Text 2 Speech Text 2 Speech 書かれた言葉を、人間らしく聞こえる音声に ホーム チュートリアル 寄付 サポート English 简体中文 繁體中文 العربية Cestina Dansk Deutsch Espanol فارسی Francais हिन्दी Magyar Bahasa Indonesia Italiano 日本語 한국어 Nederlands Norsk Polski Portugues (Br"
+ },
+ "/ar/": {
+  "checks": {
+   "rtl": true,
+   "FAQ answers": true
+  },
+  "faq_items": 6,
+  "voice_rows": 0,
+  "visible_text_sample": " تحويل النص إلى كلام مجانًا عبر الإنترنت | Text 2 Speech Text 2 Speech حوّل الكلمات المكتوبة إلى كلام يبدو بشريًا الرئيسية البرنامج التعليمي تبرع الدعم English 简体中文 繁體中文 العربية Cestina Dansk Deutsch Espanol فارسی Francais हिन्दी Magyar Bah"
+ },
+ "/tutorial.html": {
+  "checks": {
+   "h1": true,
+   "steps": true
+  },
+  "faq_items": 0,
+  "voice_rows": 0,
+  "visible_text_sample": " Text to Speech Tutorial — How to Make Voiceovers | Text 2 Speech Text 2 Speech Home Tutorial Donate Support English 简体中文 繁體中文 العربية Cestina Dansk Deutsch Espanol فارسی Francais हिन्दी Magyar Bahasa Indonesia Italiano 日本語 한국어 Nederlands N"
+ },
+ "/support.html": {
+  "checks": {
+   "FAQ on page": true,
+   "contact form": true
+  },
+  "faq_items": 0,
+  "voice_rows": 0,
+  "visible_text_sample": " Support & FAQ — Text 2 Speech Text to Speech Help Text 2 Speech Home Tutorial Donate Support English 简体中文 繁體中文 العربية Cestina Dansk Deutsch Espanol فارسی Francais हिन्दी Magyar Bahasa Indonesia Italiano 日本語 한국어 Nederlands Norsk Polski Por"
+ },
+ "/how-it-works.html": {
+  "checks": {
+   "limits table": true,
+   "5,000": true
+  },
+  "faq_items": 0,
+  "voice_rows": 6,
+  "visible_text_sample": " How Text 2 Speech Works — Voices, Limits, Privacy | Text 2 Speech Text 2 Speech Home Tutorial Donate Support ☀ 👤 Home › How it works How Text 2 Speech works Text 2 Speech (text-2-speech.com) is a free online text-to-speech tool. You paste "
+ },
+ "/voices.html": {
+  "checks": {
+   "voice table rows": true,
+   "live summary": true
+  },
+  "faq_items": 0,
+  "voice_rows": 75,
+  "visible_text_sample": " Text to Speech Voices and Languages (300+ Voices) | Text 2 Speech Text 2 Speech Home Tutorial Donate Support ☀ 👤 Home › Voices & languages Text to speech voices and languages 322 voices in 75 languages are available right now. Choose the l"
+ },
+ "/guides/subtitles.html": {
+  "checks": {
+   "SRT example": true,
+   "h1": true
+  },
+  "faq_items": 0,
+  "voice_rows": 3,
+  "visible_text_sample": " Create SRT and VTT Subtitles from Text (Free) | Text 2 Speech Text 2 Speech Home Tutorial Donate Support ☀ 👤 Home › How it works › Subtitles guide How to create SRT and VTT subtitles from text Short answer: paste your script into Text 2 Sp"
+ },
+ "/guides/mp3-vs-wav.html": {
+  "checks": {
+   "table": true,
+   "measured bytes": true
+  },
+  "faq_items": 0,
+  "voice_rows": 4,
+  "visible_text_sample": " MP3 vs WAV for Text to Speech: Size and When to Use | Text 2 Speech Text 2 Speech Home Tutorial Donate Support ☀ 👤 Home › How it works › MP3 vs WAV MP3 vs WAV for text to speech Short answer: choose MP3 for almost everything: sharing, web "
+ },
+ "/privacy.html": {
+  "checks": {
+   "Microsoft named": true
+  },
+  "faq_items": 0,
+  "voice_rows": 0,
+  "visible_text_sample": " Privacy Policy — Text 2 Speech Text 2 Speech Home Tutorial Donate Support English 简体中文 繁體中文 العربية Cestina Dansk Deutsch Espanol فارسی Francais हिन्दी Magyar Bahasa Indonesia Italiano 日本語 한국어 Nederlands Norsk Polski Portugues (Brasil) Рус"
+ }
+}

@@ -1,0 +1,11 @@
+OK   /                          {'h1': True, 'text input': True, 'generate button': True, 'FAQ answers': True, 'how-it-works step': True, 'footer links': True}
+OK   /es/                       {'h1 translated': True, 'FAQ answers': True, 'lang=es': True}
+OK   /ja/                       {'lang=ja': True, 'FAQ answers': True}
+OK   /ar/                       {'rtl': True, 'FAQ answers': True}
+OK   /tutorial.html             {'h1': True, 'steps': True}
+OK   /support.html              {'FAQ on page': True, 'contact form': True}
+OK   /how-it-works.html         {'limits table': True, '5,000': True}
+OK   /voices.html               {'voice table rows': True, 'live summary': True}
+OK   /guides/subtitles.html     {'SRT example': True, 'h1': True}
+OK   /guides/mp3-vs-wav.html    {'table': True, 'measured bytes': True}
+OK   /privacy.html              {'Microsoft named': True}

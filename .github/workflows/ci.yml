@@ -11,6 +11,11 @@ jobs:
       - run: pip install -r requirements.txt httpx pip-audit
       - name: API tests (speech provider mocked)
         run: python -m unittest tests/test_api.py -v
+      - name: SEO checks (every page rendered locally, no network)
+        run: VOXLY_VOICE_SWEEP=0 python tests/seo_checks.py --json seo-report.json
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: seo-report, path: seo-report.json, if-no-files-found: ignore }
       - run: pip-audit -r requirements.txt
       - uses: actions/setup-node@v4
         with: { node-version: "22" }

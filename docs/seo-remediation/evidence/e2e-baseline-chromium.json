@@ -1,0 +1,1258 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\ajnal\\AppData\\Local\\Temp\\claude\\c--Users-ajnal-text2speech\\b75bffd5-0b5f-41dd-867f-6d0c0a7e7992\\scratchpad\\pw\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "."
+    ],
+    "configFile": "C:\\Users\\ajnal\\text2speech\\tests\\e2e\\playwright.config.js",
+    "rootDir": "C:/Users/ajnal/text2speech/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/ajnal/text2speech/tests/e2e/results/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/ajnal/text2speech/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\ajnal\\text2speech\\tests\\e2e\\results\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\ajnal\\text2speech\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\ajnal\\text2speech\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://localhost:8804",
+          "browserName": "chromium",
+          "viewport": {
+            "width": 1280,
+            "height": 900
+          },
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:/Users/ajnal/AppData/Local/Temp/claude/c--Users-ajnal-text2speech/b75bffd5-0b5f-41dd-867f-6d0c0a7e7992/scratchpad/e2e_chromium_1.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "functional.spec.js",
+      "file": "functional.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "page / loads (200, no console errors or CSP violations)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 465,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:02:53.435Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-496bacc128ada7d418b9",
+          "file": "functional.spec.js",
+          "line": 79,
+          "column": 3
+        },
+        {
+          "title": "page /es/ loads (200, no console errors or CSP violations)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 450,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:02:54.054Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-f06ec6183919ae42c25e",
+          "file": "functional.spec.js",
+          "line": 79,
+          "column": 3
+        },
+        {
+          "title": "page /tutorial.html loads (200, no console errors or CSP violations)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 736,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:02:54.517Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-02cfef1a5a493e965102",
+          "file": "functional.spec.js",
+          "line": 79,
+          "column": 3
+        },
+        {
+          "title": "page /how-it-works.html loads (200, no console errors or CSP violations)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 787,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:02:55.264Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-1721ba8886de8d5d99e0",
+          "file": "functional.spec.js",
+          "line": 79,
+          "column": 3
+        },
+        {
+          "title": "page /voices.html loads (200, no console errors or CSP violations)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 852,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:02:56.068Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-2e1493494fc7346709fb",
+          "file": "functional.spec.js",
+          "line": 79,
+          "column": 3
+        },
+        {
+          "title": "page /guides/subtitles.html loads (200, no console errors or CSP violations)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 782,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:02:56.946Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-c501f6337d7879987b9a",
+          "file": "functional.spec.js",
+          "line": 79,
+          "column": 3
+        },
+        {
+          "title": "page /guides/mp3-vs-wav.html loads (200, no console errors or CSP violations)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 747,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:02:57.756Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-68c30003450aa36f409a",
+          "file": "functional.spec.js",
+          "line": 79,
+          "column": 3
+        },
+        {
+          "title": "page /support.html loads (200, no console errors or CSP violations)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 786,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:02:58.529Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-255f4982c0b17fd9a7c5",
+          "file": "functional.spec.js",
+          "line": 79,
+          "column": 3
+        },
+        {
+          "title": "page /donate.html loads (200, no console errors or CSP violations)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 771,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:02:59.333Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-542b5f7385e581c883f5",
+          "file": "functional.spec.js",
+          "line": 79,
+          "column": 3
+        },
+        {
+          "title": "page /privacy.html loads (200, no console errors or CSP violations)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 777,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:00.124Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-4303c8b54241d7c98249",
+          "file": "functional.spec.js",
+          "line": 79,
+          "column": 3
+        },
+        {
+          "title": "page /terms.html loads (200, no console errors or CSP violations)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 833,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:00.922Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-1b5faa09d33e0fd67510",
+          "file": "functional.spec.js",
+          "line": 79,
+          "column": 3
+        },
+        {
+          "title": "page /auth.html loads (200, no console errors or CSP violations)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 854,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:01.778Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-e87f0465ce1a457b7c5c",
+          "file": "functional.spec.js",
+          "line": 79,
+          "column": 3
+        },
+        {
+          "title": "text input: counter counts code points and lines; 5,000 limit gates Generate",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 678,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:02.655Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-fa2b3101efd296375100",
+          "file": "functional.spec.js",
+          "line": 89,
+          "column": 1
+        },
+        {
+          "title": "Ctrl+B inserts a [break:500ms] marker",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 571,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:03.347Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-b520711a67c619fedca4",
+          "file": "functional.spec.js",
+          "line": 106,
+          "column": 1
+        },
+        {
+          "title": ".txt import: empty box fills directly; over a draft asks, Cancel keeps, OK replaces",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 912,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:03.930Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-ea260e3b688b47c04f41",
+          "file": "functional.spec.js",
+          "line": 114,
+          "column": 1
+        },
+        {
+          "title": "voice language select: switching to Spanish lists only Spanish voices and picks the curated default",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 659,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:04.861Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-f1b5e4930bd2edb79d89",
+          "file": "functional.spec.js",
+          "line": 135,
+          "column": 1
+        },
+        {
+          "title": "gender filter shows only matching voices and exposes aria-pressed",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 639,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:05.536Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-4d4e56d0fac79659c2df",
+          "file": "functional.spec.js",
+          "line": 144,
+          "column": 1
+        },
+        {
+          "title": "voice search filters by name and shows an empty state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 576,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:06.186Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-4c31ecdbb684d6fc8eee",
+          "file": "functional.spec.js",
+          "line": 159,
+          "column": 1
+        },
+        {
+          "title": "voice selection: clicking a row selects it (radio checked, Selected badge)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 568,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:06.773Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-ff1f1bd517b719718c4f",
+          "file": "functional.spec.js",
+          "line": 171,
+          "column": 1
+        },
+        {
+          "title": "[tts] voice preview renders the real voice and plays it",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1229,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:07.350Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-3425b77a7a0cd2af0948",
+          "file": "functional.spec.js",
+          "line": 181,
+          "column": 1
+        },
+        {
+          "title": "speed/pitch: gated by checkboxes, clamp to ±100, exact values sent [tts]",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1602,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:08.589Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-6a70443aa7541b288f32",
+          "file": "functional.spec.js",
+          "line": 197,
+          "column": 1
+        },
+        {
+          "title": "[tts] generate MP3: result item, audio loads, MP3/SRT/VTT downloads",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1685,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:10.249Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-05e826c4672a52dbd5f5",
+          "file": "functional.spec.js",
+          "line": 219,
+          "column": 1
+        },
+        {
+          "title": "[tts] WAV generation with a [break:500ms] marker",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1478,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:11.958Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-db80f6518ecccb821fa6",
+          "file": "functional.spec.js",
+          "line": 249,
+          "column": 1
+        },
+        {
+          "title": "more than 25 [break] markers is rejected with a readable message",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 506,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:13.453Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-4fdd45e87e919f648444",
+          "file": "functional.spec.js",
+          "line": 271,
+          "column": 1
+        },
+        {
+          "title": "error states: empty text blocked; server 5xx and 429 show a message and keep the text",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 651,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:13.969Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-74e170414b05424fcc94",
+          "file": "functional.spec.js",
+          "line": 282,
+          "column": 1
+        },
+        {
+          "title": "rate limiting is configured in nginx: 20/min per IP on /api/tts, 429 status (config check, no traffic)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 115,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:14.632Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-e169ca6d920261222cf5",
+          "file": "functional.spec.js",
+          "line": 305,
+          "column": 1
+        },
+        {
+          "title": "[tts] keyboard only: choose voice -> type -> generate -> play -> download",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "tab-presses",
+                  "description": "input[name=\"voice\"]:checked: 17"
+                },
+                {
+                  "type": "tab-presses",
+                  "description": "#autoplay: 6"
+                },
+                {
+                  "type": "tab-presses",
+                  "description": "#text: 1"
+                },
+                {
+                  "type": "tab-presses",
+                  "description": "#genbtn: 3"
+                },
+                {
+                  "type": "tab-presses",
+                  "description": "#resultlist audio: 1"
+                },
+                {
+                  "type": "tab-presses",
+                  "description": "#resultlist .dl a: 6"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1623,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Tab to the selected voice radio and ArrowDown to choose another",
+                      "duration": 281
+                    },
+                    {
+                      "title": "Tab to Autoplay and turn it off with Space",
+                      "duration": 128
+                    },
+                    {
+                      "title": "Tab to the text box and type",
+                      "duration": 64
+                    },
+                    {
+                      "title": "Tab to Generate and press Enter",
+                      "duration": 550
+                    },
+                    {
+                      "title": "Tab to the audio player and press Space to play",
+                      "duration": 53
+                    },
+                    {
+                      "title": "Tab to the MP3 download link and press Enter",
+                      "duration": 149
+                    }
+                  ],
+                  "startTime": "2026-10-31T15:03:15.955Z",
+                  "annotations": [
+                    {
+                      "type": "tab-presses",
+                      "description": "input[name=\"voice\"]:checked: 17"
+                    },
+                    {
+                      "type": "tab-presses",
+                      "description": "#autoplay: 6"
+                    },
+                    {
+                      "type": "tab-presses",
+                      "description": "#text: 1"
+                    },
+                    {
+                      "type": "tab-presses",
+                      "description": "#genbtn: 3"
+                    },
+                    {
+                      "type": "tab-presses",
+                      "description": "#resultlist audio: 1"
+                    },
+                    {
+                      "type": "tab-presses",
+                      "description": "#resultlist .dl a: 6"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-49c65975c746b36764ae",
+          "file": "functional.spec.js",
+          "line": 345,
+          "column": 1
+        },
+        {
+          "title": "language switcher navigates to /es/ and the UI is Spanish",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 560,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:17.591Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-4fa7529e4369235a5897",
+          "file": "functional.spec.js",
+          "line": 389,
+          "column": 1
+        },
+        {
+          "title": "theme toggle persists across reload and onto sub-pages",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 740,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:18.166Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-89890070cc1c069d4100",
+          "file": "functional.spec.js",
+          "line": 401,
+          "column": 1
+        },
+        {
+          "title": "[tts] session privacy: results are per tab; another context can't see or fetch them",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2010,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T15:03:18.918Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d29845dce6f614c30379-f716ee42ca9987b56ae5",
+          "file": "functional.spec.js",
+          "line": 417,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "mobile 390 px",
+          "file": "functional.spec.js",
+          "line": 315,
+          "column": 6,
+          "specs": [
+            {
+              "title": "no horizontal overflow; main controls visible, sized and usable",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1190,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-31T15:03:14.755Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d29845dce6f614c30379-d0acc7c3986389ffe57f",
+              "file": "functional.spec.js",
+              "line": 317,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-31T15:02:52.931Z",
+    "duration": 28237.295,
+    "expected": 31,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

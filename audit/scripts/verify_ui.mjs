@@ -113,8 +113,10 @@ const watch = p => { p.on("pageerror", e => errs.push(e.message)); p.on("console
   ck("auth: notice shown, form disabled, no '#' links",
      await p.isVisible(".notice") && await p.isDisabled("button[data-i18n=auth_signin]") && (await p.locator('a[href="#"]').count()) === 0);
   await p.goto(BASE + "/donate.html", { waitUntil: "networkidle" });
-  ck("donate: notice shown, all 4 Donate buttons disabled", await p.isVisible(".notice") &&
-     (await p.locator("button[data-i18n=don_btn]:disabled").count()) === 4);
+  const pay = await p.$$eval("a.paybtn", as => as.map(a => [a.getAttribute("href"), a.target, a.rel]));
+  ck("donate: Stripe + Buy Me a Coffee links open in a new tab", pay.length === 2 &&
+     /^https:\/\/(buy|donate)\.stripe\.com\//.test(pay[0][0]) && /^https:\/\/buymeacoffee\.com\//.test(pay[1][0]) &&
+     pay.every(([, t, r]) => t === "_blank" && r.includes("noopener")), JSON.stringify(pay));
   await p.goto(BASE + "/support.html", { waitUntil: "networkidle" });
   // the support form went live in the full remediation (sending is covered by verify_full.mjs)
   ck("support: live form, Send enabled, email + message required",

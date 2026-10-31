@@ -139,7 +139,7 @@ for (const theme of ["dark", "light"]) {
   ck("unknown API path stays JSON 404", api[0] === 404 && api[1].includes("json"), api);
   await p.goto(BASE + "/privacy.html", { waitUntil: "networkidle" });
   const t = await p.textContent("main");
-  ck("privacy names Microsoft, states no cookies/analytics, no consent banner claims", /Microsoft/.test(t) && /do not use cookies/.test(t) && !/accept the cookie banner/.test(t));
+  ck("privacy names Microsoft, no visitor cookies, discloses page counts and server logs, no consent banner claims", /Microsoft/.test(t) && /do not set cookies for visitors/.test(t) && /counts views per page and day/.test(t) && /about 14 days/.test(t) && !/accept the cookie banner/.test(t));
   await p.context().close();
 }
 
