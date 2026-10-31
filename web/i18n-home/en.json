@@ -74,5 +74,38 @@
    "q": "Do my generated files stay online?",
    "a": "No. Results exist only for your current browser session and are removed afterwards. Anything you want to keep, download before you close the tab."
   }
- ]
+ ],
+ "about": {
+  "h": "Free text to speech online: what you get",
+  "p": [
+   "Text 2 Speech converts typed, pasted or imported text into natural-sounding speech right in your browser. It is free, shows no ads and needs no account: choose a voice, add your text and press Generate Audio. Here is what the tool does, in plain numbers."
+  ],
+  "s": [
+   {
+    "h": "300+ natural voices in 75 languages",
+    "p": [
+     "You can choose from more than 300 Microsoft neural voices in 75 languages, including regional accents such as American, British, Australian and Indian English, or European and Mexican Spanish. Filter the list by gender, search by name and play a short sample before you commit. Speed runs from −100% to +100% and pitch from −100 Hz to +100 Hz, so a single voice can sound calmer, brisker, deeper or brighter. Browse the [complete list of voices and languages](/voices.html), or read [how to choose a voice and accent](/guides/choose-voice.html) for your audience."
+    ]
+   },
+   {
+    "h": "Download text to speech as MP3 or WAV",
+    "p": [
+     "Every generation gives you a file to keep, not just playback in the page. MP3 (48 kbps, 24 kHz mono) is compact and plays on any phone, laptop or video editor. WAV (16-bit PCM, 24 kHz mono) is uncompressed, which suits further editing and mastering. With each file you also get SRT and VTT subtitles built from the word timings, so captions line up with the narration. Follow the [text to MP3 guide](/guides/text-to-mp3.html) for a step-by-step walkthrough, or the [AI voiceover guide](/guides/ai-voiceover.html) to narrate a video."
+    ]
+   },
+   {
+    "h": "Text to speech with no sign-up",
+    "p": [
+     "There is no registration, email address or login: open the page and start converting in any modern browser, on a phone, tablet or computer. Finished items appear in a results list for the current browser tab, each with its own player and download buttons. Close the tab and the list is gone, so save what you need first. The site is free to use and carries no ads; optional donations through Stripe or Buy Me a Coffee help pay for running it."
+    ]
+   },
+   {
+    "h": "Limits and privacy",
+    "p": [
+     "One generation takes up to 5,000 characters. In our test on 31 October 2026, 5,000 characters of English became about 5 minutes 28 seconds of audio and were ready in about 12 seconds. Split longer texts, such as book chapters, into parts and generate them one after another. You can insert up to 25 pause markers such as [break:2s] per generation, each up to 30 seconds and no more than 60 seconds in total, and import .txt, .md or .text files instead of pasting.",
+     "To create the audio, your text is sent to Microsoft's online speech service, so leave out anything confidential. Generated files are deleted from the server about 2 hours after your last generation. Have a question about formats, pauses or playback? The [help centre](/help.html) answers the most common ones."
+    ]
+   }
+  ]
+ }
 }

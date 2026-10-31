@@ -918,7 +918,16 @@ def _home_content(html: str, code: str | None) -> str:
     html = html.replace("<!--home:faq-->", "".join(
         f'<div class="faqitem"><button class="q" type="button" aria-expanded="false">{_e(f["q"])}<span aria-hidden="true">▾</span></button>'
         f'<div class="a">{_e(f["a"])}</div></div>' for f in c["faq"]), 1)
-    data = json.dumps(c, ensure_ascii=False).replace("</", "<\\/")
+    # About section: escaped text; "[label](/path)" becomes a link only for these pages (else plain label).
+    links = {"/voices.html", "/help.html", "/guides/text-to-mp3.html", "/guides/ai-voiceover.html", "/guides/choose-voice.html"}
+    para = lambda t: "<p>" + re.sub(r"\[([^\]]+)\]\((/[^)\s]*)\)", lambda m: f'<a href="{m.group(2)}">{m.group(1)}</a>'
+                                    if m.group(2) in links else m.group(1), _e(t)) + "</p>"
+    a = c["about"]
+    html = html.replace("<!--home:about-->", f'<h2>{_e(a["h"])}</h2><div class="about">'
+                        + "".join(map(para, a["p"])) + "".join(f"<h3>{_e(s['h'])}</h3>" + "".join(map(para, s["p"])) for s in a["s"])
+                        + "</div>", 1)
+    # the client only re-renders content after fetching another language's JSON, so the about text isn't embedded twice
+    data = json.dumps({k: v for k, v in c.items() if k != "about"}, ensure_ascii=False).replace("</", "<\\/")
     html = html.replace("<!--home:data-->",
                         f'<script id="homecontent" type="application/json" data-lang="{lang}">{data}</script>', 1)
     m = re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)

@@ -74,5 +74,38 @@
    "q": "Bleiben meine generierten Dateien online?",
    "a": "Nein. Ergebnisse existieren nur während Ihrer aktuellen Browsersitzung und werden danach entfernt. Alles, was Sie behalten möchten, sollten Sie herunterladen, bevor Sie den Tab schließen."
   }
- ]
+ ],
+ "about": {
+  "h": "Kostenlose Text-zu-Sprache online: Das bekommen Sie",
+  "p": [
+   "Text 2 Speech wandelt getippten, eingefügten oder importierten Text direkt im Browser in natürlich klingende Sprache um. Der Dienst ist kostenlos, zeigt keine Werbung und braucht kein Konto: Stimme wählen, Text einfügen und auf „Audio generieren“ klicken. Hier steht, was das Tool kann – in konkreten Zahlen."
+  ],
+  "s": [
+   {
+    "h": "Über 300 natürliche Stimmen in 75 Sprachen",
+    "p": [
+     "Sie haben die Wahl zwischen mehr als 300 neuronalen Stimmen von Microsoft in 75 Sprachen, darunter regionale Akzente wie amerikanisches, britisches, australisches und indisches Englisch oder europäisches und mexikanisches Spanisch. Für Deutsch gibt es Stimmen aus Deutschland, Österreich und der Schweiz. Filtern Sie die Liste nach Geschlecht, suchen Sie nach Namen und hören Sie eine kurze Probe, bevor Sie sich entscheiden. Das Tempo reicht von −100 % bis +100 %, die Tonhöhe von −100 Hz bis +100 Hz – so klingt dieselbe Stimme ruhiger, flotter, tiefer oder heller. Sehen Sie sich die [vollständige Liste der Stimmen und Sprachen](/voices.html) an oder lesen Sie, [wie Sie Stimme und Akzent wählen](/guides/choose-voice.html), die zu Ihrem Publikum passen."
+    ]
+   },
+   {
+    "h": "Text-zu-Sprache als MP3 oder WAV herunterladen",
+    "p": [
+     "Jede Generierung liefert eine Datei zum Behalten, nicht nur eine Wiedergabe auf der Seite. MP3 (48 kbit/s, 24 kHz mono) ist kompakt und läuft auf jedem Smartphone, Laptop und in jedem Videoschnittprogramm. WAV (16-Bit-PCM, 24 kHz mono) ist unkomprimiert und eignet sich für Nachbearbeitung und Mastering. Zu jeder Datei erhalten Sie außerdem SRT- und VTT-Untertitel, die aus den Wortzeitpunkten erstellt werden, damit die Untertitel genau zur Sprecherstimme passen. Folgen Sie der [Anleitung Text zu MP3](/guides/text-to-mp3.html) Schritt für Schritt oder dem [Leitfaden für KI-Voiceover](/guides/ai-voiceover.html), um ein Video zu vertonen."
+    ]
+   },
+   {
+    "h": "Text-zu-Sprache ohne Anmeldung",
+    "p": [
+     "Es gibt keine Registrierung, keine E-Mail-Adresse und kein Login: Seite öffnen und in jedem modernen Browser loslegen, ob auf Smartphone, Tablet oder Computer. Fertige Einträge erscheinen in einer Ergebnisliste für den aktuellen Browser-Tab, jeweils mit eigenem Player und Download-Schaltflächen. Wenn Sie den Tab schließen, ist die Liste weg – speichern Sie also vorher, was Sie brauchen. Die Nutzung ist kostenlos und werbefrei; freiwillige Spenden über Stripe oder Buy Me a Coffee helfen, den Betrieb zu finanzieren."
+    ]
+   },
+   {
+    "h": "Grenzen und Datenschutz",
+    "p": [
+     "Eine Generierung umfasst bis zu 5.000 Zeichen. In unserem Test am 31. Oktober 2026 ergaben 5.000 Zeichen englischer Text rund 5 Minuten 28 Sekunden Audio, fertig nach etwa 12 Sekunden. Teilen Sie längere Texte wie Buchkapitel in Abschnitte auf und generieren Sie diese nacheinander. Pro Generierung können Sie bis zu 25 Pausenmarken wie [break:2s] einfügen, jede bis zu 30 Sekunden und zusammen höchstens 60 Sekunden, und statt einzufügen auch .txt-, .md- oder .text-Dateien importieren.",
+     "Um das Audio zu erzeugen, wird Ihr Text an den Online-Sprachdienst von Microsoft gesendet – lassen Sie Vertrauliches also weg. Erzeugte Dateien werden etwa 2 Stunden nach Ihrer letzten Generierung vom Server gelöscht. Fragen zu Formaten, Pausen oder Wiedergabe? Das [Hilfe-Center](/help.html) beantwortet die häufigsten."
+    ]
+   }
+  ]
+ }
 }

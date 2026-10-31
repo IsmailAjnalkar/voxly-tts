@@ -293,6 +293,32 @@ class Api(unittest.TestCase):
             self.assertEqual(len(_re.findall(r"<a ", foot)), 16, path)
         self.assertIn("© 2026 QINTAR LLC · <span data-i18n=\"foot_rights\">Todos los derechos reservados.", self.c.get("/es/tutorial.html").text)
 
+    def test_home_about_section_and_title(self):
+        import re as _re
+        en = self.c.get("/").text
+        title = "Free Text to Speech Online – 300+ AI Voices, MP3, No Sign-Up"
+        self.assertIn(f"<title>{title}</title>", en)
+        self.assertIn(f'<meta property="og:title" content="{title}">', en)
+        self.assertIn(f'<meta name="twitter:title" content="{title}">', en)
+        allowed = {"/voices.html", "/help.html", "/guides/text-to-mp3.html", "/guides/ai-voiceover.html", "/guides/choose-voice.html"}
+        for path, lang in (("/", "en"), ("/es/", "es"), ("/ar/", "ar")):
+            html = self.c.get(path).text
+            about = json.loads((server._HOMEDIR / f"{lang}.json").read_text(encoding="utf-8"))["about"]
+            sec = _re.search(r'<section class="block" id="about">(.*?)</section>', html, _re.S).group(1)
+            self.assertIn(f"<h2>{server._e(about['h'])}</h2>", sec, path)
+            self.assertEqual(_re.findall(r"<h3>(.*?)</h3>", sec), [server._e(s["h"]) for s in about["s"]], path)
+            self.assertEqual(set(_re.findall(r'<a href="([^"]+)"', sec)), allowed, path)  # links rendered, only these
+            self.assertNotIn("](/", sec, path)
+            self.assertEqual(html.count("<h1"), 1, path)
+            self.assertNotIn('"about"', _re.search(r'id="homecontent"[^>]*>(.*?)</script>', html, _re.S).group(1))
+        words = len(_re.sub(r"<[^>]+>", " ", _re.search(r'id="about">(.*?)</section>', en, _re.S).group(1)).split())
+        self.assertTrue(450 <= words <= 550, words)
+        # every language has the section, with the same links as English
+        for f in server._HOMEDIR.glob("*.json"):
+            a = json.loads(f.read_text(encoding="utf-8"))["about"]
+            text = " ".join(a["p"] + [p for s in a["s"] for p in s["p"]])
+            self.assertEqual(set(_re.findall(r"\]\((/[^)]+)\)", text)), allowed, f.name)
+
     def test_language_pages_rendered_server_side(self):
         es = self.c.get("/es/").text
         self.assertIn("<title>Texto a voz gratuito en línea | Text 2 Speech</title>", es)

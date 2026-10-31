@@ -74,5 +74,38 @@
    "q": "Ligger mina genererade filer kvar online?",
    "a": "Nej. Resultaten finns bara under din aktuella webbläsarsession och tas bort efteråt. Ladda ner det du vill behålla innan du stänger fliken."
   }
- ]
+ ],
+ "about": {
+  "h": "Gratis text till tal online: det här får du",
+  "p": [
+   "Text 2 Speech gör om skriven, inklistrad eller importerad text till naturligt tal direkt i webbläsaren. Tjänsten är gratis, visar inga annonser och kräver inget konto: välj en röst, lägg in din text och klicka på Generera ljud. Här är vad verktyget gör, i konkreta siffror."
+  ],
+  "s": [
+   {
+    "h": "Över 300 naturliga röster på 75 språk",
+    "p": [
+     "Du kan välja bland fler än 300 neurala röster från Microsoft på 75 språk, med regionala accenter som amerikansk, brittisk, australisk och indisk engelska, eller europeisk och mexikansk spanska. Filtrera listan på kön, sök på namn och lyssna på ett kort prov innan du bestämmer dig. Hastigheten går från −100 % till +100 % och tonhöjden från −100 Hz till +100 Hz, så samma röst kan låta lugnare, piggare, mörkare eller ljusare. Bläddra i [hela listan med röster och språk](/voices.html) eller läs [hur du väljer röst och accent](/guides/choose-voice.html) för din publik."
+    ]
+   },
+   {
+    "h": "Ladda ner text till tal som MP3 eller WAV",
+    "p": [
+     "Varje generering ger dig en fil att behålla, inte bara uppspelning på sidan. MP3 (48 kbit/s, 24 kHz mono) är kompakt och spelas upp på alla telefoner, datorer och videoredigerare. WAV (16-bitars PCM, 24 kHz mono) är okomprimerad och passar för vidare redigering och mastring. Till varje fil får du också undertexter i SRT och VTT som bygger på tidsstämplarna för varje ord, så att texten följer berättarrösten. Följ [guiden för text till MP3](/guides/text-to-mp3.html) steg för steg, eller [guiden för AI-voiceover](/guides/ai-voiceover.html) för att lägga berättarröst på en video."
+    ]
+   },
+   {
+    "h": "Text till tal utan registrering",
+    "p": [
+     "Det behövs ingen registrering, e-postadress eller inloggning: öppna sidan och börja konvertera i valfri modern webbläsare, på mobil, surfplatta eller dator. Färdiga objekt hamnar i en resultatlista för den aktuella fliken, vart och ett med egen spelare och nedladdningsknappar. Stänger du fliken försvinner listan, så spara det du behöver först. Sajten är gratis och reklamfri; frivilliga donationer via Stripe eller Buy Me a Coffee hjälper till att betala driften."
+    ]
+   },
+   {
+    "h": "Gränser och integritet",
+    "p": [
+     "En generering rymmer upp till 5 000 tecken. I vårt test den 31 oktober 2026 blev 5 000 tecken engelsk text ungefär 5 minuter och 28 sekunder ljud, klart på cirka 12 sekunder. Dela upp längre texter, som bokkapitel, i delar och generera dem en i taget. Du kan lägga in upp till 25 pausmarkörer som [break:2s] per generering, var och en upp till 30 sekunder och högst 60 sekunder sammanlagt, och importera .txt-, .md- eller .text-filer i stället för att klistra in.",
+     "För att skapa ljudet skickas din text till Microsofts taltjänst på nätet, så utelämna allt som är konfidentiellt. Genererade filer raderas från servern ungefär 2 timmar efter din senaste generering. Har du frågor om format, pauser eller uppspelning? [Hjälpcentret](/help.html) besvarar de vanligaste."
+    ]
+   }
+  ]
+ }
 }

@@ -74,5 +74,38 @@
    "q": "I file generati restano online?",
    "a": "No. I risultati esistono solo durante la sessione corrente del browser e vengono poi rimossi. Scarica tutto ciò che vuoi conservare prima di chiudere la scheda."
   }
- ]
+ ],
+ "about": {
+  "h": "Sintesi vocale gratuita online: cosa ottieni",
+  "p": [
+   "Text 2 Speech trasforma il testo digitato, incollato o importato in una voce dal suono naturale, direttamente nel browser. È gratuito, non mostra pubblicità e non richiede un account: scegli una voce, inserisci il testo e premi Genera audio. Ecco cosa fa lo strumento, numeri alla mano."
+  ],
+  "s": [
+   {
+    "h": "Oltre 300 voci naturali in 75 lingue",
+    "p": [
+     "Puoi scegliere tra più di 300 voci neurali Microsoft in 75 lingue, con accenti regionali come l'inglese americano, britannico, australiano e indiano, o lo spagnolo europeo e messicano. Filtra l'elenco per genere, cerca per nome e ascolta un breve campione prima di decidere. La velocità va da −100% a +100% e il tono da −100 Hz a +100 Hz, così la stessa voce può risultare più calma, più vivace, più profonda o più brillante. Sfoglia l'[elenco completo di voci e lingue](/voices.html) oppure leggi [come scegliere voce e accento](/guides/choose-voice.html) in base al tuo pubblico."
+    ]
+   },
+   {
+    "h": "Scarica la sintesi vocale in MP3 o WAV",
+    "p": [
+     "Ogni generazione ti dà un file da conservare, non solo la riproduzione nella pagina. L'MP3 (48 kbps, 24 kHz mono) è compatto e si riproduce su qualsiasi telefono, portatile o programma di montaggio video. Il WAV (PCM a 16 bit, 24 kHz mono) non è compresso ed è adatto a ulteriori modifiche e al mastering. Con ogni file ricevi anche i sottotitoli SRT e VTT costruiti dai tempi delle singole parole, così le didascalie seguono la narrazione. Segui la [guida da testo a MP3](/guides/text-to-mp3.html) passo dopo passo o la [guida al voiceover con IA](/guides/ai-voiceover.html) per narrare un video."
+    ]
+   },
+   {
+    "h": "Sintesi vocale senza registrazione",
+    "p": [
+     "Non servono registrazione, indirizzo e-mail o login: apri la pagina e inizia a convertire in qualsiasi browser moderno, da telefono, tablet o computer. Gli elementi completati compaiono in un elenco di risultati legato alla scheda corrente del browser, ciascuno con il proprio lettore e i pulsanti di download. Se chiudi la scheda l'elenco sparisce, quindi salva prima ciò che ti serve. Il sito è gratuito e senza pubblicità; le donazioni facoltative tramite Stripe o Buy Me a Coffee aiutano a sostenerne i costi."
+    ]
+   },
+   {
+    "h": "Limiti e privacy",
+    "p": [
+     "Una generazione accetta fino a 5.000 caratteri. Nel nostro test del 31 ottobre 2026, 5.000 caratteri di testo inglese hanno prodotto circa 5 minuti e 28 secondi di audio, pronti in circa 12 secondi. Dividi i testi lunghi, come i capitoli di un libro, in parti e generale una dopo l'altra. Puoi inserire fino a 25 marcatori di pausa come [break:2s] per generazione, ognuno fino a 30 secondi e non più di 60 secondi in totale, e importare file .txt, .md o .text invece di incollare il testo.",
+     "Per creare l'audio, il testo viene inviato al servizio vocale online di Microsoft, quindi evita di inserire informazioni riservate. I file generati vengono eliminati dal server circa 2 ore dopo la tua ultima generazione. Hai domande su formati, pause o riproduzione? Il [centro assistenza](/help.html) risponde a quelle più comuni."
+    ]
+   }
+  ]
+ }
 }

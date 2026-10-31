@@ -74,5 +74,38 @@
    "q": "Mes fichiers générés restent-ils en ligne ?",
    "a": "Non. Les résultats n'existent que pendant votre session de navigation actuelle et sont supprimés ensuite. Téléchargez tout ce que vous souhaitez garder avant de fermer l'onglet."
   }
- ]
+ ],
+ "about": {
+  "h": "Synthèse vocale gratuite en ligne : ce que vous obtenez",
+  "p": [
+   "Text 2 Speech transforme un texte saisi, collé ou importé en une voix naturelle, directement dans votre navigateur. C'est gratuit, sans publicité et sans compte : choisissez une voix, ajoutez votre texte et cliquez sur « Générer l'audio ». Voici ce que fait l'outil, chiffres à l'appui."
+  ],
+  "s": [
+   {
+    "h": "Plus de 300 voix naturelles en 75 langues",
+    "p": [
+     "Vous avez le choix entre plus de 300 voix neuronales Microsoft dans 75 langues, avec des accents régionaux comme l'anglais américain, britannique, australien ou indien, et pour le français des voix de France, du Canada, de Belgique et de Suisse. Filtrez la liste par genre, cherchez par nom et écoutez un court extrait avant de vous décider. La vitesse va de −100 % à +100 % et la hauteur de −100 Hz à +100 Hz : une même voix peut ainsi paraître plus posée, plus vive, plus grave ou plus claire. Parcourez la [liste complète des voix et des langues](/voices.html) ou lisez [comment choisir une voix et un accent](/guides/choose-voice.html) adaptés à votre public."
+    ]
+   },
+   {
+    "h": "Télécharger la synthèse vocale en MP3 ou WAV",
+    "p": [
+     "Chaque génération vous donne un fichier à conserver, pas seulement une lecture dans la page. Le MP3 (48 kbit/s, 24 kHz mono) est léger et se lit sur n'importe quel téléphone, ordinateur portable ou logiciel de montage. Le WAV (PCM 16 bits, 24 kHz mono) n'est pas compressé, idéal pour retoucher et masteriser. Avec chaque fichier, vous obtenez aussi des sous-titres SRT et VTT construits à partir du minutage de chaque mot, pour que les sous-titres suivent la narration. Suivez le [guide texte vers MP3](/guides/text-to-mp3.html) pas à pas, ou le [guide de voix off IA](/guides/ai-voiceover.html) pour commenter une vidéo."
+    ]
+   },
+   {
+    "h": "Synthèse vocale sans inscription",
+    "p": [
+     "Pas d'inscription, d'adresse e-mail ni de connexion : ouvrez la page et commencez à convertir dans n'importe quel navigateur récent, sur téléphone, tablette ou ordinateur. Les éléments terminés s'affichent dans une liste de résultats propre à l'onglet en cours, chacun avec son lecteur et ses boutons de téléchargement. Si vous fermez l'onglet, la liste disparaît : enregistrez d'abord ce dont vous avez besoin. Le site est gratuit et sans publicité ; des dons facultatifs via Stripe ou Buy Me a Coffee aident à couvrir son fonctionnement."
+    ]
+   },
+   {
+    "h": "Limites et confidentialité",
+    "p": [
+     "Une génération accepte jusqu'à 5 000 caractères. Lors de notre test du 31 octobre 2026, 5 000 caractères d'anglais ont donné environ 5 min 28 s d'audio, prêts en 12 secondes environ. Découpez les textes longs, comme les chapitres d'un livre, en parties et générez-les l'une après l'autre. Vous pouvez insérer jusqu'à 25 marqueurs de pause comme [break:2s] par génération, de 30 secondes maximum chacun et 60 secondes au total, et importer des fichiers .txt, .md ou .text au lieu de coller le texte.",
+     "Pour créer l'audio, votre texte est envoyé au service vocal en ligne de Microsoft : évitez donc tout contenu confidentiel. Les fichiers générés sont supprimés du serveur environ 2 heures après votre dernière génération. Une question sur les formats, les pauses ou la lecture ? Le [centre d'aide](/help.html) répond aux plus fréquentes."
+    ]
+   }
+  ]
+ }
 }

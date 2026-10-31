@@ -74,5 +74,38 @@
    "q": "Tệp đã tạo có được lưu trực tuyến không?",
    "a": "Không. Kết quả chỉ tồn tại trong phiên trình duyệt hiện tại của bạn và sẽ bị xóa sau đó. Hãy tải xuống mọi thứ bạn muốn giữ trước khi đóng thẻ."
   }
- ]
+ ],
+ "about": {
+  "h": "Chuyển văn bản thành giọng nói miễn phí: bạn nhận được gì",
+  "p": [
+   "Text 2 Speech biến văn bản bạn gõ, dán hoặc nhập từ tệp thành giọng nói tự nhiên ngay trong trình duyệt. Dịch vụ miễn phí, không quảng cáo và không cần tài khoản: chọn giọng, thêm văn bản rồi nhấn Tạo âm thanh. Dưới đây là những gì công cụ làm được, bằng những con số cụ thể."
+  ],
+  "s": [
+   {
+    "h": "Hơn 300 giọng nói tự nhiên bằng 75 ngôn ngữ",
+    "p": [
+     "Bạn có thể chọn trong hơn 300 giọng nói nơ-ron của Microsoft bằng 75 ngôn ngữ, gồm cả các giọng vùng miền như tiếng Anh Mỹ, Anh, Úc và Ấn Độ, hay tiếng Tây Ban Nha châu Âu và Mexico. Lọc danh sách theo giới tính, tìm theo tên và nghe thử một đoạn ngắn trước khi quyết định. Tốc độ điều chỉnh từ −100% đến +100%, cao độ từ −100 Hz đến +100 Hz, nên cùng một giọng có thể nghe điềm tĩnh hơn, nhanh nhẹn hơn, trầm hơn hoặc sáng hơn. Xem [danh sách đầy đủ các giọng nói và ngôn ngữ](/voices.html), hoặc đọc [cách chọn giọng nói và chất giọng](/guides/choose-voice.html) phù hợp với khán giả của bạn."
+    ]
+   },
+   {
+    "h": "Tải giọng đọc văn bản dưới dạng MP3 hoặc WAV",
+    "p": [
+     "Mỗi lần tạo cho bạn một tệp để giữ lại, không chỉ là phát trên trang. MP3 (48 kbps, 24 kHz mono) gọn nhẹ và phát được trên mọi điện thoại, máy tính xách tay hay trình chỉnh sửa video. WAV (PCM 16-bit, 24 kHz mono) không nén, phù hợp để chỉnh sửa tiếp và mastering. Kèm theo mỗi tệp, bạn còn nhận phụ đề SRT và VTT được dựng từ thời gian của từng từ, nhờ đó phụ đề khớp với lời đọc. Làm theo [hướng dẫn chuyển văn bản sang MP3](/guides/text-to-mp3.html) từng bước, hoặc [hướng dẫn lồng tiếng bằng AI](/guides/ai-voiceover.html) để thuyết minh cho video."
+    ]
+   },
+   {
+    "h": "Chuyển văn bản thành giọng nói không cần đăng ký",
+    "p": [
+     "Không cần đăng ký, địa chỉ email hay đăng nhập: mở trang và bắt đầu chuyển đổi trên bất kỳ trình duyệt hiện đại nào, trên điện thoại, máy tính bảng hay máy tính. Các mục đã xong xuất hiện trong danh sách kết quả của thẻ trình duyệt hiện tại, mỗi mục có trình phát và nút tải xuống riêng. Khi đóng thẻ, danh sách sẽ biến mất, vì vậy hãy lưu trước những gì bạn cần. Trang web miễn phí và không có quảng cáo; các khoản ủng hộ tự nguyện qua Stripe hoặc Buy Me a Coffee giúp duy trì hoạt động."
+    ]
+   },
+   {
+    "h": "Giới hạn và quyền riêng tư",
+    "p": [
+     "Mỗi lần tạo nhận tối đa 5.000 ký tự. Trong thử nghiệm của chúng tôi ngày 31 tháng 10 năm 2026, 5.000 ký tự tiếng Anh cho ra khoảng 5 phút 28 giây âm thanh, hoàn tất trong khoảng 12 giây. Hãy chia văn bản dài, chẳng hạn các chương sách, thành nhiều phần và tạo lần lượt từng phần. Mỗi lần tạo, bạn có thể chèn tối đa 25 dấu ngắt nghỉ như [break:2s], mỗi dấu tối đa 30 giây và tổng cộng không quá 60 giây, đồng thời có thể nhập tệp .txt, .md hoặc .text thay vì dán văn bản.",
+     "Để tạo âm thanh, văn bản của bạn được gửi đến dịch vụ giọng nói trực tuyến của Microsoft, vì vậy đừng đưa vào nội dung bảo mật. Các tệp đã tạo sẽ bị xóa khỏi máy chủ khoảng 2 giờ sau lần tạo cuối cùng của bạn. Bạn có câu hỏi về định dạng, ngắt nghỉ hay phát lại? [Trung tâm trợ giúp](/help.html) đã giải đáp những câu hỏi thường gặp nhất."
+    ]
+   }
+  ]
+ }
 }

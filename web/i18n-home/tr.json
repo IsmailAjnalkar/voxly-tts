@@ -74,5 +74,38 @@
    "q": "Oluşturduğum dosyalar çevrimiçi kalıyor mu?",
    "a": "Hayır. Sonuçlar yalnızca mevcut tarayıcı oturumunuz boyunca vardır ve sonrasında silinir. Saklamak istediğiniz her şeyi sekmeyi kapatmadan önce indirin."
   }
- ]
+ ],
+ "about": {
+  "h": "Ücretsiz çevrimiçi metinden sese: neler sunuyoruz",
+  "p": [
+   "Text 2 Speech, yazdığınız, yapıştırdığınız veya içe aktardığınız metni doğrudan tarayıcınızda doğal sesli konuşmaya dönüştürür. Ücretsizdir, reklam göstermez ve hesap gerektirmez: bir ses seçin, metninizi ekleyin ve Ses oluştur düğmesine basın. Aracın neler yaptığını somut rakamlarla aşağıda bulabilirsiniz."
+  ],
+  "s": [
+   {
+    "h": "75 dilde 300'den fazla doğal ses",
+    "p": [
+     "75 dilde 300'den fazla Microsoft nöral sesi arasından seçim yapabilirsiniz; Amerikan, İngiliz, Avustralya ve Hint İngilizcesi ya da Avrupa ve Meksika İspanyolcası gibi bölgesel aksanlar da bunlara dahildir. Listeyi cinsiyete göre filtreleyin, ada göre arayın ve karar vermeden önce kısa bir örnek dinleyin. Hız −%100 ile +%100, perde ise −100 Hz ile +100 Hz arasında ayarlanır; böylece aynı ses daha sakin, daha canlı, daha kalın veya daha parlak duyulabilir. [Seslerin ve dillerin tam listesine](/voices.html) göz atın ya da kitlenize uygun [ses ve aksan seçme rehberini](/guides/choose-voice.html) okuyun."
+    ]
+   },
+   {
+    "h": "Metinden sesi MP3 veya WAV olarak indirin",
+    "p": [
+     "Her oluşturma işlemi, sayfada dinlemenin ötesinde saklayabileceğiniz bir dosya verir. MP3 (48 kbps, 24 kHz mono) küçüktür ve her telefonda, dizüstü bilgisayarda ve video düzenleyicide çalar. WAV (16 bit PCM, 24 kHz mono) sıkıştırılmamıştır; sonraki düzenleme ve mastering için uygundur. Her dosyayla birlikte, kelime zamanlamalarından üretilen SRT ve VTT altyazıları da alırsınız; böylece altyazılar anlatımla örtüşür. Adım adım anlatım için [metinden MP3 rehberini](/guides/text-to-mp3.html), bir videoyu seslendirmek için de [yapay zekâ seslendirme rehberini](/guides/ai-voiceover.html) izleyin."
+    ]
+   },
+   {
+    "h": "Kayıt olmadan metinden sese",
+    "p": [
+     "Kayıt, e-posta adresi veya giriş yok: sayfayı açın ve telefon, tablet ya da bilgisayardaki herhangi bir modern tarayıcıda dönüştürmeye başlayın. Tamamlanan öğeler, geçerli tarayıcı sekmesine ait sonuç listesinde, her biri kendi oynatıcısı ve indirme düğmeleriyle görünür. Sekmeyi kapattığınızda liste kaybolur; bu yüzden ihtiyacınız olanı önceden kaydedin. Site ücretsiz ve reklamsızdır; Stripe veya Buy Me a Coffee üzerinden yapılan isteğe bağlı bağışlar işletme masraflarını karşılamaya yardımcı olur."
+    ]
+   },
+   {
+    "h": "Sınırlar ve gizlilik",
+    "p": [
+     "Tek bir oluşturma en fazla 5.000 karakter alır. 31 Ekim 2026'daki testimizde 5.000 karakterlik İngilizce metin yaklaşık 5 dakika 28 saniyelik sese dönüştü ve yaklaşık 12 saniyede hazırdı. Kitap bölümleri gibi uzun metinleri parçalara ayırın ve sırayla oluşturun. Her oluşturmaya [break:2s] gibi en fazla 25 duraklama işareti ekleyebilirsiniz; her biri en fazla 30 saniye, toplamı en fazla 60 saniye olabilir. Metni yapıştırmak yerine .txt, .md veya .text dosyalarını da içe aktarabilirsiniz.",
+     "Sesi oluşturmak için metniniz Microsoft'un çevrimiçi konuşma hizmetine gönderilir; bu nedenle gizli bilgileri eklemeyin. Oluşturulan dosyalar, son oluşturma işleminizden yaklaşık 2 saat sonra sunucudan silinir. Biçimler, duraklamalar veya oynatma hakkında sorunuz mu var? [Yardım merkezi](/help.html) en sık sorulanları yanıtlıyor."
+    ]
+   }
+  ]
+ }
 }

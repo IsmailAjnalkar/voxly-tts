@@ -74,5 +74,38 @@
    "q": "Zůstávají vygenerované soubory online?",
    "a": "Ne. Výsledky existují jen po dobu aktuální relace prohlížeče a poté se odstraní. Co si chcete ponechat, stáhněte před zavřením karty."
   }
- ]
+ ],
+ "about": {
+  "h": "Převod textu na řeč zdarma online: co dostanete",
+  "p": [
+   "Text 2 Speech převede napsaný, vložený nebo importovaný text na přirozeně znějící řeč přímo v prohlížeči. Je zdarma, nezobrazuje reklamy a nevyžaduje účet: vyberte hlas, přidejte text a klikněte na Generovat zvuk. Tady je, co nástroj umí, v konkrétních číslech."
+  ],
+  "s": [
+   {
+    "h": "Více než 300 přirozených hlasů v 75 jazycích",
+    "p": [
+     "Vybírat můžete z více než 300 neuronových hlasů od Microsoftu v 75 jazycích, včetně regionálních přízvuků, jako je americká, britská, australská a indická angličtina nebo evropská a mexická španělština. Seznam vyfiltrujte podle pohlaví, hledejte podle jména a před rozhodnutím si pusťte krátkou ukázku. Rychlost lze nastavit od −100 % do +100 % a výšku hlasu od −100 Hz do +100 Hz, takže tentýž hlas může znít klidněji, svižněji, hlouběji nebo jasněji. Projděte si [úplný seznam hlasů a jazyků](/voices.html) nebo si přečtěte, [jak vybrat hlas a přízvuk](/guides/choose-voice.html) pro své publikum."
+    ]
+   },
+   {
+    "h": "Stáhněte převod textu na řeč jako MP3 nebo WAV",
+    "p": [
+     "Každé generování vám dá soubor, který si můžete ponechat, nejen přehrávání na stránce. MP3 (48 kb/s, 24 kHz mono) je malé a přehraje se na každém telefonu, notebooku i ve střihovém programu. WAV (16bitové PCM, 24 kHz mono) je nekomprimovaný a hodí se pro další úpravy a mastering. Ke každému souboru navíc dostanete titulky SRT a VTT vytvořené z časování jednotlivých slov, takže titulky sedí s mluveným slovem. Postupujte podle [návodu na převod textu do MP3](/guides/text-to-mp3.html) krok za krokem, nebo podle [průvodce AI komentářem](/guides/ai-voiceover.html), chcete-li namluvit video."
+    ]
+   },
+   {
+    "h": "Převod textu na řeč bez registrace",
+    "p": [
+     "Žádná registrace, e-mailová adresa ani přihlášení: otevřete stránku a začněte převádět v jakémkoli moderním prohlížeči, na telefonu, tabletu nebo počítači. Hotové položky se objeví v seznamu výsledků pro aktuální kartu prohlížeče, každá s vlastním přehrávačem a tlačítky ke stažení. Když kartu zavřete, seznam zmizí, proto si nejdřív uložte, co potřebujete. Web je zdarma a bez reklam; dobrovolné dary přes Stripe nebo Buy Me a Coffee pomáhají pokrýt náklady na provoz."
+    ]
+   },
+   {
+    "h": "Omezení a soukromí",
+    "p": [
+     "Jedno generování pojme až 5 000 znaků. V našem testu z 31. října 2026 vzniklo z 5 000 znaků anglického textu zhruba 5 minut a 28 sekund zvuku, hotového asi za 12 sekund. Delší texty, například kapitoly knihy, rozdělte na části a generujte je postupně. Do jednoho generování můžete vložit až 25 značek pauzy, například [break:2s], každou nejvýše 30 sekund a dohromady nejvýše 60 sekund, a místo vkládání můžete importovat soubory .txt, .md nebo .text.",
+     "K vytvoření zvuku se váš text odesílá do online řečové služby Microsoftu, proto do něj nedávejte nic důvěrného. Vygenerované soubory se ze serveru mažou asi 2 hodiny po vašem posledním generování. Máte otázku k formátům, pauzám nebo přehrávání? [Centrum nápovědy](/help.html) odpovídá na ty nejčastější."
+    ]
+   }
+  ]
+ }
 }

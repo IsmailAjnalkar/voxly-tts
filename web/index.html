@@ -5,21 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="sMzV6e4ZrfZOvnYGmFwWbZ8r0k_w84hFrkWBrCrAq0k">
 <meta name="msvalidate.01" content="8E11C1C74E84146FA5E1E2CBF73E34BD">
-<title>Text 2 Speech — Free Text to Speech Online | Natural AI Voices</title>
+<title>Free Text to Speech Online – 300+ AI Voices, MP3, No Sign-Up</title>
 <meta name="description" content="Turn any text into natural, lifelike speech with 300+ AI voices in 75 languages. Listen instantly, download MP3 or WAV plus subtitles. Free, no sign-up.">
 <link rel="canonical" href="https://text-2-speech.com/">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#0d1117">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Text 2 Speech">
-<meta property="og:title" content="Text 2 Speech — Free Text to Speech Online | Natural AI Voices">
+<meta property="og:title" content="Free Text to Speech Online – 300+ AI Voices, MP3, No Sign-Up">
 <meta property="og:description" content="Turn any text into natural, lifelike speech with 300+ AI voices in 75 languages. Listen instantly, download MP3 or WAV plus subtitles. Free, no sign-up.">
 <meta property="og:url" content="https://text-2-speech.com/">
 <meta property="og:image" content="https://text-2-speech.com/og-image.png?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Text 2 Speech — Free Text to Speech Online | Natural AI Voices">
+<meta name="twitter:title" content="Free Text to Speech Online – 300+ AI Voices, MP3, No Sign-Up">
 <meta name="twitter:description" content="Turn any text into natural, lifelike speech with 300+ AI voices in 75 languages. Listen instantly, download MP3 or WAV plus subtitles. Free, no sign-up.">
 <meta name="twitter:image" content="https://text-2-speech.com/og-image.png?v=2">
 <script type="application/ld+json">
@@ -162,6 +162,10 @@
   .ucard .emo{font-size:26px}
   .ucard h3{margin:8px 0 6px;font-size:17px;text-transform:capitalize}
   .ucard p{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
+  .about{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 22px 4px;line-height:1.65;overflow-wrap:anywhere;column-width:30em;column-gap:44px}
+  .about h3{margin:16px 0 6px;font-size:18px;break-after:avoid}
+  .about p{margin:0 0 12px}
+  .about a{text-decoration:underline}
   .faqitem{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--panel)}
   .faqitem button.q{width:100%;text-align:left;background:none;border:0;color:var(--ink);font-size:15px;font-weight:600;padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;gap:10px}
   .faqitem .a{display:none;padding:0 16px 14px;color:var(--muted);line-height:1.6;font-size:14px}
@@ -323,6 +327,9 @@
   <div class="grid3" id="usecases"><!--home:usecases--></div>
 </section>
 
+<!-- ABOUT: features, formats, limits (text from i18n-home/<lang>.json "about") -->
+<section class="block" id="about"><!--home:about--></section>
+
 <!-- FAQ -->
 <section class="block">
   <h2>FAQ</h2>
@@ -418,7 +425,7 @@ function applyI18n(code){
   $$("[data-i18n-ph]").forEach(el=>{ const k=el.dataset.i18nPh; if(T[k]) el.placeholder=T[k]; });
   $$("[data-i18n-title]").forEach(el=>{ const k=el.dataset.i18nTitle; if(T[k]) el.title=T[k]; });
   updateCounter(); renderSteps(currentStep); renderVoices(); renderResults();
-  document.title = "Text 2 Speech — " + T.h1;
+  if(code !== homeEl.dataset.lang) document.title = T.h1 + " | Text 2 Speech";  // the server's title for that language; its own title stays
 }
 
 /* ---------- Content: steps / use cases / FAQ ----------
@@ -437,6 +444,9 @@ function renderSteps(i){
 function renderHome(){
   $("#usecases").innerHTML = HOME.usecases.map(u=>`<div class="ucard"><div class="emo">${esc(u.e)}</div><h3>${esc(u.h)}</h3><p>${esc(u.p)}</p></div>`).join("");
   $("#faqlist").innerHTML = HOME.faq.map(f=>`<div class="faqitem"><button class="q" type="button">${esc(f.q)}<span>▾</span></button><div class="a">${esc(f.a)}</div></div>`).join("");
+  // "[label](/path)" -> site-relative link, as the server renders it
+  const para = t => `<p>${esc(t).replace(/\[([^\]]+)\]\((\/[\w-][\w./-]*)\)/g, '<a href="$2">$1</a>')}</p>`, A = HOME.about;
+  if(A) $("#about").innerHTML = `<h2>${esc(A.h)}</h2><div class="about">${A.p.map(para).join("")}${A.s.map(s=>`<h3>${esc(s.h)}</h3>${s.p.map(para).join("")}`).join("")}</div>`;
   a11yHome();
 }
 // Server-rendered or re-rendered: decorative glyphs hidden, each question's open state exposed
@@ -482,8 +492,16 @@ async function loadVoices(){
     const d = await r.json(); VOICES = d.voices;
     const langs = [...new Set(VOICES.map(v=>v.language))].sort((a,b)=>langLabel(a).localeCompare(langLabel(b)));
     $("#langsel").innerHTML = langs.map(l=>`<option value="${l}">${langLabel(l)}</option>`).join("");
-    $("#langsel").value = langs.includes("en") ? "en" : langs[0];
-    pickDefaultVoice(); renderVoices(); renderResults(); // restored items show voice names
+    // ?vl=hi | es | zh-TW: preselect that voice language (first voice whose locale is or starts with it);
+    // a region also picks that region's voice. Unknown values are ignored. "no" = Norwegian Bokmål (nb).
+    let vl = (new URLSearchParams(location.search).get("vl") || "").toLowerCase();
+    vl = ({no:"nb"})[vl] || vl;
+    const vlHit = v => v && (v.locale.toLowerCase() === vl || v.locale.toLowerCase().startsWith(vl + "-"));
+    const vlVoice = vl ? VOICES.find(v=>v.locale.toLowerCase() === vl) || VOICES.find(vlHit) : null;  // zh-CN before zh-CN-liaoning
+    $("#langsel").value = vlVoice ? vlVoice.language : langs.includes("en") ? "en" : langs[0];
+    pickDefaultVoice();
+    if(vlVoice && !vlHit(VOICES.find(v=>v.id===selectedVoice))) selectedVoice = vlVoice.id;
+    renderVoices(); renderResults(); // restored items show voice names
   }catch(e){ toast("Could not load the voice catalog. Check your connection and reload."); }
 }
 const CURATED_DEFAULTS = { en: "en-AU-NatashaNeural", es: "es-AR-ElenaNeural", zh: "zh-HK-HiuGaaiNeural" };

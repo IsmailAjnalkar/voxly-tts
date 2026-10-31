@@ -74,5 +74,38 @@
    "q": "Blijven mijn gegenereerde bestanden online?",
    "a": "Nee. Resultaten bestaan alleen tijdens je huidige browsersessie en worden daarna verwijderd. Download alles wat je wilt bewaren voordat je het tabblad sluit."
   }
- ]
+ ],
+ "about": {
+  "h": "Gratis tekst naar spraak online: wat je krijgt",
+  "p": [
+   "Text 2 Speech zet getypte, geplakte of geïmporteerde tekst om in natuurlijk klinkende spraak, direct in je browser. Het is gratis, toont geen advertenties en vraagt geen account: kies een stem, voeg je tekst toe en klik op Audio genereren. Dit is wat de tool doet, in concrete cijfers."
+  ],
+  "s": [
+   {
+    "h": "Meer dan 300 natuurlijke stemmen in 75 talen",
+    "p": [
+     "Je kiest uit meer dan 300 neurale stemmen van Microsoft in 75 talen, met regionale accenten zoals Amerikaans, Brits, Australisch en Indiaas Engels, en voor het Nederlands stemmen uit Nederland en België. Filter de lijst op geslacht, zoek op naam en luister naar een kort voorbeeld voordat je kiest. De snelheid loopt van −100% tot +100% en de toonhoogte van −100 Hz tot +100 Hz, zodat één stem rustiger, vlotter, lager of helderder kan klinken. Bekijk de [volledige lijst met stemmen en talen](/voices.html) of lees [hoe je een stem en accent kiest](/guides/choose-voice.html) voor je publiek."
+    ]
+   },
+   {
+    "h": "Tekst naar spraak downloaden als MP3 of WAV",
+    "p": [
+     "Elke generatie levert een bestand op dat je kunt bewaren, niet alleen weergave op de pagina. MP3 (48 kbps, 24 kHz mono) is compact en speelt af op elke telefoon, laptop of video-editor. WAV (16-bit PCM, 24 kHz mono) is ongecomprimeerd en geschikt voor verdere bewerking en mastering. Bij elk bestand krijg je ook SRT- en VTT-ondertitels die zijn opgebouwd uit de tijdcodes per woord, zodat de ondertiteling gelijkloopt met de vertelling. Volg de [handleiding tekst naar MP3](/guides/text-to-mp3.html) stap voor stap, of de [gids voor AI-voice-overs](/guides/ai-voiceover.html) om een video in te spreken."
+    ]
+   },
+   {
+    "h": "Tekst naar spraak zonder aanmelden",
+    "p": [
+     "Er is geen registratie, e-mailadres of login nodig: open de pagina en begin met omzetten in elke moderne browser, op telefoon, tablet of computer. Afgeronde items verschijnen in een resultatenlijst voor het huidige browsertabblad, elk met een eigen speler en downloadknoppen. Sluit je het tabblad, dan is de lijst weg, dus sla eerst op wat je nodig hebt. De site is gratis en reclamevrij; vrijwillige donaties via Stripe of Buy Me a Coffee helpen de kosten te dekken."
+    ]
+   },
+   {
+    "h": "Limieten en privacy",
+    "p": [
+     "Eén generatie verwerkt tot 5.000 tekens. In onze test van 31 oktober 2026 leverde 5.000 tekens Engels ongeveer 5 minuten en 28 seconden audio op, klaar in zo'n 12 seconden. Splits lange teksten, zoals boekhoofdstukken, in delen en genereer ze na elkaar. Je kunt per generatie tot 25 pauzemarkeringen zoals [break:2s] invoegen, elk tot 30 seconden en samen niet meer dan 60 seconden, en .txt-, .md- of .text-bestanden importeren in plaats van te plakken.",
+     "Om de audio te maken wordt je tekst naar de online spraakdienst van Microsoft gestuurd, dus laat vertrouwelijke informatie weg. Gegenereerde bestanden worden ongeveer 2 uur na je laatste generatie van de server verwijderd. Vragen over formaten, pauzes of afspelen? Het [helpcentrum](/help.html) beantwoordt de meest gestelde."
+    ]
+   }
+  ]
+ }
 }

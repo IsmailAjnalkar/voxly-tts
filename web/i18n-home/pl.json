@@ -74,5 +74,38 @@
    "q": "Czy wygenerowane pliki zostają w sieci?",
    "a": "Nie. Wyniki istnieją tylko w bieżącej sesji przeglądarki, a potem są usuwane. Wszystko, co chcesz zachować, pobierz przed zamknięciem karty."
   }
- ]
+ ],
+ "about": {
+  "h": "Darmowa zamiana tekstu na mowę online: co otrzymujesz",
+  "p": [
+   "Text 2 Speech zamienia wpisany, wklejony lub zaimportowany tekst na naturalnie brzmiącą mowę bezpośrednio w przeglądarce. Jest darmowy, nie wyświetla reklam i nie wymaga konta: wybierz głos, dodaj tekst i kliknij Generuj audio. Oto, co potrafi narzędzie, w konkretnych liczbach."
+  ],
+  "s": [
+   {
+    "h": "Ponad 300 naturalnych głosów w 75 językach",
+    "p": [
+     "Do wyboru masz ponad 300 neuronowych głosów Microsoft w 75 językach, w tym regionalne akcenty, takie jak angielski amerykański, brytyjski, australijski i indyjski czy hiszpański europejski i meksykański. Filtruj listę według płci, szukaj po nazwie i odsłuchaj krótką próbkę, zanim się zdecydujesz. Tempo regulujesz od −100% do +100%, a wysokość głosu od −100 Hz do +100 Hz, więc ten sam głos może brzmieć spokojniej, żwawiej, niżej lub jaśniej. Przejrzyj [pełną listę głosów i języków](/voices.html) albo przeczytaj, [jak wybrać głos i akcent](/guides/choose-voice.html) dla swoich odbiorców."
+    ]
+   },
+   {
+    "h": "Pobierz mowę z tekstu jako MP3 lub WAV",
+    "p": [
+     "Każde generowanie daje plik do zachowania, a nie tylko odtwarzanie na stronie. MP3 (48 kb/s, 24 kHz mono) jest niewielki i działa na każdym telefonie, laptopie i w każdym edytorze wideo. WAV (16-bitowy PCM, 24 kHz mono) jest nieskompresowany i nadaje się do dalszej edycji oraz masteringu. Do każdego pliku otrzymujesz też napisy SRT i VTT utworzone na podstawie czasów poszczególnych słów, dzięki czemu napisy pokrywają się z lektorem. Skorzystaj z [poradnika zamiany tekstu na MP3](/guides/text-to-mp3.html) krok po kroku lub z [poradnika lektora AI](/guides/ai-voiceover.html), aby udźwiękowić film."
+    ]
+   },
+   {
+    "h": "Zamiana tekstu na mowę bez rejestracji",
+    "p": [
+     "Nie ma rejestracji, adresu e-mail ani logowania: otwórz stronę i zacznij konwertować w dowolnej nowoczesnej przeglądarce, na telefonie, tablecie lub komputerze. Gotowe pozycje trafiają na listę wyników bieżącej karty przeglądarki, każda z własnym odtwarzaczem i przyciskami pobierania. Po zamknięciu karty lista znika, więc najpierw zapisz to, czego potrzebujesz. Serwis jest darmowy i bez reklam; dobrowolne darowizny przez Stripe lub Buy Me a Coffee pomagają pokryć koszty jego działania."
+    ]
+   },
+   {
+    "h": "Limity i prywatność",
+    "p": [
+     "Jedno generowanie obejmuje do 5000 znaków. W naszym teście z 31 października 2026 r. 5000 znaków tekstu angielskiego dało około 5 minut i 28 sekund nagrania, gotowego po mniej więcej 12 sekundach. Dłuższe teksty, np. rozdziały książki, podziel na części i generuj je po kolei. W jednym generowaniu możesz wstawić do 25 znaczników pauzy, takich jak [break:2s], każdy do 30 sekund i łącznie nie więcej niż 60 sekund, a zamiast wklejać tekst, możesz zaimportować plik .txt, .md lub .text.",
+     "Aby utworzyć nagranie, tekst jest wysyłany do internetowej usługi mowy firmy Microsoft, więc nie umieszczaj w nim poufnych informacji. Wygenerowane pliki są usuwane z serwera około 2 godziny po Twoim ostatnim generowaniu. Masz pytania o formaty, pauzy lub odtwarzanie? [Centrum pomocy](/help.html) odpowiada na te najczęstsze."
+    ]
+   }
+  ]
+ }
 }

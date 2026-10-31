@@ -74,5 +74,38 @@
    "q": "Online maradnak a generált fájljaim?",
    "a": "Nem. Az eredmények csak az aktuális böngészőmunkamenetben léteznek, utána törlődnek. Amit meg szeretnél tartani, töltsd le, mielőtt bezárod a lapot."
   }
- ]
+ ],
+ "about": {
+  "h": "Ingyenes online szövegfelolvasó: ezt kapja",
+  "p": [
+   "A Text 2 Speech a begépelt, beillesztett vagy importált szöveget természetes hangzású beszéddé alakítja, közvetlenül a böngészőben. Ingyenes, nem jelenít meg hirdetéseket, és nem kell hozzá fiók: válasszon hangot, adja meg a szöveget, majd kattintson a Hang generálása gombra. Íme, mit tud az eszköz, konkrét számokkal."
+  ],
+  "s": [
+   {
+    "h": "Több mint 300 természetes hang 75 nyelven",
+    "p": [
+     "Több mint 300 Microsoft neurális hang közül választhat 75 nyelven, regionális akcentusokkal is, például amerikai, brit, ausztrál és indiai angol vagy európai és mexikói spanyol. Szűrje a listát nem szerint, keressen név alapján, és döntés előtt hallgasson meg egy rövid mintát. A sebesség −100% és +100%, a hangmagasság −100 Hz és +100 Hz között állítható, így ugyanaz a hang lehet nyugodtabb, pörgősebb, mélyebb vagy világosabb. Nézze meg a [hangok és nyelvek teljes listáját](/voices.html), vagy olvassa el, [hogyan válasszon hangot és akcentust](/guides/choose-voice.html) a közönségéhez."
+    ]
+   },
+   {
+    "h": "Szövegfelolvasás letöltése MP3 vagy WAV formátumban",
+    "p": [
+     "Minden generálás után megtartható fájlt kap, nem csak lejátszást az oldalon. Az MP3 (48 kbps, 24 kHz mono) kis méretű, és bármilyen telefonon, laptopon vagy videószerkesztőben lejátszható. A WAV (16 bites PCM, 24 kHz mono) tömörítetlen, ezért további szerkesztéshez és masteringhez ideális. Minden fájlhoz SRT és VTT feliratot is kap, amely a szavak időzítéséből készül, így a felirat együtt halad a narrációval. Kövesse lépésről lépésre a [szövegből MP3 útmutatót](/guides/text-to-mp3.html), vagy videó narrálásához az [AI hangalámondás útmutatót](/guides/ai-voiceover.html)."
+    ]
+   },
+   {
+    "h": "Szövegfelolvasó regisztráció nélkül",
+    "p": [
+     "Nincs regisztráció, e-mail-cím vagy bejelentkezés: nyissa meg az oldalt, és kezdje el az átalakítást bármely modern böngészőben, telefonon, táblagépen vagy számítógépen. Az elkészült elemek az aktuális böngészőlap eredménylistájában jelennek meg, mindegyik saját lejátszóval és letöltési gombokkal. Ha bezárja a lapot, a lista eltűnik, ezért előbb mentse el, amire szüksége van. Az oldal ingyenes és reklámmentes; a Stripe-on vagy a Buy Me a Coffee-n keresztül adott önkéntes adományok segítenek fedezni a működés költségeit."
+    ]
+   },
+   {
+    "h": "Korlátok és adatvédelem",
+    "p": [
+     "Egy generálás legfeljebb 5000 karaktert fogad el. 2026. október 31-i tesztünkben 5000 karakternyi angol szövegből nagyjából 5 perc 28 másodperc hang lett, körülbelül 12 másodperc alatt. A hosszabb szövegeket, például könyvfejezeteket, ossza részekre, és egymás után generálja őket. Generálásonként legfeljebb 25 szünetjelölőt illeszthet be, például [break:2s], egyenként legfeljebb 30 másodperc, összesen legfeljebb 60 másodperc hosszan, és beillesztés helyett .txt, .md vagy .text fájlt is importálhat.",
+     "A hang elkészítéséhez a szöveg a Microsoft online beszédszolgáltatásához kerül, ezért ne írjon bele bizalmas információt. A generált fájlokat a szerver nagyjából 2 órával az utolsó generálás után törli. Kérdése van a formátumokról, a szünetekről vagy a lejátszásról? A [Súgóközpont](/help.html) a leggyakoribbakra választ ad."
+    ]
+   }
+  ]
+ }
 }

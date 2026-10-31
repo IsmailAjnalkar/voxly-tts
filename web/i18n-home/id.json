@@ -74,5 +74,38 @@
    "q": "Apakah file yang saya buat tetap tersimpan online?",
    "a": "Tidak. Hasil hanya ada selama sesi browser Anda saat ini dan dihapus setelahnya. Unduh apa pun yang ingin Anda simpan sebelum menutup tab."
   }
- ]
+ ],
+ "about": {
+  "h": "Text to speech gratis online: apa yang Anda dapatkan",
+  "p": [
+   "Text 2 Speech mengubah teks yang diketik, ditempel, atau diimpor menjadi ucapan yang terdengar alami langsung di browser Anda. Layanan ini gratis, tanpa iklan, dan tanpa akun: pilih suara, masukkan teks, lalu klik Buat audio. Berikut kemampuan alat ini, dalam angka yang jelas."
+  ],
+  "s": [
+   {
+    "h": "Lebih dari 300 suara alami dalam 75 bahasa",
+    "p": [
+     "Anda bisa memilih dari lebih dari 300 suara neural Microsoft dalam 75 bahasa, termasuk aksen regional seperti bahasa Inggris Amerika, Inggris, Australia, dan India, atau bahasa Spanyol Eropa dan Meksiko. Saring daftar menurut jenis kelamin, cari berdasarkan nama, dan dengarkan contoh singkat sebelum memutuskan. Kecepatan dapat diatur dari −100% hingga +100% dan nada dari −100 Hz hingga +100 Hz, sehingga satu suara bisa terdengar lebih tenang, lebih cepat, lebih berat, atau lebih cerah. Lihat [daftar lengkap suara dan bahasa](/voices.html), atau baca [cara memilih suara dan aksen](/guides/choose-voice.html) untuk audiens Anda."
+    ]
+   },
+   {
+    "h": "Unduh text to speech sebagai MP3 atau WAV",
+    "p": [
+     "Setiap pembuatan menghasilkan file yang bisa Anda simpan, bukan sekadar pemutaran di halaman. MP3 (48 kbps, 24 kHz mono) berukuran kecil dan bisa diputar di ponsel, laptop, atau editor video mana pun. WAV (PCM 16-bit, 24 kHz mono) tidak dikompresi, cocok untuk penyuntingan lanjutan dan mastering. Bersama setiap file, Anda juga mendapat subtitle SRT dan VTT yang disusun dari waktu setiap kata, sehingga teks selaras dengan narasi. Ikuti [panduan teks ke MP3](/guides/text-to-mp3.html) langkah demi langkah, atau [panduan sulih suara AI](/guides/ai-voiceover.html) untuk menarasikan video."
+    ]
+   },
+   {
+    "h": "Text to speech tanpa daftar",
+    "p": [
+     "Tidak perlu registrasi, alamat email, atau login: buka halaman dan mulai mengonversi di browser modern apa pun, di ponsel, tablet, atau komputer. Item yang selesai muncul di daftar hasil untuk tab browser saat ini, masing-masing dengan pemutar dan tombol unduh sendiri. Jika tab ditutup, daftar itu hilang, jadi simpan dulu yang Anda perlukan. Situs ini gratis dan bebas iklan; donasi sukarela melalui Stripe atau Buy Me a Coffee membantu membiayai operasionalnya."
+    ]
+   },
+   {
+    "h": "Batasan dan privasi",
+    "p": [
+     "Satu kali pembuatan menampung hingga 5.000 karakter. Dalam pengujian kami pada 31 Oktober 2026, 5.000 karakter teks bahasa Inggris menjadi sekitar 5 menit 28 detik audio dan selesai dalam sekitar 12 detik. Bagi teks panjang, seperti bab buku, menjadi beberapa bagian dan buat satu per satu. Anda dapat menyisipkan hingga 25 penanda jeda seperti [break:2s] per pembuatan, masing-masing hingga 30 detik dan total tidak lebih dari 60 detik, serta mengimpor file .txt, .md, atau .text alih-alih menempelkan teks.",
+     "Untuk membuat audio, teks Anda dikirim ke layanan suara online Microsoft, jadi jangan sertakan hal yang bersifat rahasia. File yang dibuat dihapus dari server sekitar 2 jam setelah pembuatan terakhir Anda. Punya pertanyaan tentang format, jeda, atau pemutaran? [Pusat bantuan](/help.html) menjawab pertanyaan yang paling umum."
+    ]
+   }
+  ]
+ }
 }
