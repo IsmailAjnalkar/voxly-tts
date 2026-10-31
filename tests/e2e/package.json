@@ -1,0 +1,12 @@
+{
+  "name": "text-2-speech-e2e",
+  "private": true,
+  "description": "Functional-preservation E2E suite. Needs the app running at $BASE (default http://localhost:8804). BROWSER=chromium|firefox|webkit, NO_GENERATE=1 skips tests that call the speech service.",
+  "scripts": {
+    "test": "playwright test",
+    "install-browsers": "playwright install chromium firefox webkit"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1"
+  }
+}
