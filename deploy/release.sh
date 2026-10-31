@@ -16,7 +16,7 @@ echo "backups: /root/voxly-backup-$TS.tgz /root/nginx-voxly.bak-$TS"
 cp server.py requirements.txt /opt/voxly/
 # web/ is replaced as a whole (copy, then swap) so files removed from the repo disappear too
 rm -rf /opt/voxly/web.new /opt/voxly/web.old
-cp -r web /opt/voxly/web.new && mv /opt/voxly/web /opt/voxly/web.old && mv /opt/voxly/web.new /opt/voxly/web && rm -rf /opt/voxly/web.old
+cp -rp web /opt/voxly/web.new && mv /opt/voxly/web /opt/voxly/web.old && mv /opt/voxly/web.new /opt/voxly/web && rm -rf /opt/voxly/web.old
 cp deploy/voxly-watchdog.sh /opt/voxly/ && chmod 755 /opt/voxly/voxly-watchdog.sh
 /opt/voxly/.venv/bin/pip install -q -r /opt/voxly/requirements.txt
 chown -R voxly:voxly /opt/voxly

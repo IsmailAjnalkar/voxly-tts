@@ -138,12 +138,116 @@ class Api(unittest.TestCase):
     def test_sitemap_lists_every_language(self):  # TTS-BUG-023
         r = self.c.get("/sitemap.xml")
         self.assertEqual(r.headers["content-type"].split(";")[0], "application/xml")
-        # 5 indexed pages x (root + 24 other languages) + 4 English-only pages
-        self.assertEqual(r.text.count("<loc>"), 5 * 25 + 4)
-        for absent in ("auth.html", "donate.html", "/en/"):
+        # indexed translated pages x (root + 24 other languages) + every English-only page
+        self.assertEqual(r.text.count("<loc>"), len(server._INDEXED) * 25 + len(server._EN_PAGES))
+        for absent in ("auth.html", "donate.html", "/en/", "/admin"):
             self.assertNotIn(absent, r.text)
-        for present in ("/voices.html", "/how-it-works.html", "/guides/subtitles.html", "/guides/mp3-vs-wav.html"):
-            self.assertIn(present, r.text)
+        for present in ["/voices.html", "/how-it-works.html", "/guides/subtitles.html"] + server._EN_PAGES:
+            self.assertIn(f"{server.SITE}/{present.lstrip('/')}</loc>", r.text)
+
+    def test_sitemap_xml_and_lastmod(self):
+        import re as _re
+        import xml.etree.ElementTree as ET
+        ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        urls = ET.fromstring(self.c.get("/sitemap.xml").content).findall("s:url", ns)
+        today = time.strftime("%Y-%m-%d", time.gmtime(time.time() + 86400))
+        for u in urls:
+            loc, mod = u.findtext("s:loc", namespaces=ns), u.findtext("s:lastmod", namespaces=ns)
+            self.assertRegex(mod, r"^\d{4}-\d\d-\d\d$", loc)
+            self.assertLessEqual(mod, today, loc)
+            stated = _re.search(r'"dateModified": ?"([\d-]+)"', self.c.get(loc.replace(server.SITE, "")).text)
+            if stated:  # content pages: the date the page itself states
+                self.assertEqual(mod, stated.group(1), loc)
+        self.assertEqual(len({u.findtext("s:loc", namespaces=ns) for u in urls}), len(urls))  # no duplicates
+
+    def test_hreflang_reciprocal(self):
+        import re as _re
+        for page in server._INDEXED:
+            sets = {}
+            for code in server._UI_CODES:
+                url = server._url(code, page)
+                html = self.c.get(url.replace(server.SITE, "")).text
+                alts = _re.findall(r'<link rel="alternate" hreflang="([^"]+)" href="([^"]+)">', html)
+                self.assertEqual(len(alts), 26, url)  # 25 languages + x-default
+                self.assertIn((server._HREFLANG.get(code, code), url), alts, url)  # self-referencing
+                self.assertIn(("x-default", server._url(None, page)), alts, url)
+                self.assertTrue(all(h.startswith(server.SITE + "/") for _, h in alts), url)
+                self.assertIn(f'<link rel="canonical" href="{url}">', html)
+                sets[url] = sorted(alts)
+            self.assertEqual(len({tuple(v) for v in sets.values()}), 1, page)  # same set on every version
+            self.assertEqual({h for _, h in next(iter(sets.values()))}, set(sets), page)  # each points to a version
+
+    def test_seo_checks_pass(self):  # the CI crawl (tests/seo_checks.py) on the mocked app
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import seo_checks
+        issues, report = seo_checks.run(self.c)
+        self.assertEqual(issues, [])
+        self.assertEqual(report["sitemap_urls"], report["indexable"])
+        self.assertLessEqual(report["max_depth"], 3)
+
+    def test_seo_checks_catch_defects(self):  # the checker is not vacuous
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import seo_checks
+        good = server._page("terms.html").body.decode()
+        bad = (good.replace('<link rel="canonical" href="https://text-2-speech.com/terms.html">', "")
+               .replace("</main>", '<h1>Two</h1><img src="/logo.png"><a href="/gone.html">click here</a>'
+                                   '<input id="q"><script type="application/ld+json">{oops</script></main>'))
+        with mock.patch.dict(server._page_cache, {("terms.html", None): bad}):
+            issues = [m for p, m in seo_checks.run(self.c)[0] if p == "/terms.html"]
+        text = "\n".join(issues)
+        for expected in ("2 h1", "is not the page itself", "img without alt", "broken link /gone.html",
+                         "generic anchor text", "form control without a label: q", "invalid JSON-LD"):
+            self.assertIn(expected, text)
+
+    def test_one_url_per_page(self):  # redirects and real 404s, no duplicate raw templates
+        for src, dst in (("/es", "/es/"), ("/zh-CN", "/zh-CN/"), ("/index.html", "/"), ("/en?x=1", "/en/?x=1")):
+            r = self.c.get(src, follow_redirects=False)
+            self.assertEqual((r.status_code, r.headers["location"]), (301, dst), src)
+        for path in ("/tutorial.html/", "/not-found.html", "/es/index.html", "/es/nope.html", "/guides/"):
+            r = self.c.get(path, follow_redirects=False)
+            self.assertEqual(r.status_code, 404, path)
+            self.assertIn("Page not found", r.text, path)
+        self.assertEqual(self.c.get("/logo.png").status_code, 200)  # assets still served
+
+    def test_localized_internal_links(self):
+        es = self.c.get("/es/tutorial.html").text
+        for href in ('href="/es/"', 'href="/es/support.html"', 'href="/es/privacy.html"', 'href="/guides/subtitles.html"'):
+            self.assertIn(href, es)
+        self.assertNotIn('href="/support.html"', es)
+        self.assertIn('href="/zh-CN/terms.html"', self.c.get("/zh-CN/").text)
+        self.assertIn('href="/support.html"', self.c.get("/en/").text)  # /en/ is the root's alias
+
+    def test_support_links_to_home_faq_instead_of_copying_it(self):
+        import re as _re
+        for code in ("en", "de"):
+            sup = self.c.get(server._url(code, "support.html").replace(server.SITE, "")).text
+            home = server._url(code, "").replace(server.SITE, "")
+            faq = json.loads((server._HOMEDIR / f"{code}.json").read_text(encoding="utf-8"))["faq"]
+            for f in faq:
+                self.assertIn(f'<li><a href="{home}#faqlist">{server.html_lib.escape(f["q"], quote=False)}</a></li>', sup)
+                self.assertNotIn(server.html_lib.escape(f["a"], quote=False), sup)  # answers live on the home page only
+            self.assertIn('id="faqlist"', self.c.get(home).text)
+            self.assertIn('data-i18n="sup_contact_h"', sup)  # quick fixes and contact form remain
+            self.assertIn('data-i18n="sup_quick_h"', sup)
+            self.assertNotIn("FAQPage", sup)
+
+    def test_home_schema_backed_by_page(self):
+        import re as _re
+        for code in server._UI_CODES:
+            html = self.c.get(server._url(code, "").replace(server.SITE, "")).text
+            g = {n["@type"]: n for n in self._head(html)["ld"][0]["@graph"]}
+            self.assertEqual(g["Organization"]["contactPoint"], {"@type": "ContactPoint", "contactType": "customer support",
+                                                                 "url": "https://text-2-speech.com/support.html"})
+            self.assertEqual(g["WebSite"]["copyrightHolder"]["name"], "QINTAR LLC")
+            self.assertIn("© 2026 QINTAR LLC", html)
+            self.assertIn(server.html_lib.escape(g["WebApplication"]["description"], quote=False), html, code)
+            self.assertEqual(g["WebApplication"]["offers"]["price"], "0")
+            visible = server.html_lib.unescape(_re.sub(r"<[^>]+>", "\n", html.split('id="faqlist"')[1].split("</section>")[0]))
+            for q in g["FAQPage"]["mainEntity"]:  # verbatim the visible FAQ
+                self.assertIn(q["name"], visible, code)
+                self.assertIn(q["acceptedAnswer"]["text"], visible, code)
+            for absent in ("aggregateRating", "review", "sameAs", "SearchAction", "speakable", "availableLanguage"):
+                self.assertNotIn(absent, json.dumps(g), code)
 
     # ---------- SEO: every indexable URL in every language ----------
     def _sitemap_pages(self):

@@ -790,7 +790,8 @@ _OG_LOCALE = {"en": "en_US", "zh": "zh_CN", "zh-TW": "zh_TW", "ar": "ar_AR", "cs
 _RTL = {"ar", "fa"}
 # Translated pages (all 25 languages) and English-only content pages.
 _PAGES = ["tutorial.html", "donate.html", "support.html", "auth.html", "privacy.html", "terms.html"]
-_EN_PAGES = ["how-it-works.html", "voices.html", "guides/subtitles.html", "guides/mp3-vs-wav.html"]
+_EN_PAGES = ["how-it-works.html", "voices.html", "guides/subtitles.html", "guides/mp3-vs-wav.html",
+             "about.html", "help.html", "guides/text-to-mp3.html", "guides/ai-voiceover.html", "guides/choose-voice.html"]
 _NOINDEX = {"donate.html", "auth.html"}  # placeholders until accounts/donations exist
 _INDEXED = ["", "tutorial.html", "support.html", "privacy.html", "terms.html"]
 # Description source and breadcrumb label for each translated sub-page.
@@ -929,6 +930,16 @@ def _home_content(html: str, code: str | None) -> str:
                                    "acceptedAnswer": {"@type": "Answer", "text": f["a"]}} for f in c["faq"]]
         if node.get("@type") in ("WebApplication", "WebSite"):
             node["inLanguage"] = _HREFLANG.get(lang, lang)
+        if node.get("@type") == "WebApplication":  # the visible tagline, in the page's language
+            node["description"] = {**_HOME_UI["en"], **_HOME_UI.get(code or "en", {})}["hero_sub"]
+        if node.get("@type") == "WebSite":  # what the footer says: "© 2026 QINTAR LLC"
+            node.setdefault("copyrightHolder", {"@type": "Organization", "name": "QINTAR LLC"})
+            node.setdefault("copyrightYear", 2026)
+        if node.get("@type") == "Organization":
+            # The support form is the only contact channel. No availableLanguage: the
+            # form is translated, but which languages get answered is the owner's call.
+            node.setdefault("contactPoint", {"@type": "ContactPoint", "contactType": "customer support",
+                                             "url": f"{SITE}/support.html"})
     ld_text = json.dumps(ld, ensure_ascii=False).replace("</", "<\\/")
     return html[:m.start(1)] + ld_text + html[m.end(1):]
 
@@ -974,16 +985,28 @@ def _render(name: str, code: str | None) -> str:
                             + '</script><script src="/subi18n.js', 1)
         if crumb_key and name not in _NOINDEX:
             html = _breadcrumbs(html, [(s["nav_home"], _url(code, "")), (s[crumb_key], canon)])
-        if name == "support.html":  # answer the common questions right on the support page
+            # the page as part of the site the home page describes (#website, #org); title and description as shown
+            html = _add_jsonld(html, {
+                "@context": "https://schema.org", "@type": "ContactPage" if name == "support.html" else "WebPage",
+                "@id": canon, "url": canon, "name": html_lib.unescape(re.search(r"<title>(.*?)</title>", html).group(1)),
+                "description": html_lib.unescape(re.search(r'<meta name="description" content="([^"]*)"', html).group(1)),
+                "inLanguage": _HREFLANG.get(lang, lang), "isPartOf": {"@id": f"{SITE}/#website"},
+                "publisher": {"@id": f"{SITE}/#org"}})
+        if name == "support.html":  # the FAQ questions, each linking to its answer on the home page (not a copy of it)
             c = json.loads((_HOMEDIR / f"{lang if (_HOMEDIR / f'{lang}.json').exists() else 'en'}.json").read_text(encoding="utf-8"))
-            faq = "".join(f"<h3>{_e(f['q'])}</h3><p>{_e(f['a'])}</p>" for f in c["faq"])
+            home = _url(code, "").replace(SITE, "")
+            faq = "".join(f'<li><a href="{home}#faqlist">{_e(f["q"])}</a></li>' for f in c["faq"])
             html = html.replace('<div class="card"><h2 style="margin-top:0" data-i18n="sup_contact_h">',
-                                f'<div class="card"><h2 style="margin-top:0">FAQ</h2>{faq}</div>'
+                                f'<div class="card" id="faq"><h2 style="margin-top:0">FAQ</h2><ul>{faq}</ul></div>'
                                 '<div class="card"><h2 style="margin-top:0" data-i18n="sup_contact_h">', 1)
     if name in _NOINDEX:
         html = re.sub(r'<meta name="robots" content="[^"]*">', '<meta name="robots" content="noindex, follow">', html, count=1)
     if name in _PAGES or name == "index.html":
         html = re.sub(r'(<select id="sublang"[^>]*>)(</select>)', lambda m: m.group(1) + _lang_options(lang) + m.group(2), html, count=1)
+        if lang != "en":  # links to translated pages stay in the language (subi18n.js does this too, but crawlers may run no JS)
+            pre = "/" + _PATH_OF_UI.get(lang, lang)
+            html = re.sub(r'href="/(%s)?(#[^"]*)?"' % "|".join(map(re.escape, _PAGES)),
+                          lambda m: f'href="{pre}/{m.group(1) or ""}{m.group(2) or ""}"', html)
     if page in _INDEXED:
         links = f'<link rel="canonical" href="{canon}">' + "".join(
             f'<link rel="alternate" hreflang="{_HREFLANG.get(c, c)}" href="{_url(c, page)}">'
@@ -1035,23 +1058,50 @@ def _page_route(name: str, code: str | None):
     return handler
 
 
+def _route(path: str):
+    """A page route that answers GET and HEAD (link checkers and monitors send HEAD)."""
+    return app.api_route(path, methods=["GET", "HEAD"], include_in_schema=False)
+
+
+def _redirect_route(to: str):
+    async def handler(request: Request):
+        q = request.url.query
+        return RedirectResponse(to + (f"?{q}" if q else ""), status_code=301)
+    return handler
+
+
+_route("/index.html")(_redirect_route("/"))
+_route("/favicon.ico")(_redirect_route("/favicon-48.png"))  # pages declare their icons; this is for old clients
 for _code in [None] + _UI_CODES:
     _prefix = f"/{_PATH_OF_UI.get(_code, _code)}" if _code else ""
-    for _route in ([_prefix, _prefix + "/"] if _code else ["/"]):
-        app.get(_route, include_in_schema=False)(_page_route("index.html", _code))
+    _route(_prefix + "/")(_page_route("index.html", _code))
+    if _code:  # one URL per page: /es -> /es/
+        _route(_prefix)(_redirect_route(_prefix + "/"))
     for _name in _PAGES:
-        app.get(f"{_prefix}/{_name}", include_in_schema=False)(_page_route(_name, _code))
-app.get("/voices.html", include_in_schema=False)(_voices_page)
+        _route(f"{_prefix}/{_name}")(_page_route(_name, _code))
+_route("/voices.html")(_voices_page)
 for _name in _EN_PAGES:
     if _name != "voices.html":
-        app.get(f"/{_name}", include_in_schema=False)(_page_route(_name, None))
+        _route(f"/{_name}")(_page_route(_name, None))
 
 
-@app.get("/sitemap.xml", include_in_schema=False)
+def _lastmod(page: str, code: str | None) -> str:
+    """Date the page last changed: the dateModified it states (content pages), else the
+    newest mtime of its sources - template plus that language's strings (deploy keeps mtimes)."""
+    name = page or "index.html"
+    m = re.search(r'"dateModified": ?"(\d{4}-\d\d-\d\d)', (_WEBDIR / name).read_text(encoding="utf-8"))
+    if m:
+        return m.group(1)
+    strings = _HOMEDIR if name == "index.html" else _SUBDIR
+    srcs = [_WEBDIR / name] + [f for f in (strings / f"{code or 'en'}.json",) if f.exists()]
+    return datetime.fromtimestamp(max(f.stat().st_mtime for f in srcs), timezone.utc).strftime("%Y-%m-%d")
+
+
+@_route("/sitemap.xml")
 async def sitemap():
-    locs = [_url(c, p) for p in _INDEXED for c in [None] + [c for c in _UI_CODES if c != "en"]]
-    locs += [f"{SITE}/{p}" for p in _EN_PAGES]
-    urls = "".join(f"<url><loc>{u}</loc></url>" for u in locs)
+    locs = [(_url(c, p), _lastmod(p, c)) for p in _INDEXED for c in [None] + [c for c in _UI_CODES if c != "en"]]
+    locs += [(f"{SITE}/{p}", _lastmod(p, None)) for p in _EN_PAGES]
+    urls = "".join(f"<url><loc>{u}</loc><lastmod>{d}</lastmod></url>" for u, d in locs)
     return Response('<?xml version="1.0" encoding="UTF-8"?>\n'
                     f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n',
                     media_type="application/xml")
@@ -1065,4 +1115,13 @@ async def _not_found_page(request, exc):
     return JSONResponse({"detail": exc.detail}, status_code=exc.status_code, headers=exc.headers)
 
 
-app.mount("/", StaticFiles(directory=str(BASE / "web"), html=True), name="web")
+class _Static(StaticFiles):
+    """web/ assets. HTML files are only served through their page routes (rendered,
+    per language): served raw they were duplicate, untranslated copies (/tutorial.html/)."""
+    async def get_response(self, path, scope):
+        if path.lower().endswith(".html") or path in (".", ""):
+            raise StarletteHTTPException(404)
+        return await super().get_response(path, scope)
+
+
+app.mount("/", _Static(directory=str(BASE / "web")), name="web")
