@@ -49,6 +49,8 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+import voice_pages
+
 BASE = Path(__file__).resolve().parent
 DATA = BASE / "data"
 DATA.mkdir(exist_ok=True)
@@ -107,7 +109,7 @@ async def _headers(request, call_next):
         # Static files. Pages reference subi18n.js?v=<version>, so that one is immutable.
         if "v" in request.query_params:
             resp.headers["Cache-Control"] = "public, max-age=31536000, immutable"
-        elif path.endswith((".png", ".svg", ".ico")):
+        elif path.endswith((".png", ".svg", ".ico", ".webp")):
             resp.headers["Cache-Control"] = "public, max-age=604800"
         else:
             resp.headers["Cache-Control"] = "public, max-age=3600"
@@ -791,7 +793,8 @@ _RTL = {"ar", "fa"}
 # Translated pages (all 25 languages) and English-only content pages.
 _PAGES = ["tutorial.html", "donate.html", "support.html", "auth.html", "privacy.html", "terms.html"]
 _EN_PAGES = ["how-it-works.html", "voices.html", "guides/subtitles.html", "guides/mp3-vs-wav.html",
-             "about.html", "help.html", "guides/text-to-mp3.html", "guides/ai-voiceover.html", "guides/choose-voice.html"]
+             "about.html", "help.html", "guides/text-to-mp3.html", "guides/ai-voiceover.html", "guides/choose-voice.html",
+             "text-to-speech-download.html", "text-to-voice.html", "ai-voice-generator.html"]
 _NOINDEX = {"donate.html", "auth.html"}  # placeholders until accounts/donations exist
 _INDEXED = ["", "tutorial.html", "support.html", "privacy.html", "terms.html"]
 # Description source and breadcrumb label for each translated sub-page.
@@ -1052,11 +1055,12 @@ async def _voices_page() -> HTMLResponse:
         f = sum(v["gender"] == "Female" for v in vs)
         locales = ", ".join(sorted({v["locale"] for v in vs}))
         names = ", ".join(_e(v["name"]) for v in sorted(vs, key=lambda v: v["name"]))
-        rows.append(f"<tr><th scope=\"row\">{_e(lang_name(vs))}</th><td>{_e(locales)}</td>"
+        rows.append(f"<tr><th scope=\"row\">{voice_pages.label(code, _e(lang_name(vs)))}</th><td>{_e(locales)}</td>"
                     f"<td>{len(vs)} ({f} female, {len(vs) - f} male)</td><td>{names}</td></tr>")
     summary = (f"<strong>{len(voices)} voices in {len(by_lang)} languages</strong> are available right now."
                if voices else "The live voice list could not be loaded just now; please reload the page.")
     html = html.replace("<!--voices:summary-->", summary, 1).replace("<!--voices:rows-->", "".join(rows), 1)
+    html = html.replace("</table></div>", "</table></div>" + voice_pages.INDEX_HTML, 1)
     return HTMLResponse(html, headers={"Cache-Control": "public, max-age=3600"})
 
 
@@ -1090,6 +1094,7 @@ for _code in [None] + _UI_CODES:
     for _name in _PAGES:
         _route(f"{_prefix}/{_name}")(_page_route(_name, _code))
 _route("/voices.html")(_voices_page)
+voice_pages.register(_route, lambda: _page("voices.html").body.decode("utf-8"), get_voices, _dead_voices)
 for _name in _EN_PAGES:
     if _name != "voices.html":
         _route(f"/{_name}")(_page_route(_name, None))
@@ -1111,6 +1116,7 @@ def _lastmod(page: str, code: str | None) -> str:
 async def sitemap():
     locs = [(_url(c, p), _lastmod(p, c)) for p in _INDEXED for c in [None] + [c for c in _UI_CODES if c != "en"]]
     locs += [(f"{SITE}/{p}", _lastmod(p, None)) for p in _EN_PAGES]
+    locs += [(f"{SITE}/{p}", voice_pages.UPDATED) for p in voice_pages.PATHS]
     urls = "".join(f"<url><loc>{u}</loc><lastmod>{d}</lastmod></url>" for u, d in locs)
     return Response('<?xml version="1.0" encoding="UTF-8"?>\n'
                     f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n',

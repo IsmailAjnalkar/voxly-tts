@@ -17,6 +17,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import httpx  # noqa: E402
 import server  # noqa: E402
+import voice_pages  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 
 LONG = "Microsoft Server Speech Text to Speech Voice ({}, {})"
@@ -139,7 +140,7 @@ class Api(unittest.TestCase):
         r = self.c.get("/sitemap.xml")
         self.assertEqual(r.headers["content-type"].split(";")[0], "application/xml")
         # indexed translated pages x (root + 24 other languages) + every English-only page
-        self.assertEqual(r.text.count("<loc>"), len(server._INDEXED) * 25 + len(server._EN_PAGES))
+        self.assertEqual(r.text.count("<loc>"), len(server._INDEXED) * 25 + len(server._EN_PAGES) + len(voice_pages.PATHS))
         for absent in ("auth.html", "donate.html", "/en/", "/admin"):
             self.assertNotIn(absent, r.text)
         for present in ["/voices.html", "/how-it-works.html", "/guides/subtitles.html"] + server._EN_PAGES:
@@ -290,7 +291,7 @@ class Api(unittest.TestCase):
             head = html[:html.index("</head>")]
             self.assertNotRegex(head, r"<(rect|svg|div|p)[\s>]", path)
             foot = _re.search(r"<footer>.*?</footer>", html, _re.S).group(0)
-            self.assertEqual(len(_re.findall(r"<a ", foot)), 16, path)
+            self.assertEqual(len(_re.findall(r"<a ", foot)), 19, path)
         self.assertIn("© 2026 QINTAR LLC · <span data-i18n=\"foot_rights\">Todos los derechos reservados.", self.c.get("/es/tutorial.html").text)
 
     def test_home_about_section_and_title(self):

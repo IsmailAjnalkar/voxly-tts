@@ -19,7 +19,7 @@ A = lambda t: html.escape(t, quote=True)
 
 # The catalog uses names like "Swara - IN"; examples below use names that exist in it.
 LANGS = [
-    {"slug": "english", "code": "en", "name": "English", "related": ("spanish", "german"),
+    {"slug": "english", "code": "en", "name": "English", "related": ("chinese", "german"),
      "title": "English Text to Speech Voices: US, UK, Indian & More | Text 2 Speech",
      "desc": "Free English text to speech with American, British, Indian, Australian and other accents. "
              "See every English voice, pick an accent and make MP3 audio.",
@@ -41,7 +41,7 @@ LANGS = [
          ("Steer acronyms.", "Whether an acronym is spelled out or read as a word is the voice's guess. Write it "
           "with spaces between the letters, or as the word you want, to choose."),
      ]},
-    {"slug": "spanish", "code": "es", "name": "Spanish", "related": ("portuguese", "english"),
+    {"slug": "spanish", "code": "es", "name": "Spanish", "related": ("french", "portuguese"),
      "title": "Spanish Text to Speech: Spain, Mexico & More Voices | Text 2 Speech",
      "desc": "Free Spanish text to speech with voices from Spain, Mexico, Argentina, the US and other countries. "
              "Compare regional accents and download Spanish MP3 audio.",
@@ -65,7 +65,7 @@ LANGS = [
          ("Keep ¿ and ¡.", "Opening question and exclamation marks are normal Spanish punctuation and can stay; "
           "the closing ? or ! is where Text 2 Speech ends the sentence."),
      ]},
-    {"slug": "hindi", "code": "hi", "name": "Hindi", "related": ("english", "indonesian"),
+    {"slug": "hindi", "code": "hi", "name": "Hindi", "related": ("arabic", "indonesian"),
      "title": "Hindi Text to Speech: Free Hindi Voices Online | Text 2 Speech",
      "desc": "Free Hindi text to speech with natural Hindi (India) voices. Tips for Devanagari text, English "
              "words and numbers, and how to download Hindi MP3 audio.",
@@ -87,7 +87,7 @@ LANGS = [
          ("Use a Hindi voice for Hindi text.", "In a test on this site an English voice returned no audio for "
           "Hindi text, so set <em>Voice Language</em> to Hindi first."),
      ]},
-    {"slug": "arabic", "code": "ar", "name": "Arabic", "related": ("french", "hindi"),
+    {"slug": "arabic", "code": "ar", "name": "Arabic", "related": ("portuguese", "hindi"),
      "title": "Arabic Text to Speech: Egyptian, Saudi & Gulf Voices | Text 2 Speech",
      "desc": "Free Arabic text to speech with voices from Egypt, Saudi Arabia, the Gulf, the Levant and North "
              "Africa. Tips for diacritics, numbers and mixed text.",
@@ -108,7 +108,7 @@ LANGS = [
          ("Numbers.", "Arabic text can use Western digits (2026) or Arabic-Indic digits (٢٠٢٦). Preview a "
           "sentence with your numbers to hear how the voice reads them."),
      ]},
-    {"slug": "french", "code": "fr", "name": "French", "related": ("spanish", "arabic"),
+    {"slug": "french", "code": "fr", "name": "French", "related": ("german", "spanish"),
      "title": "French Text to Speech: France, Canada & More Voices | Text 2 Speech",
      "desc": "Free French text to speech with voices from France, Canada (Québec), Belgium and Switzerland. See "
              "every French voice, with tips for accents and numbers.",
@@ -129,7 +129,7 @@ LANGS = [
          ("French spacing is fine.", "French typography puts a space before ? ! : and ;. You can keep it: Text 2 "
           "Speech still finds the end of each sentence."),
      ]},
-    {"slug": "german", "code": "de", "name": "German", "related": ("french", "english"),
+    {"slug": "german", "code": "de", "name": "German", "related": ("english", "french"),
      "title": "German Text to Speech: German, Austrian & Swiss Voices | Text 2 Speech",
      "desc": "Free German text to speech with voices from Germany, Austria and Switzerland. Tips for umlauts, "
              "compound words and dates, and how to make German MP3 audio.",
@@ -149,7 +149,7 @@ LANGS = [
          ("Write out z. B. and usw.", "Text 2 Speech ends a subtitle line at a full stop, so abbreviations such "
           "as <q>z. B.</q> break lines early; <q>zum Beispiel</q> keeps them whole."),
      ]},
-    {"slug": "portuguese", "code": "pt", "name": "Portuguese", "related": ("spanish", "french"),
+    {"slug": "portuguese", "code": "pt", "name": "Portuguese", "related": ("spanish", "arabic"),
      "title": "Portuguese Text to Speech: Brazilian & European Voices | Text 2 Speech",
      "desc": "Free Portuguese text to speech with Brazilian and European Portuguese voices. Compare the two "
              "accents, see every voice and download Portuguese MP3 audio.",
@@ -169,7 +169,7 @@ LANGS = [
          ("Break up long sentences.", "Portuguese sentences with many clauses are easier to follow with a "
           "pause: add <code>[break:500ms]</code> after a clause, or end the sentence and start a new one."),
      ]},
-    {"slug": "chinese", "code": "zh", "name": "Chinese", "related": ("japanese", "english"),
+    {"slug": "chinese", "code": "zh", "vl": "zh-CN", "name": "Chinese", "related": ("japanese", "english"),
      "title": "Chinese Text to Speech: Mandarin & Cantonese Voices | Text 2 Speech",
      "desc": "Free Chinese text to speech in Mandarin and Cantonese: voices for mainland China, Taiwan and Hong "
              "Kong. Tips for characters and punctuation, with MP3 download.",
@@ -190,7 +190,7 @@ LANGS = [
          ("Count characters, not words.", "One generation holds 5,000 characters, and every Chinese character "
           "and punctuation mark counts as one; split longer scripts into parts."),
      ]},
-    {"slug": "japanese", "code": "ja", "name": "Japanese", "related": ("chinese", "indonesian"),
+    {"slug": "japanese", "code": "ja", "name": "Japanese", "related": ("indonesian", "chinese"),
      "title": "Japanese Text to Speech: Free Japanese Voices Online | Text 2 Speech",
      "desc": "Free Japanese text to speech with natural Japanese voices. Tips for kanji readings, names and "
              "punctuation, and how to make Japanese MP3 audio and subtitles.",
@@ -209,7 +209,7 @@ LANGS = [
          ("Every character counts.", "One generation holds 5,000 characters; each kana, kanji and punctuation "
           "mark counts as one."),
      ]},
-    {"slug": "indonesian", "code": "id", "name": "Indonesian", "related": ("japanese", "hindi"),
+    {"slug": "indonesian", "code": "id", "name": "Indonesian", "related": ("hindi", "japanese"),
      "title": "Indonesian Text to Speech: Bahasa Indonesia Voices | Text 2 Speech",
      "desc": "Free Indonesian text to speech with natural Bahasa Indonesia voices. Tips for abbreviations, "
              "loanwords and numbers, and how to make Indonesian MP3 audio.",
@@ -278,7 +278,7 @@ def _body(lang: dict, vs: list[dict]) -> str:
     multi = [v for v in vs if "Multilingual" in v["id"]]
     f = sum(v["gender"] == "Female" for v in vs)
     m = sum(v["gender"] == "Male" for v in vs)
-    tool = f'<a href="/?vl={code}">Try {name} voices in the free tool</a>'
+    tool = f'<a href="/?vl={lang.get("vl", code)}">Try {name} voices in the free tool</a>'
     h = [f"<h1>{name} text to speech voices</h1>"]
     if vs:
         if len(vs) <= 4:

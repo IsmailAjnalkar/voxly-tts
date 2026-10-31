@@ -70,7 +70,7 @@ class VoicePages(unittest.TestCase):
             self.assertTrue(120 <= len(desc) <= 160, (path, len(desc)))
             titles.add(title)
             descs.add(desc)
-            self.assertIn(f'href="/?vl={lang["code"]}"', t)
+            self.assertIn(f'href="/?vl={lang.get("vl", lang["code"])}"', t)
             self.assertNotIn("<!--voices:", t)
         self.assertEqual(len(titles), len(voice_pages.LANGS))
         self.assertEqual(len(descs), len(voice_pages.LANGS))

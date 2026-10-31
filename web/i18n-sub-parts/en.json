@@ -67,5 +67,6 @@
  "terms_s4p": "Features and these terms may evolve; material changes will be noted on this page with a new date.",
  "foot_guides": "Guides", "foot_help": "Help", "foot_how": "How it works", "foot_product": "Product", "foot_rights": "All rights reserved.", "foot_subs": "SRT & VTT subtitles", "foot_tag": "Free text to speech with 300+ natural voices in 75 languages. No sign-up.", "foot_voices": "Voices & languages", "legal": "Legal",
  "don_stripe_sub": "Credit or debit card", "don_bmc_sub": "Support with a coffee",
- "foot_about": "About", "foot_helpc": "Help centre", "foot_mp3": "Text to MP3", "foot_vo": "AI voiceover", "foot_voice": "Choose a voice", "more_h": "Learn more", "sup_more": "More troubleshooting steps, limits and formats are in the help centre (in English)."
+ "foot_about": "About", "foot_helpc": "Help centre", "foot_mp3": "Text to MP3", "foot_vo": "AI voiceover", "foot_voice": "Choose a voice", "more_h": "Learn more", "sup_more": "More troubleshooting steps, limits and formats are in the help centre (in English).",
+ "foot_dl": "Download MP3/WAV", "foot_t2v": "Text to voice", "foot_aivg": "AI voice generator"
 }

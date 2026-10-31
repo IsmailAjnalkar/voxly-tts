@@ -21,6 +21,7 @@ Key facts:
 - [Help centre](https://text-2-speech.com/help.html): features, every limit with its exact value, file formats, data retention, what the tool does not do, and troubleshooting.
 - [How Text 2 Speech works](https://text-2-speech.com/how-it-works.html): where the voices come from, each step of the generation pipeline, why the limits exist and where your text goes.
 - [Voices and languages](https://text-2-speech.com/voices.html): every available voice, grouped by language (live list).
+- Voice pages by language (voices, regions, tips): [English](https://text-2-speech.com/voices/english.html), [Spanish](https://text-2-speech.com/voices/spanish.html), [Hindi](https://text-2-speech.com/voices/hindi.html), [Arabic](https://text-2-speech.com/voices/arabic.html), [French](https://text-2-speech.com/voices/french.html), [German](https://text-2-speech.com/voices/german.html), [Portuguese](https://text-2-speech.com/voices/portuguese.html), [Chinese](https://text-2-speech.com/voices/chinese.html), [Japanese](https://text-2-speech.com/voices/japanese.html), [Indonesian](https://text-2-speech.com/voices/indonesian.html).
 - [About Text 2 Speech](https://text-2-speech.com/about.html): what the service is, who holds the copyright, how it is funded and how to get in touch.
 
 ## Guides
