@@ -68,7 +68,14 @@
   // boot script applies "light" before first paint.
   var tb = document.getElementById("themebtn");
   if (tb) {
-    var paint = function () { tb.textContent = root.classList.contains("light") ? "☾" : "☀"; };
+    // Icon in an aria-hidden span; the button's name ("Dark theme") is a translated
+    // span and its state is aria-pressed. Older markup (icon as the only text) still works.
+    var icon = tb.querySelector("[aria-hidden]");
+    var paint = function () {
+      var light = root.classList.contains("light");
+      (icon || tb).textContent = light ? "☾" : "☀";
+      if (icon) tb.setAttribute("aria-pressed", String(!light));
+    };
     paint();
     tb.addEventListener("click", function () {
       root.classList.toggle("light");

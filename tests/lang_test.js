@@ -37,6 +37,9 @@ async function loadDom(url) {
     const h1 = d.querySelector("h1").textContent;
     ck("es home: H1 Spanish", /voz/i.test(h1), h1);
     ck("es home: html lang es", d.documentElement.lang === "es", d.documentElement.lang);
+    const skip = d.querySelector("header a.skip-link");
+    ck("es home: skip link translated, targets the one <main id=main>", !!skip && skip.textContent === "Saltar al contenido principal"
+       && skip.getAttribute("href") === "#main" && d.querySelectorAll("main").length === 1 && !!d.getElementById("main"), skip && skip.textContent);
     dom.window.close();
   }
   // 2) voice parity: alphabetical order, trimmed names, curated defaults
@@ -78,6 +81,9 @@ async function loadDom(url) {
     ck("de tut: guide2 html keeps break tokens", d.querySelector('[data-i18n-html="tut_g2p"]').innerHTML.includes("[break:500ms]"));
     ck("de tut: switcher value de", d.querySelector("#sublang").value === "de");
     ck("de tut: switcher has 25 options", d.querySelectorAll("#sublang option").length === 25);
+    ck("de tut: skip link + header control names in German", d.querySelector("a.skip-link").textContent === de.skip
+       && d.querySelector('label[for="sublang"]').textContent === de.ui_lang && d.getElementById("nav_lbl").textContent === de.nav_label
+       && d.querySelector("main#main") !== null);
     const navTut = d.querySelector('nav a[href="/de/tutorial.html"]');
     ck("de tut: nav links prefixed", !!navTut);
     const foot = d.querySelector('footer a[href="/de/privacy.html"]');
