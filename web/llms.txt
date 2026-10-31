@@ -3,26 +3,37 @@
 > Text 2 Speech (text-2-speech.com) is a free online text-to-speech tool. It turns text into speech with 300+ neural voices in 75 languages, works in any modern browser with no sign-up, and lets you download the result as MP3 or WAV together with SRT and VTT subtitles.
 
 Key facts:
-- Price: free. No account, sign-up or payment details.
+- Price: free. No account, sign-up or payment details. No advertising.
 - Voices: Microsoft's online neural voices; 300+ voices across 75 languages and regional variants, female and male, including multilingual voices. The list is checked every six hours and voices that stop producing audio are hidden until they work again.
-- Limits: up to 5,000 characters per generation; up to 25 pause markers, at most 30 s each and 60 s in total; speed −100% to +100%; pitch −100 Hz to +100 Hz.
-- Input: plain text in any supported language; .txt, .md and .text files can be imported.
+- Limits: up to 5,000 characters per generation; up to 25 pause markers, at most 30 s each and 60 s in total; speed −100% to +100%; pitch −100 Hz to +100 Hz; about 20 requests per minute per IP address; one voice per generation.
+- Input: plain text in any supported language; .txt, .md and .text files can be imported. No PDF, Word or web-page reading.
 - Pauses: [break:200ms] or [break:2s] markers insert exact silences (Ctrl+B inserts a 500 ms pause).
 - Output: MP3 (48 kbps, 24 kHz, mono) or WAV (16-bit PCM, 24 kHz, mono; decoded from the MP3), plus SRT and VTT subtitles timed from the speech engine's word timings.
-- Privacy: text is sent to Microsoft's online speech service to create the audio; audio and subtitle files are deleted about two hours after the last generation; no cookies, analytics or advertising trackers.
-- Interface: available in 25 languages at /<language>/ (for example /es/, /de/, /zh-CN/).
+- Measured: 5,000 characters of English produced 5 min 28 s of speech in about 12 seconds (tested 31 October 2026).
+- Privacy: text is sent to Microsoft's online speech service to create the audio; audio and subtitle files are deleted about two hours after the last generation; no cookies and no third-party analytics or advertising scripts; the server counts page views anonymously (date and page only).
+- Not available: accounts, a developer API, offline use, voice cloning, SSML or speaking styles.
+- Interface: available in 25 languages at /<language>/ (for example /es/, /de/, /zh-CN/). Guides and help pages are in English.
 - Commercial use: the user is responsible for the rights in the text and for applicable law.
+- Owner: © 2026 QINTAR LLC. Contact: the form at /support.html.
 
 ## Documentation
 
-- [How Text 2 Speech works](https://text-2-speech.com/how-it-works.html): what it does, the generation pipeline, limits, data handling and what it does not do.
+- [Help centre](https://text-2-speech.com/help.html): features, every limit with its exact value, file formats, data retention, what the tool does not do, and troubleshooting.
+- [How Text 2 Speech works](https://text-2-speech.com/how-it-works.html): where the voices come from, each step of the generation pipeline, why the limits exist and where your text goes.
 - [Voices and languages](https://text-2-speech.com/voices.html): every available voice, grouped by language (live list).
-- [Create SRT and VTT subtitles from text](https://text-2-speech.com/guides/subtitles.html): step-by-step guide with real example files.
+- [About Text 2 Speech](https://text-2-speech.com/about.html): what the service is, who holds the copyright, how it is funded and how to get in touch.
+
+## Guides
+
+- [How to convert text to MP3 for free](https://text-2-speech.com/guides/text-to-mp3.html): step-by-step conversion, what the MP3 file contains, and how to handle text over 5,000 characters.
+- [How to make a free AI voiceover from text](https://text-2-speech.com/guides/ai-voiceover.html): script preparation, pacing with pause markers (with measured timings), speed and pitch, and adding the subtitles to a video.
+- [How to choose a text to speech voice and accent](https://text-2-speech.com/guides/choose-voice.html): matching the text language, English accents by region, the twelve multilingual voices, and comparing voices.
+- [Create SRT and VTT subtitles from text](https://text-2-speech.com/guides/subtitles.html): step-by-step guide with real example files and how captions are split.
 - [MP3 vs WAV for text to speech](https://text-2-speech.com/guides/mp3-vs-wav.html): measured file sizes and when to use each.
 
 ## Pages
 
 - [Home — text to speech tool](https://text-2-speech.com/): the generator, with voice picker, preview, speed and pitch controls, downloads and FAQ.
 - [Tutorial](https://text-2-speech.com/tutorial.html): your first voiceover, pause markers and the voice collection.
-- [Support](https://text-2-speech.com/support.html): FAQ, quick fixes and a contact form.
+- [Support](https://text-2-speech.com/support.html): quick fixes and the contact form.
 - [Privacy Policy](https://text-2-speech.com/privacy.html) · [Terms of Service](https://text-2-speech.com/terms.html)
